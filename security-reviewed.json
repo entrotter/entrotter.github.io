@@ -3,8 +3,8 @@
   "scope": "All 14 installed security rules over every tracked JS source; no inline suppression. Exact source/type-input bytes and every diagnostic must match.",
   "sources": {
     "app.js": "185b35ff5355651193e7c3a8fd71ea7556fdd62986df7214003f5d99ed4eb361",
-    "eslint.config.mjs": "9c47b58e6b983da255d91ca59ee105dffbcfb92cfc575d5bd1f47cda281674b5",
-    "eslint.security.config.mjs": "f3965f5c175d6d76885f055b78613997d3547d43299eae28e285b25171804feb",
+    "eslint.config.mjs": "c02f1c56dd86d77023625cf4dde4930e29efa9cd89b4e409601a2c2abe5a67b1",
+    "eslint.security.config.mjs": "fb2ab88ae816262fd1cef89709826491797957b8ee04835fae10bc6ab83ca7f2",
     "package-lock.json": "199e29dcafd62edef5bef2483a66dbc200601458ac797f6032ecef688a116342",
     "package.json": "d4ae0a0b1a412c70cf38bace34efd9fd459736f0e8c4d13ded0c53cab43e772d",
     "pyproject.toml": "1fa3f76b9d84bb385aa4a7557416c172a54572c6d380c1ca1d64ddae31457f38",
@@ -15,7 +15,7 @@
     "scripts/quality_policy.mjs": "e8064979e1846daf16c6d81b5b25ad0b0601432e3d8b18aecd92065131333d89",
     "tests/quality.test.mjs": "71150f603988dcb2429b56de76e3535b0268fbf180b12ecbe998c23c235e52c1",
     "tests/report.test.mjs": "a7d30de36267c336519993ae3cc8e3ee22c93296c4b98f22deab1a7cbe191660",
-    "tsconfig.json": "7fc2201f2a59527b82ba606b5e28ef3e3c192389c748580fd65dea824ffd30d5",
+    "tsconfig.json": "b11349591a0d0c9933d0ee3ff60b0b874df53834e8f2e3c6c45b788aa35cb661",
     "types/browser-tools.d.ts": "0a5352e697b9e2a51651016ac789287acb71d48fdc04027d80a4050b604f579e"
   },
   "findings": [

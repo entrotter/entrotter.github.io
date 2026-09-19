@@ -1,7 +1,7 @@
 import security from "eslint-plugin-security";
 
 export default [
-  { ignores: ["node_modules/**", "output/**", ".quality/**"] },
+  { ignores: ["node_modules/**", ".venv/**", "output/**", ".quality/**"] },
   security.configs.recommended,
   {
     linterOptions: {
