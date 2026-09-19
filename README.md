@@ -10,7 +10,7 @@ public backend is required. User-provided report files stay in the browser.
 python3 -m http.server 8000 --bind 127.0.0.1
 # Open http://127.0.0.1:8000, not file:// (sample JSON uses fetch).
 python3 -m unittest discover -s tests -v
-# Node 20+; no npm install is required
+# Node 20.19+; no npm install is required
 npm test
 ```
 
@@ -77,7 +77,61 @@ WCAG conformance are not asserted. The 320px viewport check is not a hardware
 zoom measurement. No real RPC or model execution is needed for this display test.
 
 The Pages workflow runs these checks and a strict dependency advisory audit on
-pull requests; both the unit and browser jobs must pass before main can build a
+pull requests; the unit, browser and quality jobs must pass before main can build a
 Pages artifact. Main still requires independent PR approval. To compare another
 local checkout with exactly the same runner and browser, set SITE_DIR and a
 separate A11Y_OUTPUT directory when invoking the script.
+
+
+## Code quality and input validation
+
+The runtime remains plain static files with no npm dependencies or build step.
+Development tools require Node 20.19+ (CI uses Node 22). Exact tool versions and
+integrity hashes are in package-lock.json; installation uses `--ignore-scripts`.
+
+```bash
+npm ci --ignore-scripts
+npm run lint
+npm run format:check
+npm run typecheck
+npm run security
+npm test
+npm audit
+python3 -m venv .venv
+.venv/bin/python -m pip install --require-hashes --only-binary=:all: -r requirements-quality.txt
+.venv/bin/python -m ruff check tests
+.venv/bin/python -m ruff format --check tests
+.venv/bin/python -m mypy tests
+.venv/bin/python -m bandit --ignore-nosec tests/*.py
+.venv/bin/python -m pip_audit --strict --require-hashes --disable-pip -r requirements-quality.txt
+```
+
+ESLint recommended rules and explicit no-eval/dynamic-code rules cover all tracked
+JavaScript. TypeScript `checkJs` covers those same files and the actual axe-core
+global declaration used by the browser runner. Strict null checks are enabled;
+`noImplicitAny` is disabled for the JavaScript tooling. Production report inputs
+use `unknown` with object/scalar checks; this is not a complete result-schema or
+financial-semantics validator. Ruff, normal mypy and full Bandit also check the
+Python website tests. CI discovers the tracked sources and refuses empty scans.
+
+All 14 rules from eslint-plugin-security run without inline suppressions. Full
+findings are saved in `.quality/security.json` before the source-bound review
+policy is checked. `security-reviewed.json` retains 32 findings with individual
+rationales (bounded numeric grammar, inert indexed reads and trusted developer
+file operations). It pins every JS/declaration source and tool configuration/lock;
+source drift, new/missing findings or missing rationale fail the gate. These are
+author-reviewed explanations, not independent approval or proof of security.
+The policy's negative tests run with the existing Node unit suite. Scanner
+pattern coverage and advisory data have limits; no rule or advisory ID is hidden.
+
+A correctly hashed report can still contain invalid display metrics. Blank,
+whitespace and non-decimal forms such as `0x10` now fail instead of becoming zero
+or another ordinary value. Display metrics accept finite JSON-style decimal or
+exponent strings of at most 100 characters; raw token integers remain exact.
+The browser test imports six such invalid files with newly computed valid hashes,
+checks that all previous values/downloads clear, then reloads a valid sample.
+Imports make no network request. Existing report/schema/mascot files are unchanged.
+
+Quality, browser and unit jobs all gate Pages builds; PRs never deploy. After an
+independent reviewer approves and merges the changes, verify the live deployment
+separately before calling this implementation released.

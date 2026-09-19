@@ -1,0 +1,439 @@
+{
+  "review_status": "author reviewed; independent approval required",
+  "scope": "All 14 installed security rules over every tracked JS source; no inline suppression. Exact source/type-input bytes and every diagnostic must match.",
+  "sources": {
+    "app.js": "185b35ff5355651193e7c3a8fd71ea7556fdd62986df7214003f5d99ed4eb361",
+    "eslint.config.mjs": "9c47b58e6b983da255d91ca59ee105dffbcfb92cfc575d5bd1f47cda281674b5",
+    "eslint.security.config.mjs": "f3965f5c175d6d76885f055b78613997d3547d43299eae28e285b25171804feb",
+    "package-lock.json": "199e29dcafd62edef5bef2483a66dbc200601458ac797f6032ecef688a116342",
+    "package.json": "d4ae0a0b1a412c70cf38bace34efd9fd459736f0e8c4d13ded0c53cab43e772d",
+    "pyproject.toml": "1fa3f76b9d84bb385aa4a7557416c172a54572c6d380c1ca1d64ddae31457f38",
+    "requirements-quality.in": "eccd79884fb38364cc396e59e22eb5a78f48bbf92e2c0b47825dcff473692185",
+    "requirements-quality.txt": "845de7f7f24826a43ff5e9eebafa79c6b3ef0aa10e46bfc04e39b77f64cea722",
+    "scripts/check_accessibility.mjs": "5d7aad99a1fc89da227902b8cefd1d163cfe23473fbb6f8998ac7da8b7089d4b",
+    "scripts/check_quality.mjs": "51d72e7ccb7e9716acfc50e39bdf692a2512532e6da91491358da1437f4794d8",
+    "scripts/quality_policy.mjs": "e8064979e1846daf16c6d81b5b25ad0b0601432e3d8b18aecd92065131333d89",
+    "tests/quality.test.mjs": "71150f603988dcb2429b56de76e3535b0268fbf180b12ecbe998c23c235e52c1",
+    "tests/report.test.mjs": "a7d30de36267c336519993ae3cc8e3ee22c93296c4b98f22deab1a7cbe191660",
+    "tsconfig.json": "7fc2201f2a59527b82ba606b5e28ef3e3c192389c748580fd65dea824ffd30d5",
+    "types/browser-tools.d.ts": "0a5352e697b9e2a51651016ac789287acb71d48fdc04027d80a4050b604f579e"
+  },
+  "findings": [
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 30,
+        "column": 52,
+        "endLine": 30,
+        "endColumn": 68
+      },
+      "reason": "Canonicalization reads only own keys enumerated by Object.keys from parsed JSON. It writes no properties and produces a hash string; no key selects code or a prototype mutation."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-unsafe-regex",
+        "severity": 1,
+        "message": "Unsafe Regular Expression",
+        "line": 71,
+        "column": 6,
+        "endLine": 71,
+        "endColumn": 62
+      },
+      "reason": "The metric is checked as a string of at most 100 characters before this decimal grammar runs. Integer, fraction and exponent parts have distinct separators; rejected malformed values are bounded. This is not an unbounded regex service."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 150,
+        "column": 18,
+        "endLine": 150,
+        "endColumn": 25
+      },
+      "reason": "The metric name comes from the same fixed four-item list. The candidate value immediately passes rawInteger and remains inert text; no object mutation or code execution."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 151,
+        "column": 18,
+        "endLine": 151,
+        "endColumn": 25
+      },
+      "reason": "The metric name comes from the same fixed four-item list. The candidate value immediately passes rawInteger and remains inert text; no object mutation or code execution."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 201,
+        "column": 22,
+        "endLine": 201,
+        "endColumn": 27
+      },
+      "reason": "The baseline token array is checked as an array with at most eight entries, and i is the bounded loop index. record validates each selected value before metadata or balance access."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 202,
+        "column": 18,
+        "endLine": 202,
+        "endColumn": 23
+      },
+      "reason": "The candidate token array is checked for matching length and the same eight-entry maximum. The loop index comes from the baseline length, and record validates the selected candidate."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 351,
+        "column": 16,
+        "endLine": 351,
+        "endColumn": 21
+      },
+      "reason": "Both fixture traces have equal checked lengths and their equities have already passed finite. The index comes from the baseline map; conversion is for an inert exact-text table cell."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 370,
+        "column": 35,
+        "endLine": 370,
+        "endColumn": 42
+      },
+      "reason": "The candidate metric key comes from the fixed four-row display table. Values go only to String or finite/fmt and then textContent; this read does not write properties or evaluate code."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 370,
+        "column": 50,
+        "endLine": 370,
+        "endColumn": 57
+      },
+      "reason": "The candidate metric key comes from the fixed four-row display table. Values go only to String or finite/fmt and then textContent; this read does not write properties or evaluate code."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 371,
+        "column": 35,
+        "endLine": 371,
+        "endColumn": 42
+      },
+      "reason": "The candidate metric key comes from the fixed four-row display table. Values go only to String or finite/fmt and then textContent; this read does not write properties or evaluate code."
+    },
+    {
+      "finding": {
+        "file": "app.js",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 371,
+        "column": 50,
+        "endLine": 371,
+        "endColumn": 57
+      },
+      "reason": "The candidate metric key comes from the fixed four-row display table. Values go only to String or finite/fmt and then textContent; this read does not write properties or evaluate code."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 12,
+        "column": 17,
+        "endLine": 12,
+        "endColumn": 51
+      },
+      "reason": "The runner reads its own import.meta.url bytes to record its source hash. The path cannot come from a report or HTTP request."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found mkdir from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 16,
+        "column": 7,
+        "endLine": 16,
+        "endColumn": 41
+      },
+      "reason": "The output directory is a trusted operator/CI A11Y_OUTPUT path with a fixed default under output/playwright. This developer tool intentionally writes local evidence, never an imported report-selected destination."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 17,
+        "column": 25,
+        "endLine": 20,
+        "endColumn": 2
+      },
+      "reason": "The script resolves the integrity-locked local axe-core package and injects it only through browser DevTools for diagnostics. No imported report controls package resolution."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 40,
+        "column": 25,
+        "endLine": 40,
+        "endColumn": 54
+      },
+      "reason": "The loopback test server reads only index/404/style/app or a single allowlisted asset/report/schema filename. The pathname regex rejects separators/traversal outside those fixed cases; SITE_DIR is trusted operator input."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found writeFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 152,
+        "column": 9,
+        "endLine": 155,
+        "endColumn": 4
+      },
+      "reason": "The final accessibility report uses the fixed filename accessibility.json under the trusted operator/CI evidence directory. It is not a path derived from imported report contents."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 235,
+        "column": 52,
+        "endLine": 235,
+        "endColumn": 56
+      },
+      "reason": "The test canonicalizer reads own sorted keys from trusted public fixtures that it modifies locally. It writes no properties during canonicalization and never evaluates input text."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 294,
+        "column": 17,
+        "endLine": 294,
+        "endColumn": 80
+      },
+      "reason": "The runner reads the fixed liquidity-shock public fixture to construct a deliberately tampered import. This is a trusted local regression input, not a user-controlled filesystem path."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 331,
+        "column": 21,
+        "endLine": 331,
+        "endColumn": 78
+      },
+      "reason": "The sample name is iterated from a fixed list of four public fixtures. The operator chooses the local checkout root; incoming HTTP or report content cannot set this filename."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 363,
+        "column": 19,
+        "endLine": 363,
+        "endColumn": 44
+      },
+      "reason": "This reads the candidate trace at the fixed baseline iteration index while checking exact table equality against a trusted public fixture. It is test input inspection, with no mutation or code selection."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 430,
+        "column": 17,
+        "endLine": 430,
+        "endColumn": 80
+      },
+      "reason": "The runner reads the fixed liquidity-shock public fixture to construct a deliberately tampered import. This is a trusted local regression input, not a user-controlled filesystem path."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 464,
+        "column": 19,
+        "endLine": 467,
+        "endColumn": 14
+      },
+      "reason": "The runner reads the same fixed public fixture to construct correctly hashed malformed numeric imports. Only in-memory metrics change; the fixture path cannot be chosen by report contents."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 586,
+        "column": 7,
+        "endLine": 586,
+        "endColumn": 19
+      },
+      "reason": "This writes null only to the same fixed source-inventory key when that exact local file cannot be read. No untrusted property keys or object prototypes are used."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 587,
+        "column": 23,
+        "endLine": 587,
+        "endColumn": 52
+      },
+      "reason": "The source inventory reads a fixed six-item website file list under the operator-selected local checkout. Missing files become null evidence rather than substituting another path."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 590,
+        "column": 7,
+        "endLine": 590,
+        "endColumn": 19
+      },
+      "reason": "This writes null only to the same fixed source-inventory key when that exact local file cannot be read. No untrusted property keys or object prototypes are used."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_accessibility.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found writeFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 617,
+        "column": 9,
+        "endLine": 620,
+        "endColumn": 4
+      },
+      "reason": "The final accessibility report uses the fixed filename accessibility.json under the trusted operator/CI evidence directory. It is not a path derived from imported report contents."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_quality.mjs",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 59,
+        "column": 3,
+        "endLine": 59,
+        "endColumn": 16
+      },
+      "reason": "Source keys are local Git/TypeScript inventory paths, used solely to build a fresh hash map and compare exact reviewed bytes. No incoming report or server request selects these paths."
+    },
+    {
+      "finding": {
+        "file": "scripts/check_quality.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 60,
+        "column": 19,
+        "endLine": 60,
+        "endColumn": 33
+      },
+      "reason": "The checker reads JavaScript and declaration sources discovered from the trusted local checkout and TypeScript input listing. It executes fixed Git/compiler commands without a shell; this developer gate is not exposed to uploaded files."
+    },
+    {
+      "finding": {
+        "file": "tests/report.test.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 22,
+        "column": 3,
+        "endLine": 22,
+        "endColumn": 62
+      },
+      "reason": "The unit test reads the fixed sibling app.js production source using import.meta.url and runs it in a deliberately minimal VM. No untrusted report chooses code or the source filename."
+    },
+    {
+      "finding": {
+        "file": "tests/report.test.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 27,
+        "column": 5,
+        "endLine": 30,
+        "endColumn": 6
+      },
+      "reason": "The test reads the fixed archived-state Uniswap public report relative to its own module. This is offline evidence display validation, not archive RPC execution."
+    },
+    {
+      "finding": {
+        "file": "tests/report.test.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 36,
+        "column": 9,
+        "endLine": 39,
+        "endColumn": 10
+      },
+      "reason": "The filename is chosen only by the fixed three-sample test loop, relative to this test module. Imported data does not control the path."
+    },
+    {
+      "finding": {
+        "file": "tests/report.test.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 74,
+        "column": 5,
+        "endLine": 77,
+        "endColumn": 6
+      },
+      "reason": "The test reads the fixed archived-state Uniswap public report relative to its own module. This is offline evidence display validation, not archive RPC execution."
+    }
+  ]
+}

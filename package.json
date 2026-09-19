@@ -3,15 +3,26 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "test": "node --test tests/report.test.mjs",
-    "test:accessibility": "node scripts/check_accessibility.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "test:accessibility": "node scripts/check_accessibility.mjs",
+    "lint": "eslint . --max-warnings 0",
+    "format:check": "prettier --check \"**/*.{js,mjs,ts}\"",
+    "typecheck": "tsc --pretty false",
+    "security": "node scripts/check_quality.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19"
   },
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.4",
     "axe-core": "4.13.0",
-    "playwright": "1.63.0"
+    "eslint": "10.11.0",
+    "eslint-plugin-security": "4.0.1",
+    "globals": "17.4.0",
+    "playwright": "1.63.0",
+    "prettier": "3.9.8",
+    "typescript": "7.0.2"
   }
 }
