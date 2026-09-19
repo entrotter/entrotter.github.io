@@ -28,7 +28,8 @@ class SiteTests(unittest.TestCase):
             d=json.loads(p.read_text());supplied=d.pop('artifact_id')
             data=json.dumps(d,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()
             self.assertEqual(hashlib.sha256(data).hexdigest(),supplied)
-            self.assertEqual(d['scenario']['provenance']['kind'],'synthetic')
+            self.assertEqual(d['scenario']['provenance']['kind'], 'historical-fork' if d['mode']=='evm-fork' else 'synthetic')
+            if d['mode']=='evm-fork': self.assertEqual(d['source']['block_hash'],d['scenario']['source']['block_hash'])
     def test_not_business_saas(self):
         text=(ROOT/'index.html').read_text().lower()
         self.assertNotIn('<form',text);self.assertNotIn('connect wallet',text);self.assertNotIn('stripe',text)
