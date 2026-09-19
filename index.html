@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Entrotter is an open-source, local-first test bench for onchain agents. Inspect assumptions, compare decisions and reproduce the evidence.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="color-scheme" content="dark">
+  <title>Entrotter · A time machine for onchain agents</title>
+  <link rel="icon" href="assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="header shell">
+  <a class="brand" href="#" aria-label="Entrotter home"><img src="assets/icon.png" width="42" height="42" alt=""><span>entrotter</span></a>
+  <nav aria-label="Main navigation"><a href="#how">How it works</a><a href="#quickstart">Quickstart</a><a href="#contribute">Contribute</a><a class="github" href="https://github.com/entrotter/entrotter">GitHub <span aria-hidden="true">↗</span></a></nav>
+</header>
+<main id="main">
+<section class="hero shell">
+  <p class="eyebrow"><span class="dot"></span> OPEN-SOURCE · LOCAL-FIRST · EXPERIMENTAL 0.1</p>
+  <h1>Send your agents<br><span>back in time.</span></h1>
+  <p class="intro">A test bench for the decisions you don’t want to learn from in production. Start from a known state. Change one action. Keep the evidence.</p>
+  <div class="actions"><a class="button primary" href="#quickstart">Run it locally <span aria-hidden="true">↗</span></a><a class="button secondary" href="#reports">Inspect a sample report <span aria-hidden="true">↓</span></a></div>
+  <p class="release-note">Offline stress tests are runnable. The historical-fork adapter is implemented but still awaiting real-chain validation.</p>
+  <div class="timeline" aria-label="Known source, isolated branches, reproducible result">
+    <div><span class="step">01</span><strong>Known state</strong><small>Source + assumptions</small></div><span class="connector" aria-hidden="true"></span>
+    <div><span class="step">02</span><strong>Two decisions</strong><small>Baseline + intervention</small></div><span class="connector" aria-hidden="true"></span>
+    <div><span class="step">03</span><strong>One clear record</strong><small>Trace + content hash</small></div>
+  </div>
+</section>
+<section class="section shell" id="how">
+  <div class="section-head"><p class="eyebrow">THE SOFTWARE, NOT THE SCI-FI</p><h2>Rewind state.<br>Not reality.</h2><p>“Time machine” is a useful metaphor. Re-executing actions on a fork is not the same as reconstructing the future of an entire economy.</p></div>
+  <div class="feature-grid">
+    <article><span class="tag">RUNNABLE OFFLINE</span><h3>Synthetic stress tests</h3><p>Compare causal policies on an explicit price path. Include fees, slippage and drawdown. No API key, wallet or cloud account.</p></article>
+    <article><span class="tag muted">VALIDATION PENDING</span><h3>Isolated EVM branches</h3><p>An Anvil adapter runs supplied actions in paired local processes. Source pins, overrides and receipts belong in the report.</p></article>
+    <article><span class="tag">CONTRIBUTOR-FRIENDLY</span><h3>Evidence you can inspect</h3><p>Versioned JSON, a small Python SDK, a CLI and six focused repositories. No proprietary backend required to run the offline example.</p></article>
+  </div>
+</section>
+<section class="section shell" id="reports">
+  <div class="section-head wide"><p class="eyebrow">READ-ONLY REPORT EXPLORER</p><h2>Better decisions need<br>honest comparisons.</h2><p>These are actual outputs from the offline model, using <strong>invented prices</strong>. They are not historical performance, forecasts or live agent results.</p></div>
+  <div class="report-panel">
+    <div class="report-toolbar"><label for="scenario">Synthetic scenario<select id="scenario"><option value="liquidity-shock">Liquidity shock</option><option value="recovery-trap">Recovery trap</option><option value="depeg-stress">Depeg stress</option></select></label><label class="file-button" for="import">Open local report<input id="import" type="file" accept="application/json,.json"></label></div>
+    <p id="report-status" class="report-status" role="status" aria-live="polite">Loading a recorded offline result…</p>
+    <div class="metrics" aria-live="polite"><div><span>Hold baseline</span><strong id="baseline-value">—</strong><small>Final model equity</small></div><div><span>Circuit-breaker policy</span><strong id="candidate-value">—</strong><small>Final model equity</small></div><div><span>Candidate − baseline</span><strong id="delta-value">—</strong><small>Model quote units, not USD</small></div></div>
+    <div class="chart-area"><div class="legend"><span><i class="legend-baseline"></i>Hold baseline</span><span><i class="legend-candidate"></i>Circuit-breaker policy</span></div><svg id="chart" viewBox="0 0 1000 260" role="img" aria-label="Portfolio equity across synthetic observations"><title>Synthetic model equity</title><line x1="45" y1="225" x2="970" y2="225" class="axis"/><line x1="45" y1="25" x2="45" y2="225" class="axis"/><polyline id="baseline-line" class="line baseline" points=""/><polyline id="candidate-line" class="line candidate" points=""/></svg><p class="chart-caption">Observation order → <span>Identical inputs. No future lookahead.</span></p></div>
+    <div class="table-wrap"><table><caption class="visually-hidden">Policy comparison metrics</caption><thead><tr><th scope="col">Metric</th><th scope="col">Baseline</th><th scope="col">Candidate</th></tr></thead><tbody id="metric-rows"></tbody></table></div>
+    <details open><summary>Assumptions and limits</summary><ul id="assumptions"></ul></details>
+    <details><summary>Full result JSON</summary><pre id="raw-report"></pre></details>
+    <div class="artifact"><span>SHA-256</span><code id="hash">—</code><a id="download" href="reports/liquidity-shock.json" download>Source JSON ↗</a></div>
+    <p class="privacy">Local files stay in your browser. No uploads, accounts, analytics, wallet connection or transactions. A valid hash verifies integrity, not model correctness.</p>
+  </div>
+</section>
+<section class="section shell quickstart" id="quickstart">
+  <div class="section-head"><p class="eyebrow">BACKEND-FIRST BY DESIGN</p><h2>Your terminal.<br>Your experiments.</h2><p>Python 3.11+ is enough for the offline example. Install the sibling source checkouts, not an unverified package from a registry.</p><a class="text-link" href="https://github.com/entrotter/entrotter#quick-start-without-dependencies-or-an-api-key">Full setup and architecture ↗</a></div>
+  <div class="terminal"><div class="terminal-title"><span>LOCAL WORKSPACE</span><span>NO API KEY</span></div><pre><code><span class="comment"># Six repositories, one workspace</span>
+export PYTHONPATH="$PWD/engine/src:\
+$PWD/sdk-python/src:$PWD/cli/src"
+
+<span class="comment"># Run the offline example</span>
+python3 -m entrotter_cli run \
+  scenarios/fixtures/liquidity-shock.json \
+  --local -o report.json
+
+<span class="comment"># Verify and inspect the evidence</span>
+python3 -m entrotter_cli verify report.json
+python3 -m entrotter_cli inspect report.json</code></pre></div>
+</section>
+<section class="section shell" id="contribute">
+  <div class="section-head wide"><p class="eyebrow">BUILD THE TIME MACHINE TOGETHER</p><h2>Small repositories.<br>Meaningful pull requests.</h2><p>Start where you can help. Improve a failure case, an API boundary or a reproduction command. A negative result is a useful contribution.</p></div>
+  <div class="repo-grid">
+    <a href="https://github.com/entrotter/engine"><strong>engine <span>↗</span></strong><p>Execution, validation and isolation</p><small>PYTHON</small></a>
+    <a href="https://github.com/entrotter/sdk-python"><strong>sdk-python <span>↗</span></strong><p>Client and typed report access</p><small>PYTHON</small></a>
+    <a href="https://github.com/entrotter/cli"><strong>cli <span>↗</span></strong><p>Commands and developer experience</p><small>PYTHON</small></a>
+    <a href="https://github.com/entrotter/scenarios"><strong>scenarios <span>↗</span></strong><p>Open fixtures and source provenance</p><small>JSON / SCHEMAS</small></a>
+    <a href="https://github.com/entrotter/entrotter.github.io"><strong>website <span>↗</span></strong><p>Documentation and report inspection</p><small>HTML / CSS / JS</small></a>
+    <a href="https://github.com/entrotter/entrotter"><strong>coordination <span>↗</span></strong><p>Roadmap, evidence and contribution map</p><small>PROJECT</small></a>
+  </div>
+</section>
+</main>
+<footer class="shell footer"><a class="brand" href="#">entrotter</a><p>Open source. Visible assumptions. No promises about the future.</p><a href="https://github.com/entrotter/entrotter/blob/main/LICENSE">MIT License ↗</a></footer>
+</body>
+</html>

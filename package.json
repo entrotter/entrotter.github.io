@@ -1,0 +1,8 @@
+{
+  "name": "entrotter-oss-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {"test": "node --test tests/report.test.mjs"},
+  "engines": {"node": ">=20"},
+  "license": "MIT"
+}

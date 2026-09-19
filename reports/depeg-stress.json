@@ -1,0 +1,261 @@
+{
+  "schema_version": "0.1.0",
+  "engine_version": "0.1.0",
+  "mode": "fixture",
+  "scenario": {
+    "schema_version": "0.1.0",
+    "id": "depeg-stress",
+    "title": "Synthetic depeg stress",
+    "mode": "fixture",
+    "provenance": {
+      "kind": "synthetic",
+      "description": "An illustrative depeg shape. It is not the historical USDC depeg."
+    },
+    "market": {
+      "prices": [
+        "1",
+        "1",
+        "0.99",
+        "0.98",
+        "0.94",
+        "0.88",
+        "0.84",
+        "0.90",
+        "0.96"
+      ],
+      "initial_cash": "0",
+      "initial_units": "100",
+      "fee_bps": 30,
+      "slippage_bps": 20,
+      "symbol": "TEST"
+    },
+    "baseline": {
+      "type": "hold"
+    },
+    "candidate": {
+      "type": "circuit_breaker",
+      "drawdown_trigger": "0.04"
+    }
+  },
+  "baseline": {
+    "policy": {
+      "type": "hold"
+    },
+    "trace": [
+      {
+        "step": 0,
+        "observed_price": "1",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "100",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 1,
+        "observed_price": "1",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "100",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 2,
+        "observed_price": "0.99",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "99.00",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 3,
+        "observed_price": "0.98",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "98.00",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 4,
+        "observed_price": "0.94",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "94.00",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 5,
+        "observed_price": "0.88",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "88.00",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 6,
+        "observed_price": "0.84",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "84.00",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 7,
+        "observed_price": "0.90",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "90.00",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 8,
+        "observed_price": "0.96",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "96.00",
+        "execution_price": null,
+        "fee": "0"
+      }
+    ],
+    "metrics": {
+      "initial_equity": "100",
+      "final_equity": "96.00",
+      "return_pct": "-4.00",
+      "max_drawdown_pct": "16.00",
+      "fees": "0",
+      "trades": 0
+    }
+  },
+  "candidate": {
+    "policy": {
+      "type": "circuit_breaker",
+      "drawdown_trigger": "0.04"
+    },
+    "trace": [
+      {
+        "step": 0,
+        "observed_price": "1",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "100",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 1,
+        "observed_price": "1",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "100",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 2,
+        "observed_price": "0.99",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "99.00",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 3,
+        "observed_price": "0.98",
+        "action": "hold",
+        "cash": "0",
+        "units": "100",
+        "equity": "98.00",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 4,
+        "observed_price": "0.94",
+        "action": "sell_all",
+        "cash": "93.53056400",
+        "units": "0",
+        "equity": "93.53056400",
+        "execution_price": "0.93812",
+        "fee": "0.28143600"
+      },
+      {
+        "step": 5,
+        "observed_price": "0.88",
+        "action": "hold",
+        "cash": "93.53056400",
+        "units": "0",
+        "equity": "93.53056400",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 6,
+        "observed_price": "0.84",
+        "action": "hold",
+        "cash": "93.53056400",
+        "units": "0",
+        "equity": "93.53056400",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 7,
+        "observed_price": "0.90",
+        "action": "hold",
+        "cash": "93.53056400",
+        "units": "0",
+        "equity": "93.53056400",
+        "execution_price": null,
+        "fee": "0"
+      },
+      {
+        "step": 8,
+        "observed_price": "0.96",
+        "action": "hold",
+        "cash": "93.53056400",
+        "units": "0",
+        "equity": "93.53056400",
+        "execution_price": null,
+        "fee": "0"
+      }
+    ],
+    "metrics": {
+      "initial_equity": "100",
+      "final_equity": "93.53056400",
+      "return_pct": "-6.46943600",
+      "max_drawdown_pct": "6.46943600",
+      "fees": "0.28143600",
+      "trades": 1
+    }
+  },
+  "comparison": {
+    "final_equity_delta": "-2.46943600"
+  },
+  "assumptions": [
+    "Synthetic exogenous price path; not a historical replay.",
+    "Both policies observe identical prices with no future lookahead.",
+    "Immediate fills with fixed fees/slippage; no gas, MEV, market impact or liquidity model.",
+    "No real money, chain transaction or LLM is used."
+  ],
+  "artifact_id": "b2ad2922dcf53dc5d4076e80dabbe9b9a8c7e27844f28892439837022f684db9"
+}
