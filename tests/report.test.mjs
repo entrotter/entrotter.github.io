@@ -135,3 +135,16 @@ test("hash verification rejects non-object or non-finite parsed JSON", async () 
     await assert.rejects(context.checkHash(value), /Invalid report object/);
   assert.throws(() => context.canonical(Infinity), /Invalid JSON number/);
 });
+
+test("local EVM reports accept null/absent source while forks require their pin", () => {
+  const r = evm();
+  r.mode = "evm-local";
+  r.scenario.provenance.kind = "local-evm";
+  r.source = null;
+  assert.match(context.evmViewModel(r).source, /Local disposable chain/);
+  delete r.source;
+  assert.match(context.evmViewModel(r).source, /Local disposable chain/);
+  const fork = evm();
+  fork.source = null;
+  assert.throws(() => context.evmViewModel(fork), /source pin/);
+});

@@ -119,7 +119,10 @@ function evmViewModel(input) {
     (report.mode === "evm-fork" ? "historical-fork" : "local-evm")
   )
     throw new Error("Invalid EVM provenance.");
-  const source = report.source === undefined ? null : record(report.source);
+  const source =
+    report.source === undefined || report.source === null
+      ? null
+      : record(report.source);
   const baseline = record(report.baseline),
     candidate = record(report.candidate);
   const bm = record(baseline.metrics),

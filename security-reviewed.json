@@ -2,7 +2,7 @@
   "review_status": "author reviewed; independent approval required",
   "scope": "All 14 installed security rules over every tracked JS source; no inline suppression. Exact source/type-input bytes and every diagnostic must match.",
   "sources": {
-    "app.js": "185b35ff5355651193e7c3a8fd71ea7556fdd62986df7214003f5d99ed4eb361",
+    "app.js": "645675eab6c3b159a0234bc1847238f8e4e8c1ae589c3c85df5679c8e7b319d6",
     "eslint.config.mjs": "c02f1c56dd86d77023625cf4dde4930e29efa9cd89b4e409601a2c2abe5a67b1",
     "eslint.security.config.mjs": "fb2ab88ae816262fd1cef89709826491797957b8ee04835fae10bc6ab83ca7f2",
     "package-lock.json": "199e29dcafd62edef5bef2483a66dbc200601458ac797f6032ecef688a116342",
@@ -14,7 +14,7 @@
     "scripts/check_quality.mjs": "51d72e7ccb7e9716acfc50e39bdf692a2512532e6da91491358da1437f4794d8",
     "scripts/quality_policy.mjs": "e8064979e1846daf16c6d81b5b25ad0b0601432e3d8b18aecd92065131333d89",
     "tests/quality.test.mjs": "71150f603988dcb2429b56de76e3535b0268fbf180b12ecbe998c23c235e52c1",
-    "tests/report.test.mjs": "a7d30de36267c336519993ae3cc8e3ee22c93296c4b98f22deab1a7cbe191660",
+    "tests/report.test.mjs": "a15d0e2d90ff523435716b03ddc82d476de4c42780b96581ea530402599fd227",
     "tsconfig.json": "b11349591a0d0c9933d0ee3ff60b0b874df53834e8f2e3c6c45b788aa35cb661",
     "types/browser-tools.d.ts": "0a5352e697b9e2a51651016ac789287acb71d48fdc04027d80a4050b604f579e"
   },
@@ -51,9 +51,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Function Call Object Injection Sink",
-        "line": 150,
+        "line": 153,
         "column": 18,
-        "endLine": 150,
+        "endLine": 153,
         "endColumn": 25
       },
       "reason": "The metric name comes from the same fixed four-item list. The candidate value immediately passes rawInteger and remains inert text; no object mutation or code execution."
@@ -64,9 +64,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Function Call Object Injection Sink",
-        "line": 151,
+        "line": 154,
         "column": 18,
-        "endLine": 151,
+        "endLine": 154,
         "endColumn": 25
       },
       "reason": "The metric name comes from the same fixed four-item list. The candidate value immediately passes rawInteger and remains inert text; no object mutation or code execution."
@@ -77,9 +77,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Function Call Object Injection Sink",
-        "line": 201,
+        "line": 204,
         "column": 22,
-        "endLine": 201,
+        "endLine": 204,
         "endColumn": 27
       },
       "reason": "The baseline token array is checked as an array with at most eight entries, and i is the bounded loop index. record validates each selected value before metadata or balance access."
@@ -90,9 +90,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Function Call Object Injection Sink",
-        "line": 202,
+        "line": 205,
         "column": 18,
-        "endLine": 202,
+        "endLine": 205,
         "endColumn": 23
       },
       "reason": "The candidate token array is checked for matching length and the same eight-entry maximum. The loop index comes from the baseline length, and record validates the selected candidate."
@@ -103,9 +103,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Generic Object Injection Sink",
-        "line": 351,
+        "line": 354,
         "column": 16,
-        "endLine": 351,
+        "endLine": 354,
         "endColumn": 21
       },
       "reason": "Both fixture traces have equal checked lengths and their equities have already passed finite. The index comes from the baseline map; conversion is for an inert exact-text table cell."
@@ -116,9 +116,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Function Call Object Injection Sink",
-        "line": 370,
+        "line": 373,
         "column": 35,
-        "endLine": 370,
+        "endLine": 373,
         "endColumn": 42
       },
       "reason": "The candidate metric key comes from the fixed four-row display table. Values go only to String or finite/fmt and then textContent; this read does not write properties or evaluate code."
@@ -129,9 +129,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Function Call Object Injection Sink",
-        "line": 370,
+        "line": 373,
         "column": 50,
-        "endLine": 370,
+        "endLine": 373,
         "endColumn": 57
       },
       "reason": "The candidate metric key comes from the fixed four-row display table. Values go only to String or finite/fmt and then textContent; this read does not write properties or evaluate code."
@@ -142,9 +142,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Function Call Object Injection Sink",
-        "line": 371,
+        "line": 374,
         "column": 35,
-        "endLine": 371,
+        "endLine": 374,
         "endColumn": 42
       },
       "reason": "The candidate metric key comes from the fixed four-row display table. Values go only to String or finite/fmt and then textContent; this read does not write properties or evaluate code."
@@ -155,9 +155,9 @@
         "ruleId": "security/detect-object-injection",
         "severity": 1,
         "message": "Function Call Object Injection Sink",
-        "line": 371,
+        "line": 374,
         "column": 50,
-        "endLine": 371,
+        "endLine": 374,
         "endColumn": 57
       },
       "reason": "The candidate metric key comes from the fixed four-row display table. Values go only to String or finite/fmt and then textContent; this read does not write properties or evaluate code."
