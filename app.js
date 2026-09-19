@@ -59,11 +59,11 @@ function evmViewModel(report) {
   }
   return {rows,traces,source:source?`Chain ${source.chain_id} · Block ${source.block_number}\n${source.block_hash}`:'Local disposable chain; no historical source'};
 }
-function tableRows(id, rows) {
+function tableRows(id, rows, rowHeaders=false) {
   $(id).replaceChildren();
   for(const row of rows) {
     const tr=document.createElement('tr');
-    for(const value of row) {const td=document.createElement('td');td.textContent=value;tr.appendChild(td);}
+    row.forEach((value,index)=>{const cell=document.createElement(rowHeaders&&index===0?'th':'td');if(rowHeaders&&index===0)cell.scope='row';cell.textContent=value;tr.appendChild(cell);});
     $(id).appendChild(tr);
   }
 }
@@ -71,9 +71,10 @@ function setError(message) {
   $('report-status').textContent=message; $('report-status').classList.add('error');
   ['baseline-value','candidate-value','delta-value','hash'].forEach(id=>$(id).textContent='—');
   $('baseline-line').setAttribute('points',''); $('candidate-line').setAttribute('points','');
-  $('metric-rows').replaceChildren(); $('assumptions').replaceChildren(); $('raw-report').textContent='';
+  $('metric-table').hidden=true; $('metric-rows').replaceChildren(); $('assumptions').replaceChildren(); $('raw-report').textContent='';
   $('download').hidden=true;
   $('evm-details').hidden=true; $('evm-traces').replaceChildren(); $('source-pin').textContent='';
+  $('fixture-chart').hidden=true; $('equity-rows').replaceChildren(); $('chart-description').textContent='';
 }
 async function render(report, seq) {
   await checkHash(report);
@@ -89,7 +90,8 @@ async function render(report, seq) {
     $('baseline-value').textContent=Number(tokenUnits(report.baseline.metrics.final_balance_wei,18)).toFixed(6);
     $('candidate-value').textContent=Number(tokenUnits(report.candidate.metrics.final_balance_wei,18)).toFixed(6);
     $('delta-value').textContent=Number(tokenUnits(report.comparison.final_balance_delta_wei,18)).toFixed(6);
-    tableRows('metric-rows',view.rows); tableRows('evm-traces',view.traces);
+    tableRows('metric-rows',view.rows,true); tableRows('evm-traces',view.traces);
+    $('equity-rows').replaceChildren(); $('chart-description').textContent='';
     $('source-pin').textContent=view.source;
   } else {
   if (report.scenario?.provenance?.kind !== 'synthetic') throw new Error('A fixture must be labelled synthetic.');
@@ -99,6 +101,8 @@ async function render(report, seq) {
   const values=[...yb,...yc], min=Math.min(...values), max=Math.max(...values), spread=max-min||1;
   function line(ys) {return ys.map((y,i)=>`${45+i/(ys.length-1)*925},${210-(y-min)/spread*165}`).join(' ');}
   $('baseline-line').setAttribute('points',line(yb)); $('candidate-line').setAttribute('points',line(yc));
+  $('chart-description').textContent=`${yb.length} observations, in recorded order. Dashed line: baseline. Solid line: candidate. Open Equity values by observation for every exact value.`;
+  tableRows('equity-rows',b.trace.map((point,i)=>[String(i+1),point.equity,c.trace[i].equity]),true);
   $('baseline-value').textContent=fmt(b.metrics.final_equity);
   $('candidate-value').textContent=fmt(c.metrics.final_equity);
   const delta=finite(report.comparison.final_equity_delta);
@@ -106,9 +110,9 @@ async function render(report, seq) {
   $('metric-rows').replaceChildren();
   for (const [label, key, suffix] of [['Model return','return_pct','%'],['Maximum drawdown','max_drawdown_pct','%'],['Fees (quote units)','fees',''],['Number of trades','trades','']]) {
     const tr=document.createElement('tr');
-    for (const text of [label, key==='trades'?String(b.metrics[key]):fmt(b.metrics[key])+suffix, key==='trades'?String(c.metrics[key]):fmt(c.metrics[key])+suffix]) {
-      const td=document.createElement('td'); td.textContent=text; tr.appendChild(td);
-    }
+    [label, key==='trades'?String(b.metrics[key]):fmt(b.metrics[key])+suffix, key==='trades'?String(c.metrics[key]):fmt(c.metrics[key])+suffix].forEach((text,index)=>{
+      const cell=document.createElement(index===0?'th':'td');if(index===0)cell.scope='row';cell.textContent=text;tr.appendChild(cell);
+    });
     $('metric-rows').appendChild(tr);
   }
   }
@@ -122,6 +126,7 @@ async function render(report, seq) {
   $('raw-report').textContent=JSON.stringify(report,null,2);
   $('report-status').classList.remove('error');
   $('report-status').textContent='Integrity verified locally · '+(evm?(report.mode==='evm-fork'?'Archived-state actions; not historical replay':'Local EVM actions'):'Synthetic fixture')+' · '+String(report.scenario.title).slice(0,120);
+  $('metric-table').hidden=false;
   $('download').hidden=false;
 }
 async function loadSample() {
