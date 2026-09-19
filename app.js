@@ -1,6 +1,6 @@
 'use strict';
 const $ = (id) => document.getElementById(id);
-const allowedSamples = new Set(['liquidity-shock', 'recovery-trap', 'depeg-stress']);
+const allowedSamples = new Set(['liquidity-shock', 'recovery-trap', 'depeg-stress', 'ethereum-uniswap-slippage']);
 let generation = 0;
 // The backend canonicalizes JSON with sorted keys and ensure_ascii=True.
 function canonical(value) {
@@ -20,17 +20,78 @@ function finite(value) {
   return Number(value);
 }
 function fmt(value, digits=2) { return finite(value).toLocaleString('en-US', {maximumFractionDigits:digits}); }
+function rawInteger(value) {
+  if (typeof value !== 'string' || !/^-?(0|[1-9][0-9]{0,79})$/.test(value)) throw new Error('Invalid raw integer.');
+  return value;
+}
+function tokenUnits(value, decimals) {
+  rawInteger(value);
+  if (!Number.isInteger(decimals) || decimals<0 || decimals>36) throw new Error('Invalid token decimals.');
+  const negative=value.startsWith('-'), digits=(negative?value.slice(1):value).padStart(decimals+1,'0');
+  return (negative?'-':'')+(decimals?digits.slice(0,-decimals)+'.'+digits.slice(-decimals):digits);
+}
+function evmViewModel(report) {
+  if (!['evm-local','evm-fork'].includes(report.mode)) throw new Error('Unsupported EVM report.');
+  if (report.scenario?.provenance?.kind !== (report.mode==='evm-fork'?'historical-fork':'local-evm')) throw new Error('Invalid EVM provenance.');
+  const source=report.source;
+  if (report.mode==='evm-fork' && (!Number.isSafeInteger(source?.chain_id) || source.chain_id<1 || !Number.isSafeInteger(source?.block_number) || source.block_number<1 || !/^0x[0-9a-fA-F]{64}$/.test(source?.block_hash))) throw new Error('Missing historical source pin.');
+  const rows=[], traces=[];
+  for (const key of ['initial_balance_wei','final_balance_wei','balance_delta_wei','gas_used']) {
+    rows.push([key.replaceAll('_',' '),rawInteger(report.baseline?.metrics?.[key]),rawInteger(report.candidate?.metrics?.[key])]);
+  }
+  if(report.baseline?.metrics?.gas_cost_wei!==undefined || report.candidate?.metrics?.gas_cost_wei!==undefined) rows.push(['Gas cost (wei)',rawInteger(report.baseline?.metrics?.gas_cost_wei),rawInteger(report.candidate?.metrics?.gas_cost_wei)]);
+  for(const [name,branch] of [['Baseline',report.baseline],['Candidate',report.candidate]]) {
+    if(!Array.isArray(branch.trace)||branch.trace.length<1||branch.trace.length>32) throw new Error('Invalid EVM trace.');
+    for(const step of branch.trace) {
+      if(!Number.isInteger(step.step)||step.step<0||step.step>31||!['noop','success','reverted','rejected'].includes(step.status)) throw new Error('Invalid EVM step.');
+      traces.push([name,String(step.step),step.status,rawInteger(step.gas_used),rawInteger(step.actor_balance_wei)]);
+    }
+  }
+  const bt=report.baseline.tokens??[],ct=report.candidate.tokens??[];
+  if(!Array.isArray(bt)||!Array.isArray(ct)||bt.length!==ct.length||bt.length>8) throw new Error('Invalid token observations.');
+  const seen=new Set();
+  for(let i=0;i<bt.length;i++) {
+    const b=bt[i],c=ct[i];
+    if(!/^0x[0-9a-fA-F]{40}$/.test(b.address)||b.address.toLowerCase()!==c.address?.toLowerCase()||seen.has(b.address.toLowerCase())||b.decimals!==c.decimals||!/^[A-Z0-9_-]{1,12}$/.test(b.symbol)||b.symbol!==c.symbol) throw new Error('Mismatched token metadata.');
+    seen.add(b.address.toLowerCase());
+    rows.push([b.symbol+' final token units',tokenUnits(b.final_balance_raw,b.decimals),tokenUnits(c.final_balance_raw,c.decimals)]);
+    rows.push([b.symbol+' change in raw units',rawInteger(b.balance_delta_raw),rawInteger(c.balance_delta_raw)]);
+  }
+  return {rows,traces,source:source?`Chain ${source.chain_id} · Block ${source.block_number}\n${source.block_hash}`:'Local disposable chain; no historical source'};
+}
+function tableRows(id, rows) {
+  $(id).replaceChildren();
+  for(const row of rows) {
+    const tr=document.createElement('tr');
+    for(const value of row) {const td=document.createElement('td');td.textContent=value;tr.appendChild(td);}
+    $(id).appendChild(tr);
+  }
+}
 function setError(message) {
   $('report-status').textContent=message; $('report-status').classList.add('error');
   ['baseline-value','candidate-value','delta-value','hash'].forEach(id=>$(id).textContent='—');
   $('baseline-line').setAttribute('points',''); $('candidate-line').setAttribute('points','');
   $('metric-rows').replaceChildren(); $('assumptions').replaceChildren(); $('raw-report').textContent='';
   $('download').hidden=true;
+  $('evm-details').hidden=true; $('evm-traces').replaceChildren(); $('source-pin').textContent='';
 }
 async function render(report, seq) {
   await checkHash(report);
   if (seq !== generation) return;
-  if (report.mode !== 'fixture') throw new Error('This explorer currently renders fixture reports only. Use the CLI to inspect EVM artifacts.');
+  const evm=report.mode!=='fixture';
+  $('fixture-chart').hidden=evm; $('evm-details').hidden=!evm;
+  $('baseline-label').textContent=evm?'Baseline actions':'Hold baseline';
+  $('candidate-label').textContent=evm?'Changed actions':'Circuit-breaker policy';
+  $('baseline-unit').textContent=$('candidate-unit').textContent=evm?'Final native balance (wei)':'Final model equity';
+  $('delta-unit').textContent=evm?'Native wei; not profit':'Model quote units, not USD';
+  if(evm) {
+    const view=evmViewModel(report);
+    $('baseline-value').textContent=rawInteger(report.baseline.metrics.final_balance_wei);
+    $('candidate-value').textContent=rawInteger(report.candidate.metrics.final_balance_wei);
+    $('delta-value').textContent=rawInteger(report.comparison.final_balance_delta_wei);
+    tableRows('metric-rows',view.rows); tableRows('evm-traces',view.traces);
+    $('source-pin').textContent=view.source;
+  } else {
   if (report.scenario?.provenance?.kind !== 'synthetic') throw new Error('A fixture must be labelled synthetic.');
   const b=report.baseline, c=report.candidate;
   if (!Array.isArray(b?.trace) || !Array.isArray(c?.trace) || b.trace.length!==c.trace.length || b.trace.length<2 || b.trace.length>4096) throw new Error('Invalid trace.');
@@ -50,6 +111,7 @@ async function render(report, seq) {
     }
     $('metric-rows').appendChild(tr);
   }
+  }
   if (!Array.isArray(report.assumptions) || report.assumptions.length>32) throw new Error('Invalid assumptions.');
   $('assumptions').replaceChildren();
   for (const text of report.assumptions) {
@@ -59,7 +121,7 @@ async function render(report, seq) {
   $('hash').textContent=report.artifact_id;
   $('raw-report').textContent=JSON.stringify(report,null,2);
   $('report-status').classList.remove('error');
-  $('report-status').textContent='Integrity verified locally · Synthetic fixture · '+String(report.scenario.title).slice(0,120);
+  $('report-status').textContent='Integrity verified locally · '+(evm?(report.mode==='evm-fork'?'Archived-state actions; not historical replay':'Local EVM actions'):'Synthetic fixture')+' · '+String(report.scenario.title).slice(0,120);
   $('download').hidden=false;
 }
 async function loadSample() {

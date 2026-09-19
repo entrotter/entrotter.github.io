@@ -15,7 +15,7 @@ class HTML(HTMLParser):
 class SiteTests(unittest.TestCase):
     def setUp(self):
         self.html=HTML();self.html.feed((ROOT/'index.html').read_text())
-    def test_no_remote_scripts(self):self.assertEqual(self.html.scripts,['app.js'])
+    def test_no_remote_scripts(self):self.assertEqual(self.html.scripts,['app.js?v='+hashlib.sha256((ROOT/'app.js').read_bytes()).hexdigest()[:12]])
     def test_no_duplicate_ids(self):self.assertEqual(len(self.html.ids),len(set(self.html.ids)))
     def test_internal_anchors(self):
         for link in self.html.links:
@@ -28,7 +28,8 @@ class SiteTests(unittest.TestCase):
             d=json.loads(p.read_text());supplied=d.pop('artifact_id')
             data=json.dumps(d,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()
             self.assertEqual(hashlib.sha256(data).hexdigest(),supplied)
-            self.assertEqual(d['scenario']['provenance']['kind'],'synthetic')
+            self.assertEqual(d['scenario']['provenance']['kind'], 'historical-fork' if d['mode']=='evm-fork' else 'synthetic')
+            if d['mode']=='evm-fork': self.assertEqual(d['source']['block_hash'],d['scenario']['source']['block_hash'])
     def test_not_business_saas(self):
         text=(ROOT/'index.html').read_text().lower()
         self.assertNotIn('<form',text);self.assertNotIn('connect wallet',text);self.assertNotIn('stripe',text)

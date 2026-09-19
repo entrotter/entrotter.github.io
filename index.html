@@ -8,8 +8,8 @@
   <meta name="color-scheme" content="dark">
   <title>Entrotter · A time machine for onchain agents</title>
   <link rel="icon" href="assets/icon.png" type="image/png">
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="style.css?v=e8349e22754d">
+  <script src="app.js?v=fae5bee7bf75" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -23,7 +23,7 @@
   <h1>Send your agents<br><span>back in time.</span></h1>
   <p class="intro">A test bench for the decisions you don’t want to learn from in production. Start from a known state. Change one action. Keep the evidence.</p>
   <div class="actions"><a class="button primary" href="#quickstart">Run it locally <span aria-hidden="true">↗</span></a><a class="button secondary" href="#reports">Inspect a sample report <span aria-hidden="true">↓</span></a></div>
-  <p class="release-note">Offline stress tests are runnable. The historical-fork adapter is implemented but still awaiting real-chain validation.</p>
+  <p class="release-note">Offline stress tests and a pinned Ethereum / Uniswap fork are verified. Agent integration and broader benchmarks remain in progress.</p>
   <div class="timeline" aria-label="Known source, isolated branches, reproducible result">
     <div><span class="step">01</span><strong>Known state</strong><small>Source + assumptions</small></div><span class="connector" aria-hidden="true"></span>
     <div><span class="step">02</span><strong>Two decisions</strong><small>Baseline + intervention</small></div><span class="connector" aria-hidden="true"></span>
@@ -34,18 +34,19 @@
   <div class="section-head"><p class="eyebrow">THE SOFTWARE, NOT THE SCI-FI</p><h2>Rewind state.<br>Not reality.</h2><p>“Time machine” is a useful metaphor. Re-executing actions on a fork is not the same as reconstructing the future of an entire economy.</p></div>
   <div class="feature-grid">
     <article><span class="tag">RUNNABLE OFFLINE</span><h3>Synthetic stress tests</h3><p>Compare causal policies on an explicit price path. Include fees, slippage and drawdown. No API key, wallet or cloud account.</p></article>
-    <article><span class="tag muted">VALIDATION PENDING</span><h3>Isolated EVM branches</h3><p>An Anvil adapter runs supplied actions in paired local processes. Source pins, overrides and receipts belong in the report.</p></article>
+    <article><span class="tag">REAL FORK VERIFIED</span><h3>Isolated EVM branches</h3><p>An Anvil adapter runs supplied actions in paired local processes. Source pins, overrides and receipts belong in the report.</p></article>
     <article><span class="tag">CONTRIBUTOR-FRIENDLY</span><h3>Evidence you can inspect</h3><p>Versioned JSON, a small Python SDK, a CLI and six focused repositories. No proprietary backend required to run the offline example.</p></article>
   </div>
 </section>
 <section class="section shell" id="reports">
-  <div class="section-head wide"><p class="eyebrow">READ-ONLY REPORT EXPLORER</p><h2>Better decisions need<br>honest comparisons.</h2><p>These are actual outputs from the offline model, using <strong>invented prices</strong>. They are not historical performance, forecasts or live agent results.</p></div>
+  <div class="section-head wide"><p class="eyebrow">READ-ONLY REPORT EXPLORER</p><h2>Better decisions need<br>honest comparisons.</h2><p>Inspect synthetic stress tests or a real Uniswap experiment at pinned Ethereum state. The fork executes supplied decisions; it does not replay history, predict prices or establish profit.</p></div>
   <div class="report-panel">
-    <div class="report-toolbar"><label for="scenario">Synthetic scenario<select id="scenario"><option value="liquidity-shock">Liquidity shock</option><option value="recovery-trap">Recovery trap</option><option value="depeg-stress">Depeg stress</option></select></label><label class="file-button" for="import">Open local report<input id="import" type="file" accept="application/json,.json"></label></div>
+    <div class="report-toolbar"><label for="scenario">Example scenario<select id="scenario"><option value="liquidity-shock">Liquidity shock</option><option value="recovery-trap">Recovery trap</option><option value="depeg-stress">Depeg stress</option><option value="ethereum-uniswap-slippage">Ethereum · Uniswap output floor</option></select></label><label class="file-button" for="import">Open local report<input id="import" type="file" accept="application/json,.json"></label></div>
     <p id="report-status" class="report-status" role="status" aria-live="polite">Loading a recorded offline result…</p>
-    <div class="metrics" aria-live="polite"><div><span>Hold baseline</span><strong id="baseline-value">—</strong><small>Final model equity</small></div><div><span>Circuit-breaker policy</span><strong id="candidate-value">—</strong><small>Final model equity</small></div><div><span>Candidate − baseline</span><strong id="delta-value">—</strong><small>Model quote units, not USD</small></div></div>
-    <div class="chart-area"><div class="legend"><span><i class="legend-baseline"></i>Hold baseline</span><span><i class="legend-candidate"></i>Circuit-breaker policy</span></div><svg id="chart" viewBox="0 0 1000 260" role="img" aria-label="Portfolio equity across synthetic observations"><title>Synthetic model equity</title><line x1="45" y1="225" x2="970" y2="225" class="axis"/><line x1="45" y1="25" x2="45" y2="225" class="axis"/><polyline id="baseline-line" class="line baseline" points=""/><polyline id="candidate-line" class="line candidate" points=""/></svg><p class="chart-caption">Observation order → <span>Identical inputs. No future lookahead.</span></p></div>
+    <div class="metrics" aria-live="polite"><div><span id="baseline-label">Hold baseline</span><strong id="baseline-value">—</strong><small id="baseline-unit">Final model equity</small></div><div><span id="candidate-label">Circuit-breaker policy</span><strong id="candidate-value">—</strong><small id="candidate-unit">Final model equity</small></div><div><span>Candidate − baseline</span><strong id="delta-value">—</strong><small id="delta-unit">Model quote units, not USD</small></div></div>
+    <div class="chart-area" id="fixture-chart"><div class="legend"><span><i class="legend-baseline"></i>Hold baseline</span><span><i class="legend-candidate"></i>Circuit-breaker policy</span></div><svg id="chart" viewBox="0 0 1000 260" role="img" aria-label="Portfolio equity across synthetic observations"><title>Synthetic model equity</title><line x1="45" y1="225" x2="970" y2="225" class="axis"/><line x1="45" y1="25" x2="45" y2="225" class="axis"/><polyline id="baseline-line" class="line baseline" points=""/><polyline id="candidate-line" class="line candidate" points=""/></svg><p class="chart-caption">Observation order → <span>Identical inputs. No future lookahead.</span></p></div>
     <div class="table-wrap"><table><caption class="visually-hidden">Policy comparison metrics</caption><thead><tr><th scope="col">Metric</th><th scope="col">Baseline</th><th scope="col">Candidate</th></tr></thead><tbody id="metric-rows"></tbody></table></div>
+    <div id="evm-details" hidden><h3>Source state and action receipts</h3><pre id="source-pin"></pre><p>Balances use exact units. Symbols are labels. Full receipts, addresses and token deltas are available in the JSON below.</p><div class="table-wrap"><table><caption>Supplied actions on isolated local forks</caption><thead><tr><th>Branch</th><th>Step</th><th>Status</th><th>Gas used</th><th>Native balance (wei)</th></tr></thead><tbody id="evm-traces"></tbody></table></div></div>
     <details open><summary>Assumptions and limits</summary><ul id="assumptions"></ul></details>
     <details><summary>Full result JSON</summary><pre id="raw-report"></pre></details>
     <div class="artifact"><span>SHA-256</span><code id="hash">—</code><a id="download" href="reports/liquidity-shock.json" download>Source JSON ↗</a></div>
