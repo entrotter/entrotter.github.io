@@ -15,7 +15,7 @@ class HTML(HTMLParser):
 class SiteTests(unittest.TestCase):
     def setUp(self):
         self.html=HTML();self.html.feed((ROOT/'index.html').read_text())
-    def test_no_remote_scripts(self):self.assertEqual(self.html.scripts,['app.js'])
+    def test_no_remote_scripts(self):self.assertEqual(self.html.scripts,['app.js?v='+hashlib.sha256((ROOT/'app.js').read_bytes()).hexdigest()[:12]])
     def test_no_duplicate_ids(self):self.assertEqual(len(self.html.ids),len(set(self.html.ids)))
     def test_internal_anchors(self):
         for link in self.html.links:
