@@ -1,5 +1,7 @@
 # Entrotter documentation and report explorer
 
+[Workspace setup](https://github.com/entrotter/entrotter#quick-start-without-dependencies-or-an-api-key) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [MIT license](LICENSE)
+
 A zero-build static OSS website for GitHub Pages. HTML, CSS and plain JavaScript.
 No framework, npm install, third-party script, tracking, wallet connection or
 public backend is required. User-provided report files stay in the browser.
