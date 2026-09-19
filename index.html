@@ -9,7 +9,7 @@
   <title>Entrotter · A time machine for onchain agents</title>
   <link rel="icon" href="assets/icon.png" type="image/png">
   <link rel="stylesheet" href="style.css?v=e8349e22754d">
-  <script src="app.js?v=fae5bee7bf75" defer></script>
+  <script src="app.js?v=8f857fa31577" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -46,7 +46,7 @@
     <div class="metrics" aria-live="polite"><div><span id="baseline-label">Hold baseline</span><strong id="baseline-value">—</strong><small id="baseline-unit">Final model equity</small></div><div><span id="candidate-label">Circuit-breaker policy</span><strong id="candidate-value">—</strong><small id="candidate-unit">Final model equity</small></div><div><span>Candidate − baseline</span><strong id="delta-value">—</strong><small id="delta-unit">Model quote units, not USD</small></div></div>
     <div class="chart-area" id="fixture-chart"><div class="legend"><span><i class="legend-baseline"></i>Hold baseline</span><span><i class="legend-candidate"></i>Circuit-breaker policy</span></div><svg id="chart" viewBox="0 0 1000 260" role="img" aria-label="Portfolio equity across synthetic observations"><title>Synthetic model equity</title><line x1="45" y1="225" x2="970" y2="225" class="axis"/><line x1="45" y1="25" x2="45" y2="225" class="axis"/><polyline id="baseline-line" class="line baseline" points=""/><polyline id="candidate-line" class="line candidate" points=""/></svg><p class="chart-caption">Observation order → <span>Identical inputs. No future lookahead.</span></p></div>
     <div class="table-wrap"><table><caption class="visually-hidden">Policy comparison metrics</caption><thead><tr><th scope="col">Metric</th><th scope="col">Baseline</th><th scope="col">Candidate</th></tr></thead><tbody id="metric-rows"></tbody></table></div>
-    <div id="evm-details" hidden><h3>Source state and action receipts</h3><pre id="source-pin"></pre><p>Balances use exact units. Symbols are labels. Full receipts, addresses and token deltas are available in the JSON below.</p><div class="table-wrap"><table><caption>Supplied actions on isolated local forks</caption><thead><tr><th>Branch</th><th>Step</th><th>Status</th><th>Gas used</th><th>Native balance (wei)</th></tr></thead><tbody id="evm-traces"></tbody></table></div></div>
+    <div id="evm-details" hidden><h3>Source state and action receipts</h3><pre id="source-pin"></pre><p>Summary balances are approximate ETH; tables preserve exact wei and token units. Symbols are labels. Full receipts, addresses and token deltas are available in the JSON below.</p><div class="table-wrap"><table><caption>Supplied actions on isolated local forks</caption><thead><tr><th>Branch</th><th>Step</th><th>Status</th><th>Gas used</th><th>Native balance (wei)</th></tr></thead><tbody id="evm-traces"></tbody></table></div></div>
     <details open><summary>Assumptions and limits</summary><ul id="assumptions"></ul></details>
     <details><summary>Full result JSON</summary><pre id="raw-report"></pre></details>
     <div class="artifact"><span>SHA-256</span><code id="hash">—</code><a id="download" href="reports/liquidity-shock.json" download>Source JSON ↗</a></div>

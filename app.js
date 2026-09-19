@@ -82,13 +82,13 @@ async function render(report, seq) {
   $('fixture-chart').hidden=evm; $('evm-details').hidden=!evm;
   $('baseline-label').textContent=evm?'Baseline actions':'Hold baseline';
   $('candidate-label').textContent=evm?'Changed actions':'Circuit-breaker policy';
-  $('baseline-unit').textContent=$('candidate-unit').textContent=evm?'Final native balance (wei)':'Final model equity';
-  $('delta-unit').textContent=evm?'Native wei; not profit':'Model quote units, not USD';
+  $('baseline-unit').textContent=$('candidate-unit').textContent=evm?'Approximate native balance (ETH)':'Final model equity';
+  $('delta-unit').textContent=evm?'Approximate ETH; not profit':'Model quote units, not USD';
   if(evm) {
     const view=evmViewModel(report);
-    $('baseline-value').textContent=rawInteger(report.baseline.metrics.final_balance_wei);
-    $('candidate-value').textContent=rawInteger(report.candidate.metrics.final_balance_wei);
-    $('delta-value').textContent=rawInteger(report.comparison.final_balance_delta_wei);
+    $('baseline-value').textContent=Number(tokenUnits(report.baseline.metrics.final_balance_wei,18)).toFixed(6);
+    $('candidate-value').textContent=Number(tokenUnits(report.candidate.metrics.final_balance_wei,18)).toFixed(6);
+    $('delta-value').textContent=Number(tokenUnits(report.comparison.final_balance_delta_wei,18)).toFixed(6);
     tableRows('metric-rows',view.rows); tableRows('evm-traces',view.traces);
     $('source-pin').textContent=view.source;
   } else {
