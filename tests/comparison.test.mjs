@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {validate,canonical,decimal} from '../tokyo2026/report.mjs';
-const original=JSON.parse(readFileSync(new URL('../tokyo2026/example.json',import.meta.url)));
+import {validate,canonical,decimal} from '../report-validation.mjs';
+const original=JSON.parse(readFileSync(new URL('../assets/examples/action-comparison.json',import.meta.url)));
 function tamper(fn,rehash=true){const e=structuredClone(original);fn(e.report);if(rehash)e.sha256=createHash('sha256').update(canonical(e.report)).digest('hex');return e}
 test('measured report passes hash and semantic validation',async()=>assert.equal((await validate(original)).trials.length,4));
 for(const [name,fn,rehash] of [

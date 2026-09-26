@@ -1,5 +1,5 @@
-import {validate,decimal} from './report.mjs';
-const $=id=>document.getElementById(id);
+import {validate,decimal} from './report-validation.mjs';
+const $=id=>document.getElementById('c-'+id);
 const titles={'proposed':'Proposed swap','reduced':'Reduce the size','strict-minimum':'Raise the minimum','hold':'Keep the position'};
 let current;
 function el(tag,text,cls){const n=document.createElement(tag);n.textContent=text;if(cls)n.className=cls;return n}
@@ -29,9 +29,9 @@ async function display(envelope,label){
   $('setup').textContent=JSON.stringify(r.setup,null,2);$('results').hidden=false;$('download').disabled=false;
 }
 function error(e){$('results').hidden=true;$('download').disabled=true;current=null;$('mode').textContent='Report rejected';$('message').textContent='Could not load report: '+e.message}
-async function sample(){try{const response=await fetch('./example.json');if(!response.ok)throw Error('Example unavailable');await display(await response.json(),'Recorded example · executed September 26, 2026')}catch(e){error(e)}}
+async function sample(){try{const response=await fetch('./assets/examples/action-comparison.json');if(!response.ok)throw Error('Example unavailable');await display(await response.json(),'Recorded local execution · not a live run')}catch(e){error(e)}}
 $('sample').onclick=sample;
 $('report-file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>2_000_000)throw Error('Maximum report size is 2 MB');await display(JSON.parse(await file.text()),'Imported local report · validated in your browser')}catch(e){error(e)}finally{e.target.value=''}};
-$('download').onclick=()=>{if(!current)return;const u=URL.createObjectURL(new Blob([JSON.stringify(current,null,2)],{type:'application/json'}));const a=el('a','');a.href=u;a.download='tokyo-comparison.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+$('download').onclick=()=>{if(!current)return;const u=URL.createObjectURL(new Blob([JSON.stringify(current,null,2)],{type:'application/json'}));const a=el('a','');a.href=u;a.download='entrotter-comparison.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
 $('command-form').onsubmit=e=>{e.preventDefault();const values=['amount','spend','rate'].map(id=>$(id).value);if(values.some(v=>!/^\d{1,6}(\.\d{1,6})?$/.test(v)||Number(v)<=0)){ $('command').textContent='Enter positive decimal amounts (up to six decimal places).';return; }$('command').textContent=`python3 compare.py --amount ${values[0]} --max-spend ${values[1]} --min-rate ${values[2]} --output report.json`;};
 sample();

@@ -22,7 +22,6 @@ jobs:
         with:
           node-version: '22'
       - run: npm test
-      - run: node --test tests/tokyo-report.test.mjs
   build:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: check
@@ -33,8 +32,8 @@ jobs:
       - name: Stage only public website files
         run: |
           mkdir -p _site
-          cp index.html 404.html style.css app.js .nojekyll _site/
-          cp -R assets reports schemas tokyo2026 _site/
+          cp index.html 404.html style.css app.js comparison.mjs report-validation.mjs .nojekyll _site/
+          cp -R assets reports schemas _site/
           test ! -f _site/CNAME
       - uses: actions/upload-pages-artifact@v3
         with:
