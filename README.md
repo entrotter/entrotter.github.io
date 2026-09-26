@@ -30,7 +30,7 @@ Configure Settings > Pages > Source as GitHub Actions, or use the parent
 workspace's reviewed `scripts/publish.py --apply`. Push to main triggers
 `.github/workflows/pages.yml`. A workflow file alone is not proof of a live site.
 
-The deploy artifact contains only index.html, 404.html, style.css, app.js, public
+The deploy artifact contains only index.html, 404.html, style.css, app.js, comparison.mjs, report-validation.mjs, public
 assets, schemas and public example reports. It never uploads the repository root,
 private logs or a local .env. Pull requests run checks; only main deploys.
 
@@ -46,3 +46,22 @@ All imported strings are inserted with textContent, never as HTML.
 
 Run the parent workspace's `scripts/browser_check.py` for an optional Playwright
 smoke test, hash verification, malformed import handling and screenshots.
+
+## The experiment console
+
+The home page combines the four-action Uniswap comparison and the existing v0.1
+report explorer. There is no event-specific subpage. The purple UFO and orbital
+visuals reuse existing project artwork. The interface identifies recorded results,
+local imports and reproducible execution distinctly; the website never runs swaps.
+
+`comparison.mjs` renders the console; `report-validation.mjs` checks its data.
+The immutable measured example is in `assets/examples/action-comparison.json`.
+Its original wire format and provenance are preserved for compatibility. The
+original v0.1 reports remain in `reports/` and use the unchanged `app.js` validator.
+The reproduction link pins the existing runner commit while that code awaits review.
+
+Run `npm test` for both report formats, and the Python tests above for the home
+page contract and deployment allowlist. Browser verification covers desktop/mobile,
+local imports, malformed input, command generation and the earlier report explorer.
+
+Publication remains protected-main-only. An open PR is not a deployed result.

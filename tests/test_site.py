@@ -5,7 +5,8 @@ from pathlib import Path
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 class HTML(HTMLParser):
-    def __init__(self):super().__init__();self.scripts=[];self.ids=[];self.links=[];self.meta=[]
+    def __init__(self):super().__init__();self.scripts=[];self.ids=[];self.links=[];self.meta=[];self.text=[]
+    def handle_data(self,data):self.text.append(data)
     def handle_starttag(self,tag,attrs):
         a=dict(attrs)
         if tag=='script':self.scripts.append(a.get('src'))
@@ -15,7 +16,7 @@ class HTML(HTMLParser):
 class SiteTests(unittest.TestCase):
     def setUp(self):
         self.html=HTML();self.html.feed((ROOT/'index.html').read_text())
-    def test_no_remote_scripts(self):self.assertEqual(self.html.scripts,['app.js?v='+hashlib.sha256((ROOT/'app.js').read_bytes()).hexdigest()[:12]])
+    def test_no_remote_scripts(self):self.assertEqual(self.html.scripts,['app.js?v='+hashlib.sha256((ROOT/'app.js').read_bytes()).hexdigest()[:12], 'comparison.mjs?v='+hashlib.sha256((ROOT/'comparison.mjs').read_bytes()).hexdigest()[:12]])
     def test_no_duplicate_ids(self):self.assertEqual(len(self.html.ids),len(set(self.html.ids)))
     def test_internal_anchors(self):
         for link in self.html.links:
@@ -32,11 +33,19 @@ class SiteTests(unittest.TestCase):
             if d['mode']=='evm-fork': self.assertEqual(d['source']['block_hash'],d['scenario']['source']['block_hash'])
     def test_not_business_saas(self):
         text=(ROOT/'index.html').read_text().lower()
-        self.assertNotIn('<form',text);self.assertNotIn('connect wallet',text);self.assertNotIn('stripe',text)
+        self.assertEqual(text.count('<form'),1);self.assertIn('id="c-command-form"',text);self.assertNotIn('connect wallet',text);self.assertNotIn('stripe',text)
     def test_workflow_stages_allowlisted_files(self):
         text=(ROOT/'.github/workflows/pages.yml').read_text()
         self.assertIn('path: _site',text);self.assertIn('cp index.html',text)
         self.assertNotIn('path: .\n',text)
+    def test_comparison_is_part_of_home(self):
+        text=(ROOT/'index.html').read_text()
+        self.assertIn('id="compare"',text)
+        self.assertIn('id="c-report-file"',text)
+        self.assertFalse((ROOT/'tokyo2026').exists())
+        self.assertNotIn('TOKYO',' '.join(self.html.text).upper())
+        self.assertNotIn('2026',' '.join(self.html.text))
+
     def test_mascot_asset(self):self.assertTrue((ROOT/'assets/icon.png').is_file())
 
 if __name__=='__main__':unittest.main()
