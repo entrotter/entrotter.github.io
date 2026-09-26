@@ -46,3 +46,7 @@ All imported strings are inserted with textContent, never as HTML.
 
 Run the parent workspace's `scripts/browser_check.py` for an optional Playwright
 smoke test, hash verification, malformed import handling and screenshots.
+
+## ETHGlobal Tokyo 2026 addition
+
+`tokyo2026/` contains the new static four-action comparison viewer. Run `node --test tests/tokyo-report.test.mjs`. Publication remains protected-main-only; an open PR is not a deployed result.
