@@ -1,0 +1,34 @@
+{
+  "original_findings": 97,
+  "retained_original_reasons": 97,
+  "new_findings": 2,
+  "mapped_by": "Exact unchanged line blocks plus file/rule/message/column; no findings suppressed",
+  "new_reasons": [
+    {
+      "finding": {
+        "file": "tests/trace.test.mjs",
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 17,
+        "column": 5,
+        "endLine": 20,
+        "endColumn": 6
+      },
+      "reason": "The test reads only the fixed repository-relative original32 public JSON fixture via import.meta.url; no imported report, user path or remote response selects a filesystem path."
+    },
+    {
+      "finding": {
+        "file": "trace-viewer.mjs",
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 121,
+        "column": 7,
+        "endLine": 121,
+        "endColumn": 21
+      },
+      "reason": "The index comes from mapping the validated original prefix of at most32 entries. comparisons is built one-to-one from validated candidate rows; the selected label is assigned only to textContent, with no property writes or executable selection."
+    }
+  ]
+}

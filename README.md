@@ -24,6 +24,12 @@ The browser converts decimal strings to JavaScript numbers for visualization
 only. The original exact strings remain in the JSON and the expandable observation table. Do not treat chart labels
 as an exact financial ledger. No imported file is uploaded or saved remotely.
 
+The v0.1 explorer’s **Report source** selector identifies a verified local file
+as **Local report**, even when it contains a copy of a bundled example. Loading
+clears the previous result; a rejected file leaves **No verified report**. Choose
+any example, including the previously selected one, to return to recorded data.
+A cancelled file chooser preserves the current report.
+
 ## Deployment
 
 Repository name: `entrotter/entrotter.github.io` (public).
@@ -32,7 +38,7 @@ Configure Settings > Pages > Source as GitHub Actions, or use the parent
 workspace's reviewed `scripts/publish.py --apply`. Push to main triggers
 `.github/workflows/pages.yml`. A workflow file alone is not proof of a live site.
 
-The deploy artifact contains only index.html, 404.html, style.css, app.js, comparison.mjs, report-validation.mjs, trace-report.mjs, trace-viewer.mjs, public
+The deploy artifact contains only index.html, 404.html, style.css, app.js, comparison.mjs, report-validation.mjs, trace-report.mjs, trace-comparison.mjs, trace-viewer.mjs, observed-trace.mjs, position-report.mjs, public
 assets, schemas and public example reports. It never uploads the repository root,
 private logs or a local .env. Pull requests run checks; only main deploys.
 
@@ -120,9 +126,12 @@ Python website tests. CI discovers the tracked sources and refuses empty scans.
 
 All 14 rules from eslint-plugin-security run without inline suppressions. Full
 findings are saved in `.quality/security.json` before the source-bound review
-policy is checked. `security-reviewed.json` retains 97 findings with individual
+policy is checked. `security-reviewed.json` retains 139 findings with individual
 rationales (bounded numeric grammar, inert indexed reads and trusted developer
-file operations). It pins every JS/declaration source and tool configuration/lock;
+file operations). All 122 previous per-context explanations remain exact; 15 new
+account codec, display and fixed-fixture findings have separate explanations.
+The two additional fixed-fixture reads in the local-source race control have
+individual reasons; all 137 preceding reasons remain exact. It pins every JS/declaration source and tool configuration/lock;
 source drift, new/missing findings or missing rationale fail the gate. These are
 author-reviewed explanations, not independent approval or proof of security.
 The policy's negative tests run with the existing Node unit suite. Scanner
@@ -193,8 +202,25 @@ or import a separate `trace_version: "0.1.0"` JSON file. The browser displays th
 pinned source/parent/Shanghai header, original signed transaction identities and
 nonces, original versus baseline/candidate gas and log counts, and exact receipt
 fields/log bytes. Skipped, rejected, unmined and nonce-conflicting outcomes remain
-visible; an unmatched baseline is explicitly **UNVERIFIED**. The existing v0.1
-scenario/model explorer remains separate and unchanged.
+visible; an unmatched baseline is explicitly **UNVERIFIED**. A current-case caption
+shows the validated loaded count, through_index and skip_indices; static four-case
+text is explicitly the recorded sample. Failed imports clear both the caption and
+comparison overview. Candidate differences
+are grouped against the original projected receipts, rather than the baseline:
+omitted/no receipt, position or cumulative gas only, other execution receipt
+fields, or an exact original receipt match. Every exact differing field remains
+visible, including structural shifts, and the full three receipts remain available.
+Receipt matches do not establish unchanged contract state or consumer behavior;
+omitted gas is not a benefit or profit measurement. The existing v0.1
+scenario/model explorer remains separate; its report validation is unchanged.
+
+`tests/data/trace-oracle-prefix-32.json` is a byte-identical test-only copy of the
+[engine198 native005 report](https://github.com/entrotter/engine/blob/198139ff0b3bf37781b4232b27d8eeb0a5da5365/evidence/trace-parent-cache/native-005/report.json),
+SHA-256 `72b9765731a77c06df1200a2dcf46f74cb7f512758ab35029ae9cef2c6ef2120`.
+It shows 12 exact original receipt matches, one omission and 19 structural-only
+receipt shifts. This UI work imports existing bytes; it runs no new historical
+replay, model evaluation or live consumer validation. The bundled recorded case
+below retains its original report and sources.
 
 `reports/trace-mainnet-prefix-four.json` preserves the exact actual default-worker
 report from [engine817 / PR30](https://github.com/entrotter/engine/blob/8176597af994dddb7a3dc6721db623580ebc9601/evidence/trace-mine-deadline/README.md),
@@ -234,3 +260,95 @@ full-block/opcode/root/end-withdrawal and alternate-market coverage remain open.
 Original in-prefix oracle updates remain; external responses are not invented.
 This proposed browser view does not add a trace HTTP endpoint or run a transaction.
 Protected review and live publication remain separate gates.
+
+
+## Read-only Aave price observations
+
+Choose **Inspect recorded Aave price change**, or import the engine's separate
+`observation_version: "0.1.0"` wrapper directly in the historical-prefix panel.
+The browser checks the fixed profile, sealed nested trace and wrapper, four
+phases, complete query coverage, raw ABI, heads, code identities and declared
+classification. It displays consumer/producer prices, exact USD units when
+supported, and reasons for an **UNPROVEN** comparison when views are incomplete.
+Integers beyond JavaScript Number precision remain exact; the original imported
+JSON stays available. Invalid imports and switching to an ordinary replay clear
+all prior price rows. Imports make no network request.
+
+`reports/trace-observed-price32.json` is byte-identical to the
+[engine40 supported native32 source](https://github.com/entrotter/engine/tree/40bea57e25ab94c0d0f6136b4c3a5af4a99e6a1d/evidence/owned-consumer-observations/historical-32),
+SHA-256 `7010848300c353310fb78dab7f377daea4226633e49af3c1a384bcb3a579ba9d`.
+It contains 32-of-181 transactions with omission12 and four read-only Aave/WETH
+price phases. The page inspects recorded bytes; it runs no EVM, model or strategy.
+The price difference is not profit, provider/deployed-code authenticity or
+full-block/root equivalence. Native execution is separate from default Docker.
+The pre-existing nested trace validator's browser-safe numeric limits remain;
+this is selected consistency checking, not execution or full engine validation.
+
+The six compact controls in `tests/data/observed-controls.json` are deliberately
+mutated synthetic tests, each sealed and accepted by the engine40 Python wrapper
+validator. They cover large integers, unavailable queries/code, future feed
+values and negative producer answers. They reuse the sample's unchanged nested
+trace and do not represent new chain execution. Browser regressions check exact
+prices, unproven reasons, invalid-file clearing, valid recovery, keyboard use and
+reflow at 1280/390/320 CSS pixels. Protected main and live Pages remain separate.
+
+
+## Read-only Aave account impact
+
+The proposed **Compare recorded Aave account impact** button opens the original
+default-Docker13-of-181 transaction-prefix result with omission12. Import a local
+`position_version: "0.1.0"` wrapper through the same historical-prefix panel.
+The page validates its closed account/trace plan, outer account seal, nested price
+seal and nested signed-prefix seal; all four account ABI/config/code/head/query
+records and the recomputed account classification must agree. Existing report
+families and their validation remain separate and unchanged. No report import
+fetches, uploads, calls an RPC or executes a transaction/model.
+
+Before the account address and full table, two summary values show exact
+**Borrowing capacity change (USD)** and **Health factor change**. They use
+candidate minus baseline, an explicit plus sign for positive values, a minus
+sign for negative values and zero without a sign. Missing comparisons stay
+**Unavailable**; either branch with no debt keeps the health delta
+**Not defined (no debt)**. The values stack on small screens and retain every
+decimal; a positive account delta is not a profit or strategy recommendation.
+
+The six-metric comparison shows exact collateral, debt, borrowing capacity,
+liquidation threshold, LTV and health factor after both branches, with candidate
+minus baseline deltas. USD conversion is available only when currency/config
+bindings and all account views are complete. Formatting uses BigInt division,
+with no Number conversion or rounding. Expand the raw phases and configuration
+sections to inspect full integers, observed heads and Pool code identities and returned provider/oracle
+addresses. A missing/changed view shows **UNPROVEN** and unavailable differences.
+Zero debt keeps the raw uint256 sentinel while the normalized display says
+**No debt**, with no health-factor delta. Health statuses refer to the current
+loaded result; the sample-specific explanation is explicitly labelled.
+
+`reports/aave-account-impact13.json` is byte-identical to
+[Engine88c6 account evidence](https://github.com/entrotter/engine/tree/88c6cd0d00f466ed7e870bd57c118aa50984f8b1/evidence/aave-account-impact),
+SHA256 `cd96e04c837fa1dcc6b6cf009d58adffe3ffdaebc9fbd5b3b900d71cd2912978`.
+It verifies13 original baseline receipt projections and candidate12+skip12, and
+records all four account/price phases. The public account comes from original
+transaction-source evidence, not an identified user. Capacity differs by
+81628966124 base units (816.28966124 USD at the bound1e8 unit); health factor
+differs by3852169807877337 WAD. Both sample health factors remain at or above one.
+This is aggregate account-state dependence across the prefix, not sole-WETH-price
+causality, profit or a signed borrowing/liquidation strategy. Provider/proxy
+authentication, full-block/state-root proof and economic strategy remain unproven.
+
+Nine compact controls in `tests/data/position-controls.json` are deliberately
+mutated synthetic tests, sealed and accepted by the standalone SDKba4 validator.
+They share the unchanged nested price/trace and cover missing data, wrong config,
+empty/changed code, differing initial values, large exact integers, zero debt,
+a debt transition and the health-factor-one boundary. They are not new chain
+executions or user evidence. Invalid imports and switches to other report families
+clear the account values and download. The new module joins the explicit static
+deployment allowlist; private logs and evidence remain outside the deploy bundle.
+Independent review, exact-head mandatory CI, human main approval and live Pages
+publication remain separate gates. This viewer adds no new chain/model run.
+
+The browser also constructs two explicit synthetic after-state display controls:
+reversed account values and equal account values. They check negative and zero
+summary changes without changing the nested recorded trace/price evidence.
+The existing nine fixed controls remain unchanged. See the
+[account summary validation](evidence/account-summary/README.md) for results and
+limitations; protected-main review and Pages publication remain separate.

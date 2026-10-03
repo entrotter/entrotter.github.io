@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "mapping_counts": {
+    "unchanged_exact_fingerprint": 77,
+    "moved_whole_expression_occurrence": 45,
+    "new_context": 15
+  },
+  "scope": "All122 original individual rationales retained exactly. Unchanged files match full finding fingerprint; moved expressions match whole expression including arguments and ordered occurrence. Exactly15 new contexts separately reviewed. Preliminary collision-prone mapping retained privately."
+}

@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "prior_head": "4c6e27ed6db398d51d1c0d68ef429f869a61b4c3",
+  "counts": {
+    "exact": 85,
+    "moved_whole_expression_occurrence": 52,
+    "new": 0
+  },
+  "all137_previous_individual_rationales_retained": true,
+  "rules_or_suppressions_changed": false
+}

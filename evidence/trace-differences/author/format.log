@@ -1,0 +1,6 @@
+
+> entrotter-oss-website@0.1.0 format:check
+> prettier --check "**/*.{js,mjs,ts}"
+
+Checking formatting...
+All matched files use Prettier code style!

@@ -1,0 +1,766 @@
+TAP version 13
+# Subtest: measured report passes hash and semantic validation
+ok 1 - measured report passes hash and semantic validation
+  ---
+  duration_ms: 46.506542
+  type: 'test'
+  ...
+# Subtest: rejects changed hash
+ok 2 - rejects changed hash
+  ---
+  duration_ms: 4.808709
+  type: 'test'
+  ...
+# Subtest: rejects receipt gas mismatch
+ok 3 - rejects receipt gas mismatch
+  ---
+  duration_ms: 12.193167
+  type: 'test'
+  ...
+# Subtest: rejects different starting root
+ok 4 - rejects different starting root
+  ---
+  duration_ms: 20.213375
+  type: 'test'
+  ...
+# Subtest: rejects inconsistent delta
+ok 5 - rejects inconsistent delta
+  ---
+  duration_ms: 8.86575
+  type: 'test'
+  ...
+# Subtest: rejects fake hold fee
+ok 6 - rejects fake hold fee
+  ---
+  duration_ms: 18.380833
+  type: 'test'
+  ...
+# Subtest: rejects missing trial
+ok 7 - rejects missing trial
+  ---
+  duration_ms: 1.144125
+  type: 'test'
+  ...
+# Subtest: rejects wrong token
+ok 8 - rejects wrong token
+  ---
+  duration_ms: 8.756125
+  type: 'test'
+  ...
+# Subtest: rejects wrong calldata fee
+ok 9 - rejects wrong calldata fee
+  ---
+  duration_ms: 11.587667
+  type: 'test'
+  ...
+# Subtest: rejects wrong chain
+ok 10 - rejects wrong chain
+  ---
+  duration_ms: 11.651917
+  type: 'test'
+  ...
+# Subtest: rejects invalid decimals
+ok 11 - rejects invalid decimals
+  ---
+  duration_ms: 7.591708
+  type: 'test'
+  ...
+# Subtest: rejects forged policy
+ok 12 - rejects forged policy
+  ---
+  duration_ms: 3.2055
+  type: 'test'
+  ...
+# Subtest: rejects wrong input
+ok 13 - rejects wrong input
+  ---
+  duration_ms: 3.524709
+  type: 'test'
+  ...
+# Subtest: rejects missing receipt
+ok 14 - rejects missing receipt
+  ---
+  duration_ms: 1.857
+  type: 'test'
+  ...
+# Subtest: rejects missing cleanup
+ok 15 - rejects missing cleanup
+  ---
+  duration_ms: 1.430709
+  type: 'test'
+  ...
+# Subtest: rejects unsupported format
+ok 16 - rejects unsupported format
+  ---
+  duration_ms: 1.08225
+  type: 'test'
+  ...
+# Subtest: rejects invalid amount type
+ok 17 - rejects invalid amount type
+  ---
+  duration_ms: 0.771125
+  type: 'test'
+  ...
+# Subtest: rejects malformed envelope
+ok 18 - rejects malformed envelope
+  ---
+  duration_ms: 0.237708
+  type: 'test'
+  ...
+# Subtest: exact decimals avoid floating point
+ok 19 - exact decimals avoid floating point
+  ---
+  duration_ms: 0.239708
+  type: 'test'
+  ...
+# Subtest: published supported native32 wrapper preserves all receipts and four exact prices
+ok 20 - published supported native32 wrapper preserves all receipts and four exact prices
+  ---
+  duration_ms: 154.897875
+  type: 'test'
+  ...
+# Subtest: Python-engine-sealed synthetic large_integer control remains compatible
+ok 21 - Python-engine-sealed synthetic large_integer control remains compatible
+  ---
+  duration_ms: 222.579792
+  type: 'test'
+  ...
+# Subtest: Python-engine-sealed synthetic missing_source control remains compatible
+ok 22 - Python-engine-sealed synthetic missing_source control remains compatible
+  ---
+  duration_ms: 149.796541
+  type: 'test'
+  ...
+# Subtest: Python-engine-sealed synthetic zero_code control remains compatible
+ok 23 - Python-engine-sealed synthetic zero_code control remains compatible
+  ---
+  duration_ms: 184.205542
+  type: 'test'
+  ...
+# Subtest: Python-engine-sealed synthetic future_feed control remains compatible
+ok 24 - Python-engine-sealed synthetic future_feed control remains compatible
+  ---
+  duration_ms: 132.996125
+  type: 'test'
+  ...
+# Subtest: Python-engine-sealed synthetic rpc_missing_head control remains compatible
+ok 25 - Python-engine-sealed synthetic rpc_missing_head control remains compatible
+  ---
+  duration_ms: 119.126791
+  type: 'test'
+  ...
+# Subtest: Python-engine-sealed synthetic negative_feed control remains compatible
+ok 26 - Python-engine-sealed synthetic negative_feed control remains compatible
+  ---
+  duration_ms: 117.840708
+  type: 'test'
+  ...
+# Subtest: hash-resealed wrong profile is rejected
+ok 27 - hash-resealed wrong profile is rejected
+  ---
+  duration_ms: 51.980334
+  type: 'test'
+  ...
+# Subtest: hash-resealed wrong version is rejected
+ok 28 - hash-resealed wrong version is rejected
+  ---
+  duration_ms: 54.908667
+  type: 'test'
+  ...
+# Subtest: hash-resealed wrong scope is rejected
+ok 29 - hash-resealed wrong scope is rejected
+  ---
+  duration_ms: 57.854708
+  type: 'test'
+  ...
+# Subtest: hash-resealed nested identity is rejected
+ok 30 - hash-resealed nested identity is rejected
+  ---
+  duration_ms: 100.777
+  type: 'test'
+  ...
+# Subtest: hash-resealed phase order is rejected
+ok 31 - hash-resealed phase order is rejected
+  ---
+  duration_ms: 97.638042
+  type: 'test'
+  ...
+# Subtest: hash-resealed unexpected selector is rejected
+ok 32 - hash-resealed unexpected selector is rejected
+  ---
+  duration_ms: 96.131625
+  type: 'test'
+  ...
+# Subtest: hash-resealed missing query coverage is rejected
+ok 33 - hash-resealed missing query coverage is rejected
+  ---
+  duration_ms: 124.83975
+  type: 'test'
+  ...
+# Subtest: hash-resealed available and failed query is rejected
+ok 34 - hash-resealed available and failed query is rejected
+  ---
+  duration_ms: 117.253958
+  type: 'test'
+  ...
+# Subtest: hash-resealed ABI address padding is rejected
+ok 35 - hash-resealed ABI address padding is rejected
+  ---
+  duration_ms: 104.496916
+  type: 'test'
+  ...
+# Subtest: hash-resealed round width is rejected
+ok 36 - hash-resealed round width is rejected
+  ---
+  duration_ms: 84.460541
+  type: 'test'
+  ...
+# Subtest: hash-resealed round id overflow is rejected
+ok 37 - hash-resealed round id overflow is rejected
+  ---
+  duration_ms: 95.309666
+  type: 'test'
+  ...
+# Subtest: hash-resealed parent hash is rejected
+ok 38 - hash-resealed parent hash is rejected
+  ---
+  duration_ms: 90.078959
+  type: 'test'
+  ...
+# Subtest: hash-resealed post timestamp is rejected
+ok 39 - hash-resealed post timestamp is rejected
+  ---
+  duration_ms: 83.03075
+  type: 'test'
+  ...
+# Subtest: hash-resealed code bounds is rejected
+ok 40 - hash-resealed code bounds is rejected
+  ---
+  duration_ms: 86.9335
+  type: 'test'
+  ...
+# Subtest: hash-resealed code digest grammar is rejected
+ok 41 - hash-resealed code digest grammar is rejected
+  ---
+  duration_ms: 102.654291
+  type: 'test'
+  ...
+# Subtest: hash-resealed false price difference is rejected
+ok 42 - hash-resealed false price difference is rejected
+  ---
+  duration_ms: 85.810708
+  type: 'test'
+  ...
+# Subtest: hash-resealed false completeness is rejected
+ok 43 - hash-resealed false completeness is rejected
+  ---
+  duration_ms: 88.023
+  type: 'test'
+  ...
+# Subtest: hash-resealed extra classifier field is rejected
+ok 44 - hash-resealed extra classifier field is rejected
+  ---
+  duration_ms: 87.766458
+  type: 'test'
+  ...
+# Subtest: hash-resealed nested receipt contradiction is rejected
+ok 45 - hash-resealed nested receipt contradiction is rejected
+  ---
+  duration_ms: 79.009542
+  type: 'test'
+  ...
+# Subtest: checksum tampering, wrong RPC metadata and duplicate failures are rejected
+ok 46 - checksum tampering, wrong RPC metadata and duplicate failures are rejected
+  ---
+  duration_ms: 397.059542
+  type: 'test'
+  ...
+# Subtest: lossless JSON rejects malformed, ambiguous and unbounded input
+ok 47 - lossless JSON rejects malformed, ambiguous and unbounded input
+  ---
+  duration_ms: 23.791792
+  type: 'test'
+  ...
+# Subtest: recorded13 account wrapper retains full original trace, four views and six exact deltas
+ok 48 - recorded13 account wrapper retains full original trace, four views and six exact deltas
+  ---
+  duration_ms: 137.292917
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: profile
+ok 49 - resealed account contradiction rejected: profile
+  ---
+  duration_ms: 74.463
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: scope
+ok 50 - resealed account contradiction rejected: scope
+  ---
+  duration_ms: 49.267167
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: extra plan selector
+ok 51 - resealed account contradiction rejected: extra plan selector
+  ---
+  duration_ms: 17.398833
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: zero account
+ok 52 - resealed account contradiction rejected: zero account
+  ---
+  duration_ms: 21.767792
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: foreign trace plan
+ok 53 - resealed account contradiction rejected: foreign trace plan
+  ---
+  duration_ms: 75.013375
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: row account
+ok 54 - resealed account contradiction rejected: row account
+  ---
+  duration_ms: 71.606791
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: phase order
+ok 55 - resealed account contradiction rejected: phase order
+  ---
+  duration_ms: 67.422916
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: head binding
+ok 56 - resealed account contradiction rejected: head binding
+  ---
+  duration_ms: 65.480458
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: short account ABI
+ok 57 - resealed account contradiction rejected: short account ABI
+  ---
+  duration_ms: 53.433083
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: threshold
+ok 58 - resealed account contradiction rejected: threshold
+  ---
+  duration_ms: 80.793167
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: bad padded address
+ok 59 - resealed account contradiction rejected: bad padded address
+  ---
+  duration_ms: 94.503708
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: missing diagnostic
+ok 60 - resealed account contradiction rejected: missing diagnostic
+  ---
+  duration_ms: 61.669625
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: available plus failed
+ok 61 - resealed account contradiction rejected: available plus failed
+  ---
+  duration_ms: 53.313833
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: diagnostic category
+ok 62 - resealed account contradiction rejected: diagnostic category
+  ---
+  duration_ms: 59.992625
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: wrong RPC method
+ok 63 - resealed account contradiction rejected: wrong RPC method
+  ---
+  duration_ms: 56.931666
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: class delta
+ok 64 - resealed account contradiction rejected: class delta
+  ---
+  duration_ms: 56.024708
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: zero debt false health
+ok 65 - resealed account contradiction rejected: zero debt false health
+  ---
+  duration_ms: 54.284917
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: nested price seal
+ok 66 - resealed account contradiction rejected: nested price seal
+  ---
+  duration_ms: 63.320792
+  type: 'test'
+  ...
+# Subtest: resealed account contradiction rejected: nested trace seal
+ok 67 - resealed account contradiction rejected: nested trace seal
+  ---
+  duration_ms: 49.782542
+  type: 'test'
+  ...
+# Subtest: exact values beyond Number precision and zero-debt sentinels decode without rounding
+ok 68 - exact values beyond Number precision and zero-debt sentinels decode without rounding
+  ---
+  duration_ms: 0.704875
+  type: 'test'
+  ...
+# Subtest: duplicate keys, non-integer account values, oversize input and invalid outer hashes reject
+ok 69 - duplicate keys, non-integer account values, oversize input and invalid outer hashes reject
+  ---
+  duration_ms: 98.6815
+  type: 'test'
+  ...
+# Subtest: account controls and sample button are wired into the historical panel
+ok 70 - account controls and sample button are wired into the historical panel
+  ---
+  duration_ms: 0.678625
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: missing_account
+ok 71 - standalone SDK-sealed synthetic account control: missing_account
+  ---
+  duration_ms: 60.779167
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: wrong_provider
+ok 72 - standalone SDK-sealed synthetic account control: wrong_provider
+  ---
+  duration_ms: 49.594958
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: empty_pool_code
+ok 73 - standalone SDK-sealed synthetic account control: empty_pool_code
+  ---
+  duration_ms: 67.2145
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: changed_pool_code
+ok 74 - standalone SDK-sealed synthetic account control: changed_pool_code
+  ---
+  duration_ms: 58.140042
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: initial_difference
+ok 75 - standalone SDK-sealed synthetic account control: initial_difference
+  ---
+  duration_ms: 56.99
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: large_integer
+ok 76 - standalone SDK-sealed synthetic account control: large_integer
+  ---
+  duration_ms: 86.408417
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: no_debt
+ok 77 - standalone SDK-sealed synthetic account control: no_debt
+  ---
+  duration_ms: 50.876875
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: debt_transition
+ok 78 - standalone SDK-sealed synthetic account control: debt_transition
+  ---
+  duration_ms: 44.983875
+  type: 'test'
+  ...
+# Subtest: standalone SDK-sealed synthetic account control: health_boundary
+ok 79 - standalone SDK-sealed synthetic account control: health_boundary
+  ---
+  duration_ms: 59.252542
+  type: 'test'
+  ...
+# Subtest: security policy retains explicitly reviewed findings
+ok 80 - security policy retains explicitly reviewed findings
+  ---
+  duration_ms: 6.245583
+  type: 'test'
+  ...
+# Subtest: source drift, new/missing findings and absent rationale fail review
+ok 81 - source drift, new/missing findings and absent rationale fail review
+  ---
+  duration_ms: 7.643584
+  type: 'test'
+  ...
+# Subtest: empty source scope fails review
+ok 82 - empty source scope fails review
+  ---
+  duration_ms: 0.189459
+  type: 'test'
+  ...
+# Subtest: parser and suppressed diagnostics cannot be accepted as a clean scan
+ok 83 - parser and suppressed diagnostics cannot be accepted as a clean scan
+  ---
+  duration_ms: 0.437125
+  type: 'test'
+  ...
+# Subtest: production JS verifies Python artifact: liquidity-shock
+ok 84 - production JS verifies Python artifact: liquidity-shock
+  ---
+  duration_ms: 27.495125
+  type: 'test'
+  ...
+# Subtest: production JS verifies Python artifact: recovery-trap
+ok 85 - production JS verifies Python artifact: recovery-trap
+  ---
+  duration_ms: 16.834542
+  type: 'test'
+  ...
+# Subtest: production JS verifies Python artifact: depeg-stress
+ok 86 - production JS verifies Python artifact: depeg-stress
+  ---
+  duration_ms: 4.443791
+  type: 'test'
+  ...
+# Subtest: tampered metric fails integrity validation
+ok 87 - tampered metric fails integrity validation
+  ---
+  duration_ms: 15.449208
+  type: 'test'
+  ...
+# Subtest: unknown schema is not accepted
+ok 88 - unknown schema is not accepted
+  ---
+  duration_ms: 1.162541
+  type: 'test'
+  ...
+# Subtest: canonical ASCII escaping includes supplementary Unicode
+ok 89 - canonical ASCII escaping includes supplementary Unicode
+  ---
+  duration_ms: 0.261084
+  type: 'test'
+  ...
+# Subtest: finite numerical display validation
+ok 90 - finite numerical display validation
+  ---
+  duration_ms: 0.477166
+  type: 'test'
+  ...
+# Subtest: JS re-canonicalization matches exported content hash
+ok 91 - JS re-canonicalization matches exported content hash
+  ---
+  duration_ms: 5.602834
+  type: 'test'
+  ...
+# Subtest: real archived-state artifact passes hash and receipt view validation
+ok 92 - real archived-state artifact passes hash and receipt view validation
+  ---
+  duration_ms: 17.726958
+  type: 'test'
+  ...
+# Subtest: token units preserve integers beyond Number safe precision
+ok 93 - token units preserve integers beyond Number safe precision
+  ---
+  duration_ms: 0.933666
+  type: 'test'
+  ...
+# Subtest: missing source hash cannot appear as a historical report
+ok 94 - missing source hash cannot appear as a historical report
+  ---
+  duration_ms: 0.497667
+  type: 'test'
+  ...
+# Subtest: mismatched token addresses cannot share a comparison row
+ok 95 - mismatched token addresses cannot share a comparison row
+  ---
+  duration_ms: 0.412542
+  type: 'test'
+  ...
+# Subtest: malformed receipt state and oversized traces fail closed
+ok 96 - malformed receipt state and oversized traces fail closed
+  ---
+  duration_ms: 0.476709
+  type: 'test'
+  ...
+# Subtest: display metrics reject coercible non-decimal strings
+ok 97 - display metrics reject coercible non-decimal strings
+  ---
+  duration_ms: 0.181375
+  type: 'test'
+  ...
+# Subtest: decimal metrics preserve supported signed/exponent values and reject overflow
+ok 98 - decimal metrics preserve supported signed/exponent values and reject overflow
+  ---
+  duration_ms: 0.198708
+  type: 'test'
+  ...
+# Subtest: hash verification rejects non-object or non-finite parsed JSON
+ok 99 - hash verification rejects non-object or non-finite parsed JSON
+  ---
+  duration_ms: 0.417709
+  type: 'test'
+  ...
+# Subtest: local EVM reports accept null/absent source while forks require their pin
+ok 100 - local EVM reports accept null/absent source while forks require their pin
+  ---
+  duration_ms: 0.904459
+  type: 'test'
+  ...
+# Subtest: recorded agent decisions join causal steps to exact candidate outcomes
+ok 101 - recorded agent decisions join causal steps to exact candidate outcomes
+  ---
+  duration_ms: 21.693
+  type: 'test'
+  ...
+# Subtest: agent recording rejects forged steps, responses, IDs, outcomes and future history
+ok 102 - agent recording rejects forged steps, responses, IDs, outcomes and future history
+  ---
+  duration_ms: 23.110541
+  type: 'test'
+  ...
+# Subtest: agent metadata preserves built-in determinism and known generation cost
+ok 103 - agent metadata preserves built-in determinism and known generation cost
+  ---
+  duration_ms: 18.554125
+  type: 'test'
+  ...
+# Subtest: resealed agent refuses array choice disguised as hold
+ok 104 - resealed agent refuses array choice disguised as hold
+  ---
+  duration_ms: 5.829541
+  type: 'test'
+  ...
+# Subtest: resealed agent refuses held action claiming successful gas use
+ok 105 - resealed agent refuses held action claiming successful gas use
+  ---
+  duration_ms: 9.685
+  type: 'test'
+  ...
+# Subtest: resealed agent refuses proposal unrelated to scenario
+ok 106 - resealed agent refuses proposal unrelated to scenario
+  ---
+  duration_ms: 15.802583
+  type: 'test'
+  ...
+# Subtest: resealed agent refuses receipt contradicting outcome
+ok 107 - resealed agent refuses receipt contradicting outcome
+  ---
+  duration_ms: 28.78125
+  type: 'test'
+  ...
+# Subtest: original native32 report distinguishes omission and structural receipt shifts
+ok 108 - original native32 report distinguishes omission and structural receipt shifts
+  ---
+  duration_ms: 178.554666
+  type: 'test'
+  ...
+# Subtest: a coherently resealed gas change remains an execution difference beside shifts
+ok 109 - a coherently resealed gas change remains an execution difference beside shifts
+  ---
+  duration_ms: 195.796167
+  type: 'test'
+  ...
+# Subtest: unavailable receipts stay separate from omitted and unchanged receipts
+ok 110 - unavailable receipts stay separate from omitted and unchanged receipts
+  ---
+  duration_ms: 32.045291
+  type: 'test'
+  ...
+# Subtest: exact original Docker four-prefix and separate native one-prefix reports pass
+ok 111 - exact original Docker four-prefix and separate native one-prefix reports pass
+  ---
+  duration_ms: 19.936791
+  type: 'test'
+  ...
+# Subtest: unverified rejected and unmined baselines are honestly displayable
+ok 112 - unverified rejected and unmined baselines are honestly displayable
+  ---
+  duration_ms: 19.37975
+  type: 'test'
+  ...
+# Subtest: first baseline conflict shares its parent nonce anchor with candidate
+ok 113 - first baseline conflict shares its parent nonce anchor with candidate
+  ---
+  duration_ms: 23.03225
+  type: 'test'
+  ...
+# Subtest: reordered JSON keys and differing-field set order remain compatible
+ok 114 - reordered JSON keys and differing-field set order remain compatible
+  ---
+  duration_ms: 30.175583
+  type: 'test'
+  ...
+# Subtest: resealed source, prefix and intervention contradictions fail
+ok 115 - resealed source, prefix and intervention contradictions fail
+  ---
+  duration_ms: 34.310625
+  type: 'test'
+  ...
+# Subtest: resealed hashes, receipt senders, targets and signed types/nonces fail
+ok 116 - resealed hashes, receipt senders, targets and signed types/nonces fail
+  ---
+  duration_ms: 54.158875
+  type: 'test'
+  ...
+# Subtest: resealed receipt difference and verification claims fail
+ok 117 - resealed receipt difference and verification claims fail
+  ---
+  duration_ms: 64.344
+  type: 'test'
+  ...
+# Subtest: resealed nonce repair or hidden conflict fails
+ok 118 - resealed nonce repair or hidden conflict fails
+  ---
+  duration_ms: 31.658583
+  type: 'test'
+  ...
+# Subtest: shape, unsafe integers, log/calldata and serialized quotas fail closed
+ok 119 - shape, unsafe integers, log/calldata and serialized quotas fail closed
+  ---
+  duration_ms: 440.944333
+  type: 'test'
+  ...
+# Subtest: changed unsigned checksum fails and hostile Unicode stays data
+ok 120 - changed unsigned checksum fails and hostile Unicode stays data
+  ---
+  duration_ms: 19.002292
+  type: 'test'
+  ...
+# Subtest: Python-sealed integer-valued float and exponent runtime codecs verify
+ok 121 - Python-sealed integer-valued float and exponent runtime codecs verify
+  ---
+  duration_ms: 15.017375
+  type: 'test'
+  ...
+# Subtest: 64 KiB calldata envelope fits the engine's larger raw-wire bound
+ok 122 - 64 KiB calldata envelope fits the engine's larger raw-wire bound
+  ---
+  duration_ms: 59.581666
+  type: 'test'
+  ...
+# Subtest: Python ASCII escaping includes DEL and astral Unicode
+ok 123 - Python ASCII escaping includes DEL and astral Unicode
+  ---
+  duration_ms: 8.436917
+  type: 'test'
+  ...
+# Subtest: pending digest cannot expose later caller mutations in displayed data
+ok 124 - pending digest cannot expose later caller mutations in displayed data
+  ---
+  duration_ms: 18.201375
+  type: 'test'
+  ...
+# Subtest: Unicode text limits count codepoints for assumptions and Anvil versions
+ok 125 - Unicode text limits count codepoints for assumptions and Anvil versions
+  ---
+  duration_ms: 19.6495
+  type: 'test'
+  ...
+# Subtest: resealed zero gas and reverted nonzero bloom cannot claim matching receipts
+ok 126 - resealed zero gas and reverted nonzero bloom cannot claim matching receipts
+  ---
+  duration_ms: 2.589917
+  type: 'test'
+  ...
+1..126
+# tests 126
+# suites 0
+# pass 126
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3637.307667

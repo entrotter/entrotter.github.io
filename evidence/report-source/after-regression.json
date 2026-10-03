@@ -1,0 +1,16 @@
+{
+  "source": {
+    "app.js": "52262c322f0476bca8d3a65b9ad97c3c6d022c1e85c5ddd9920a683ab97c76af",
+    "index.html": "dd48fe37803e0def4777bc3885f553ad752933a8fcba54bf877c5f63400010b0"
+  },
+  "checks": [
+    {
+      "case": "valid imported agent report identifies local origin",
+      "expected": "local-report",
+      "actual": "local-report",
+      "initial": "liquidity-shock",
+      "uploads": 0
+    }
+  ],
+  "status": "passed"
+}

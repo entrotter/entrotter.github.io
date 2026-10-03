@@ -1,0 +1,38 @@
+{
+  "base": "8aa0e582dfa56ec795cf0adc83303ac1eb952528",
+  "status": "local_checks_passed",
+  "source_sha256": {
+    "app.js": "52262c322f0476bca8d3a65b9ad97c3c6d022c1e85c5ddd9920a683ab97c76af",
+    "index.html": "dd48fe37803e0def4777bc3885f553ad752933a8fcba54bf877c5f63400010b0",
+    "scripts/check_accessibility.mjs": "a87110538b7cd5b470afc0acc92ed71a6bdf2911d9dd32bf38969394a69c41a9",
+    "security-reviewed.json": "cb505070c343db8ff081002aa52f16264722c36f1277d3e2149b2917b8f90852",
+    "package.json": "d4ae0a0b1a412c70cf38bace34efd9fd459736f0e8c4d13ded0c53cab43e772d",
+    "package-lock.json": "199e29dcafd62edef5bef2483a66dbc200601458ac797f6032ecef688a116342",
+    "style.css": "2e72483077e431e1c8f3091cd1d3449c05bc4e2c2b275590800af279c745fb33",
+    "reports/agent-local-codex.json": "802683e5b42c066a08016c87f51679986715add21f661d7d6c4cc7e563e320e6",
+    "reports/liquidity-shock.json": "626d696c4ecd3399d5fb398509380750e515ef342032f952266a7948fa641a0d",
+    "reports/recovery-trap.json": "94c983d6190a0b57ae0876eceb7c66cf1c4d6ff98a9247d72fc17c71c78304bb"
+  },
+  "checks": {
+    "node_tests": 126,
+    "python_tests": 12,
+    "browser_groups": 43,
+    "raw_axe_scans": 58,
+    "browser_js_errors": 0,
+    "security_findings": 139,
+    "prior_security_reasons_retained": 137,
+    "new_security_contexts": 2
+  },
+  "logs_sha256": {
+    "lint-final.log": "2c9dae0fc75439bb07612cbb2e9c776b1bdcd90578f5457760b94ba3e98a7393",
+    "format-final.log": "7b7a87ecaa6a0516a9aa6870fb8f94ecd8ce2b92a336a39f646a310766a6bc6e",
+    "typecheck-final.log": "10886242e507423a2e416506fd816a6941e14ccaa78ba061209021fdcb79277c",
+    "security-final.log": "f8313d205c350a23eb7fea30012281103c6902ea8c41f70b2b7942ccf43b6707",
+    "node-tests-final.log": "b9f4a01cb9a13290220acd34e9bd3ad936f473483e91bb85502a4456d596f271",
+    "python-tests.log": "8a6f62b4ad0314e4b15f3756ff8750a86c3b58d5537ed8c0e0cffd93a8231603",
+    "final-browser.log": "7e934805930c30c8bd64ef3a4841966ebf1e7fc1f7f6d4220f46d24270b3fab5"
+  },
+  "browser_scope": "actual static Chromium UI, no fresh EVM/model execution",
+  "new_race_completion": "actual production sample handler promise awaited",
+  "old_source_chooser_failure": "cause unknown; original private output retained; later pass does not prove cause"
+}

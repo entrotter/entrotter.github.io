@@ -6,6 +6,10 @@ import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { resolve, extname } from "node:path";
 import { createRequire } from "node:module";
 import { chromium } from "playwright";
+import {
+  parseObservationJSON,
+  observationCanonical,
+} from "../observed-trace.mjs";
 
 const require = createRequire(import.meta.url);
 const runnerHash = createHash("sha256")
@@ -32,7 +36,7 @@ const server = createServer(async (request, response) => {
     const pathname = new URL(request.url || "/", "http://127.0.0.1").pathname;
     const name = pathname === "/" ? "index.html" : pathname.slice(1);
     if (
-      !/^(index\.html|404\.html|style\.css|app\.js|comparison\.mjs|report-validation\.mjs|trace-report\.mjs|trace-viewer\.mjs|(?:assets|reports|schemas)\/(?:examples\/)?[a-zA-Z0-9_.-]+)$/.test(
+      !/^(index\.html|404\.html|style\.css|app\.js|comparison\.mjs|report-validation\.mjs|trace-report\.mjs|trace-comparison\.mjs|trace-viewer\.mjs|observed-trace\.mjs|position-report\.mjs|(?:assets|reports|schemas)\/(?:examples\/)?[a-zA-Z0-9_.-]+)$/.test(
         name,
       )
     ) {
@@ -472,9 +476,128 @@ try {
             .querySelector("#report-status")
             ?.textContent?.includes("<img"),
         );
+        assert.equal(
+          await page.locator("#scenario").inputValue(),
+          "local-report",
+        );
         assert.equal(await page.locator("#report-status img").count(), 0);
         assert.equal(requests.length, count);
         assert.equal(await page.locator("#download").isVisible(), false);
+      }),
+  );
+  await check(
+    "Local report source survives stale samples and restores the same example",
+    () =>
+      withPage(390, async (page) => {
+        for (const outcome of ["valid", "invalid", "stale-error"]) {
+          let release;
+          let started;
+          const held = new Promise((resolve) => {
+            release = resolve;
+          });
+          const intercepted = new Promise((resolve) => {
+            started = resolve;
+          });
+          await page.route("**/reports/recovery-trap.json", async (route) => {
+            started();
+            await held;
+            await route.fulfill({
+              status: outcome === "stale-error" ? 500 : 200,
+              contentType: "application/json",
+              body: await readFile(
+                resolve(root, "reports/recovery-trap.json"),
+                "utf8",
+              ),
+            });
+          });
+          try {
+            // Capture the actual handler promise so stale completion is observed,
+            // rather than inferred from a delay or unrelated digest scheduling.
+            await page.evaluate(() => {
+              const selection = document.querySelector("#scenario");
+              if (!(selection instanceof HTMLSelectElement))
+                throw new Error("Missing selector");
+              selection.value = "recovery-trap";
+              Object.defineProperty(window, "sampleLoadCompletion", {
+                value: Reflect.get(window, "loadSample")(),
+                configurable: true,
+              });
+            });
+            await intercepted;
+            assert.equal(
+              await page.locator("#scenario").inputValue(),
+              "loading",
+            );
+            assert.equal(
+              await page.locator("#metric-table").isVisible(),
+              false,
+            );
+            assert.equal(await page.locator("#raw-report").textContent(), "");
+            const count = requests.length;
+            await page.locator("#import").setInputFiles({
+              name: "local-report.json",
+              mimeType: "application/json",
+              buffer:
+                outcome === "invalid"
+                  ? Buffer.from("{")
+                  : await readFile(
+                      resolve(root, "reports/liquidity-shock.json"),
+                    ),
+            });
+            const expected =
+              outcome === "invalid" ? "no-report" : "local-report";
+            await page.waitForFunction((value) => {
+              const node = document.querySelector("#scenario");
+              return node instanceof HTMLSelectElement && node.value === value;
+            }, expected);
+            assert.equal(requests.length, count);
+            const response = page.waitForResponse(
+              "**/reports/recovery-trap.json",
+            );
+            release();
+            await (await response).finished();
+            await page.evaluate(() =>
+              Reflect.get(window, "sampleLoadCompletion"),
+            );
+            assert.equal(
+              await page.locator("#scenario").inputValue(),
+              expected,
+            );
+            assert.equal(await page.locator("#download").isVisible(), false);
+            assert.equal(
+              await page.locator("#metric-table").isVisible(),
+              outcome !== "invalid",
+            );
+            await noOverflow(page);
+            if (outcome === "valid")
+              await page.locator("#reports").screenshot({
+                path: resolve(output, "local-report-source-390.png"),
+              });
+            await page.locator("#import").setInputFiles([]);
+            assert.equal(
+              await page.locator("#scenario").inputValue(),
+              expected,
+            );
+          } finally {
+            release();
+            await page.unroute("**/reports/recovery-trap.json");
+          }
+          await page.selectOption("#scenario", "liquidity-shock");
+          await page.waitForFunction(() =>
+            document
+              .querySelector("#report-status")
+              ?.textContent?.includes("Integrity verified locally"),
+          );
+          assert.equal(
+            await page.locator("#scenario").inputValue(),
+            "liquidity-shock",
+          );
+          assert.equal(
+            await page.locator("#download").getAttribute("href"),
+            "reports/liquidity-shock.json",
+          );
+          assert.equal(await page.locator("#download").isVisible(), true);
+        }
       }),
   );
   await check(
@@ -741,6 +864,7 @@ try {
             .querySelector("#report-status")
             ?.textContent?.includes("mismatch"),
         );
+        assert.equal(await page.locator("#scenario").inputValue(), "no-report");
         assert.equal(await page.locator("#candidate-value").innerText(), "—");
         assert.equal(await page.locator("#equity-rows tr").count(), 0);
         assert.equal(await page.locator("#fixture-chart").isVisible(), false);
@@ -750,6 +874,10 @@ try {
           document
             .querySelector("#report-status")
             ?.textContent?.includes("Synthetic recovery trap"),
+        );
+        assert.equal(
+          await page.locator("#scenario").inputValue(),
+          "recovery-trap",
         );
         assert.equal(await page.locator("#metric-table").isVisible(), true);
         assert.equal(await page.locator("#fixture-chart").isVisible(), true);
@@ -872,6 +1000,10 @@ try {
               .querySelector("#trace-status")
               ?.textContent?.includes("matches all original"),
           );
+          assert.equal(
+            await page.locator("#trace-case").innerText(),
+            "Loaded prefix: 4 original transactions · through_index 3 · skip_indices [0]",
+          );
           assert.equal(await page.locator("#trace-inputs tr").count(), 4);
           const table = await page.locator("#trace-outcomes").innerText();
           for (const value of [
@@ -937,6 +1069,10 @@ try {
           // as in the existing console chooser check, after leaving the table.
           await page.locator("#trace-sample").focus();
           await page.keyboard.press("Tab");
+          await focusIs(page, "trace-price-sample");
+          await page.keyboard.press("Tab");
+          await focusIs(page, "trace-account-sample");
+          await page.keyboard.press("Tab");
           await focusIs(page, "trace-import");
           await visibleFocus(page);
           const chooser = page.waitForEvent("filechooser");
@@ -969,6 +1105,572 @@ try {
             (await page.locator("#report-status").innerText()).includes(
               "Integrity verified locally",
             ),
+          );
+        }),
+    );
+  }
+  for (const width of [1280, 390, 320]) {
+    await check(
+      `${width}px original32 local import: omission, structural shifts and exact fields`,
+      () =>
+        withPage(width, async (page) => {
+          await page.locator(".trace-archive > summary").click();
+          const before = requests.length;
+          await page
+            .locator("#trace-import")
+            .setInputFiles(
+              resolve(root, "tests/data/trace-oracle-prefix-32.json"),
+            );
+          await page.waitForFunction(() =>
+            document
+              .querySelector("#trace-comparison-summary")
+              ?.textContent?.includes("19 position / cumulative gas only"),
+          );
+          const summary = await page
+            .locator("#trace-comparison-summary")
+            .innerText();
+          for (const value of [
+            "1 omitted",
+            "0 execution receipt differences",
+            "12 exact original receipt matches",
+            "0 unavailable receipts",
+          ])
+            assert.ok(summary.includes(value), value);
+          assert.equal(requests.length, before);
+          assert.equal(
+            await page.locator("#trace-case").innerText(),
+            "Loaded prefix: 32 original transactions · through_index 31 · skip_indices [12]",
+          );
+          assert.equal(await page.locator("#trace-outcomes tr").count(), 32);
+          const omitted = page.locator("#trace-outcomes tr").nth(12);
+          assert.ok(
+            (await omitted.innerText()).includes("Omitted · no receipt"),
+          );
+          const shifted = page.locator("#trace-outcomes tr").nth(13);
+          assert.ok(
+            (await shifted.innerText()).includes(
+              "Position / cumulative gas only",
+            ),
+          );
+          assert.equal(
+            await shifted.locator("td").last().innerText(),
+            "cumulativeGasUsed, transactionIndex",
+          );
+          await page
+            .locator("#trace-receipts details")
+            .nth(13)
+            .locator("summary")
+            .focus();
+          await page.keyboard.press("Enter");
+          const exact = JSON.parse(
+            await page.locator("#trace-receipts pre").nth(13).innerText(),
+          );
+          assert.equal(exact.original.gasUsed, exact.candidate.gasUsed);
+          assert.deepEqual(exact.original.logs, exact.candidate.logs);
+          assert.notEqual(
+            exact.original.transactionIndex,
+            exact.candidate.transactionIndex,
+          );
+          assert.equal(
+            await page.locator("#trace-download").isVisible(),
+            false,
+          );
+          await page
+            .locator("#trace-outcomes")
+            .locator("..")
+            .locator("..")
+            .focus();
+          await visibleFocus(page);
+          await page.keyboard.press("ArrowRight");
+          if (width < 700)
+            await page.waitForFunction(() => {
+              const wrapper =
+                document.querySelector("#trace-outcomes")?.parentElement
+                  ?.parentElement;
+              return (
+                wrapper !== null &&
+                wrapper !== undefined &&
+                wrapper.scrollLeft > 0
+              );
+            });
+          await noOverflow(page);
+          await scan(page, `original32-${width}`);
+          await page
+            .locator("#trace-comparison-summary")
+            .scrollIntoViewIfNeeded();
+          await page.screenshot({
+            path: resolve(output, `${width}-original32-summary.png`),
+          });
+          await shifted.scrollIntoViewIfNeeded();
+          await page.screenshot({
+            path: resolve(output, `${width}-original32-shift.png`),
+          });
+        }),
+    );
+  }
+  for (const width of [1280, 390, 320]) {
+    await check(
+      `Observed prices: exact values, unproven views, rejection and clearing ${width}px`,
+      () =>
+        withPage(width, async (page) => {
+          await page.locator(".trace-archive > summary").click();
+          await page.locator("#trace-price-sample").focus();
+          await page.keyboard.press("Enter");
+          await page.waitForFunction(() =>
+            document
+              .querySelector("#trace-price-summary")
+              ?.textContent?.includes("7.89973126"),
+          );
+          assert.equal(await page.locator("#trace-price-rows tr").count(), 4);
+          assert.equal(await page.locator("#trace-outcomes tr").count(), 32);
+          assert.ok(
+            (await page.locator("#trace-price-summary").innerText()).includes(
+              "not profit",
+            ),
+          );
+          assert.ok(
+            (await page.locator("#trace-price-rows").innerText()).includes(
+              "256292441874",
+            ),
+          );
+          assert.equal(
+            await page.locator("#trace-download").getAttribute("href"),
+            "reports/trace-observed-price32.json",
+          );
+          await page
+            .locator("#trace-price-rows")
+            .locator("..")
+            .locator("..")
+            .focus();
+          await visibleFocus(page);
+          await noOverflow(page);
+          await scan(page, `observed-price-${width}`);
+          await page.locator("#trace-price-heading").scrollIntoViewIfNeeded();
+          await page.screenshot({
+            path: resolve(output, `${width}-observed-price.png`),
+          });
+          const template = parseObservationJSON(
+            await readFile(
+              resolve(root, "reports/trace-observed-price32.json"),
+              "utf8",
+            ),
+          );
+          const controls = parseObservationJSON(
+            await readFile(
+              resolve(root, "tests/data/observed-controls.json"),
+              "utf8",
+            ),
+          );
+          const importRow = async (row) => {
+            const text = observationCanonical(row);
+            const before = requests.length;
+            await page.locator("#trace-import").setInputFiles({
+              name: "local-price.json",
+              mimeType: "application/json",
+              buffer: Buffer.from(text),
+            });
+            await page.waitForFunction(
+              (id) => document.querySelector("#trace-hash")?.textContent === id,
+              row.artifact_id,
+            );
+            assert.equal(requests.length, before);
+          };
+          const large = controls.find((row) => row.name === "large_integer");
+          const big = {
+            ...template,
+            observations: large.observations,
+            classification: large.classification,
+            artifact_id: large.artifact_id,
+          };
+          await importRow(big);
+          assert.ok(
+            (await page.locator("#trace-price-rows").innerText()).includes(
+              (2n ** 200n).toString(),
+            ),
+          );
+          assert.ok(
+            (await page.locator("#trace-price-summary").innerText()).includes(
+              "USD 0.00000010",
+            ),
+          );
+          assert.equal(
+            await page.locator("#trace-raw").textContent(),
+            observationCanonical(big),
+          );
+          const missing = controls.find(
+            (row) => row.name === "rpc_missing_head",
+          );
+          await importRow({
+            ...template,
+            observations: missing.observations,
+            classification: missing.classification,
+            artifact_id: missing.artifact_id,
+          });
+          assert.ok(
+            (await page.locator("#trace-price-summary").innerText()).startsWith(
+              "UNPROVEN",
+            ),
+          );
+          assert.ok(
+            (await page.locator("#trace-price-rows").innerText()).includes(
+              "head: rpc_error",
+            ),
+          );
+          await scan(page, `observed-unproven-${width}`);
+          const bad = structuredClone(template);
+          bad.classification.price_difference++;
+          const { artifact_id, ...body } = bad;
+          bad.artifact_id = createHash("sha256")
+            .update(observationCanonical(body))
+            .digest("hex");
+          await page.locator("#trace-import").setInputFiles({
+            name: "invalid-price.json",
+            mimeType: "application/json",
+            buffer: Buffer.from(observationCanonical(bad)),
+          });
+          await page.waitForFunction(() =>
+            document
+              .querySelector("#trace-status")
+              ?.classList.contains("error"),
+          );
+          assert.equal(
+            await page.locator("#trace-price-results").isVisible(),
+            false,
+          );
+          for (const id of [
+            "trace-price-summary",
+            "trace-price-rows",
+            "trace-price-identities",
+            "trace-raw",
+            "trace-hash",
+          ])
+            assert.equal(await page.locator(`#${id}`).textContent(), "");
+          assert.equal(
+            await page.locator("#trace-download").getAttribute("href"),
+            null,
+          );
+          await page.locator("#trace-sample").click();
+          await page.waitForFunction(
+            () => document.querySelectorAll("#trace-outcomes tr").length === 4,
+          );
+          assert.equal(
+            await page.locator("#trace-price-results").isVisible(),
+            false,
+          );
+          assert.equal(await page.locator("#trace-price-rows tr").count(), 0);
+        }),
+    );
+  }
+  for (const width of [1280, 390, 320]) {
+    await check(
+      `Account impact: exact units, missing views, sentinel, recovery and keyboard ${width}px`,
+      () =>
+        withPage(width, async (page) => {
+          await page.locator(".trace-archive > summary").click();
+          await page.locator("#trace-price-sample").focus();
+          await page.keyboard.press("Tab");
+          await focusIs(page, "trace-account-sample");
+          await visibleFocus(page);
+          await page.keyboard.press("Enter");
+          await page.waitForFunction(
+            () => document.querySelectorAll("#trace-outcomes tr").length === 13,
+          );
+          assert.equal(
+            await page.locator("#trace-account-results").isVisible(),
+            true,
+          );
+          assert.ok(
+            (await page.locator("#trace-origin").innerText()).includes(
+              "default-Docker13",
+            ),
+          );
+          assert.ok(
+            (
+              await page.locator("#trace-account-comparison").innerText()
+            ).includes("816.28966124"),
+          );
+          assert.ok(
+            (
+              await page.locator("#trace-account-comparison").innerText()
+            ).includes("0.003852169807877337"),
+          );
+          assert.equal(
+            await page.locator("#trace-account-comparison tr").count(),
+            6,
+          );
+          assert.equal(
+            await page.locator("#trace-account-capacity-delta").innerText(),
+            "+816.28966124",
+          );
+          assert.equal(
+            await page.locator("#trace-account-health-delta").innerText(),
+            "+0.003852169807877337",
+          );
+          const summaryTree = await page
+            .locator(".account-impact-summary")
+            .ariaSnapshot();
+          assert.ok(summaryTree.includes("Borrowing capacity change (USD)"));
+          assert.ok(summaryTree.includes("Health factor change"));
+          const summaryBox = await page
+            .locator(".account-impact-summary")
+            .boundingBox();
+          const tableBox = await page
+            .locator("#trace-account-comparison")
+            .boundingBox();
+          assert.ok(
+            summaryBox &&
+              tableBox &&
+              summaryBox.y + summaryBox.height <= tableBox.y,
+          );
+          if (width <= 680) {
+            const capacityBox = await page
+              .locator("#trace-account-capacity-delta")
+              .boundingBox();
+            const healthBox = await page
+              .locator("#trace-account-health-delta")
+              .boundingBox();
+            assert.ok(
+              capacityBox &&
+                healthBox &&
+                capacityBox.y + capacityBox.height < healthBox.y,
+            );
+          }
+          assert.equal(await page.locator("#trace-account-rows tr").count(), 4);
+          assert.equal(await page.locator("#trace-price-rows tr").count(), 4);
+          assert.equal(
+            await page.locator("#trace-download").getAttribute("href"),
+            "reports/aave-account-impact13.json",
+          );
+          await page
+            .locator("#trace-account-comparison")
+            .locator("..")
+            .locator("..")
+            .focus();
+          await visibleFocus(page);
+          await noOverflow(page);
+          await scan(page, `account-impact-${width}`);
+          await page.locator("#trace-account-heading").scrollIntoViewIfNeeded();
+          await page.screenshot({
+            path: resolve(output, `${width}-account-impact.png`),
+          });
+          const template = parseObservationJSON(
+            await readFile(
+              resolve(root, "reports/aave-account-impact13.json"),
+              "utf8",
+            ),
+          );
+          const controls = parseObservationJSON(
+            await readFile(
+              resolve(root, "tests/data/position-controls.json"),
+              "utf8",
+            ),
+          );
+          // Explicit synthetic display controls: reverse both after-values or
+          // make them equal. Provider/price/trace records remain unchanged.
+          for (const name of ["negative_change", "zero_change"]) {
+            const synthetic = structuredClone(template);
+            const before = structuredClone(template.classification.baseline);
+            const after = structuredClone(template.classification.candidate);
+            if (name === "negative_change") {
+              synthetic.observations[1].raw = template.observations[3].raw;
+              synthetic.observations[3].raw = template.observations[1].raw;
+              synthetic.classification.baseline = after;
+              synthetic.classification.candidate = before;
+            } else {
+              synthetic.observations[3].raw = template.observations[1].raw;
+              synthetic.classification.candidate = before;
+            }
+            synthetic.classification.differences = Object.fromEntries(
+              Object.entries(template.classification.differences).map(
+                ([key, value]) => [key, name === "zero_change" ? 0n : -value],
+              ),
+            );
+            const { artifact_id, ...body } = synthetic;
+            synthetic.artifact_id = createHash("sha256")
+              .update(observationCanonical(body))
+              .digest("hex");
+            controls.push({ name, ...synthetic });
+          }
+          const importsStart = requests.length;
+          for (const name of [
+            "missing_account",
+            "large_integer",
+            "no_debt",
+            "debt_transition",
+            "health_boundary",
+            "negative_change",
+            "zero_change",
+          ]) {
+            const control = controls.find((row) => row.name === name);
+            assert.ok(control);
+            const imported = structuredClone(template);
+            Object.assign(imported, {
+              observations: control.observations,
+              classification: control.classification,
+              artifact_id: control.artifact_id,
+            });
+            await page.locator("#trace-import").setInputFiles({
+              name: `${name}.json`,
+              mimeType: "application/json",
+              buffer: Buffer.from(observationCanonical(imported)),
+            });
+            await page.waitForFunction(
+              (id) => document.querySelector("#trace-hash")?.textContent === id,
+              control.artifact_id,
+            );
+            const expectedCapacity =
+              name === "missing_account"
+                ? "Unavailable"
+                : name === "large_integer"
+                  ? "+0.0000001"
+                  : name === "negative_change"
+                    ? "−816.28966124"
+                    : name === "zero_change"
+                      ? "0"
+                      : "+0.00000001";
+            const expectedHealth =
+              name === "missing_account"
+                ? "Unavailable"
+                : name === "no_debt" || name === "debt_transition"
+                  ? "Not defined (no debt)"
+                  : name === "negative_change"
+                    ? "−0.003852169807877337"
+                    : name === "zero_change"
+                      ? "0"
+                      : "+0.000000000000000001";
+            assert.equal(
+              await page.locator("#trace-account-capacity-delta").innerText(),
+              expectedCapacity,
+            );
+            assert.equal(
+              await page.locator("#trace-account-health-delta").innerText(),
+              expectedHealth,
+            );
+            if (name === "missing_account") {
+              assert.ok(
+                (
+                  await page.locator("#trace-account-summary").innerText()
+                ).includes("UNPROVEN"),
+              );
+              assert.ok(
+                (
+                  await page.locator("#trace-account-comparison").innerText()
+                ).includes("Unavailable"),
+              );
+              assert.ok(
+                !(
+                  await page.locator("#trace-account-comparison").innerText()
+                ).includes("816.28966124"),
+              );
+            } else if (name === "large_integer") {
+              await page
+                .locator("#trace-account-rows")
+                .locator("..")
+                .locator("..")
+                .locator("..")
+                .evaluate((node) => node.setAttribute("open", ""));
+              assert.ok(
+                (
+                  (await page.locator("#trace-account-rows").textContent()) ??
+                  ""
+                ).includes((2n ** 200n + 1n).toString()),
+              );
+              assert.ok(
+                (
+                  await page.locator("#trace-account-comparison").innerText()
+                ).includes("0.00000001"),
+              );
+            } else if (name === "no_debt" || name === "debt_transition") {
+              assert.ok(
+                (
+                  await page.locator("#trace-account-comparison").innerText()
+                ).includes("No debt (uint256 sentinel)"),
+              );
+              assert.ok(
+                (
+                  await page.locator("#trace-account-comparison").innerText()
+                ).includes("Not defined (no debt)"),
+              );
+            } else if (name === "health_boundary") {
+              assert.ok(
+                (
+                  await page.locator("#trace-account-summary").innerText()
+                ).includes("baseline below 1"),
+              );
+            }
+            assert.equal(
+              await page.locator("#trace-download").getAttribute("href"),
+              null,
+            );
+            await noOverflow(page);
+            await scan(page, `account-${name}-${width}`);
+          }
+          const bad = structuredClone(template);
+          bad.classification.differences.available_borrows_base++;
+          const { artifact_id, ...body } = bad;
+          bad.artifact_id = createHash("sha256")
+            .update(observationCanonical(body))
+            .digest("hex");
+          await page.locator("#trace-import").setInputFiles({
+            name: "resealed-account-contradiction.json",
+            mimeType: "application/json",
+            buffer: Buffer.from(observationCanonical(bad)),
+          });
+          await page.waitForFunction(() =>
+            document
+              .querySelector("#trace-status")
+              ?.classList.contains("error"),
+          );
+          assert.equal(
+            await page.locator("#trace-account-results").isVisible(),
+            false,
+          );
+          for (const id of [
+            "trace-account-summary",
+            "trace-account-capacity-delta",
+            "trace-account-health-delta",
+            "trace-account-comparison",
+            "trace-account-rows",
+            "trace-account-identities",
+            "trace-price-rows",
+            "trace-raw",
+            "trace-hash",
+          ])
+            assert.equal(await page.locator(`#${id}`).textContent(), "");
+          assert.equal(
+            await page.locator("#trace-download").getAttribute("href"),
+            null,
+          );
+          assert.equal(
+            requests.length,
+            importsStart,
+            "Local account imports made a request",
+          );
+          await page.locator("#trace-account-sample").click();
+          await page.waitForFunction(
+            () =>
+              document.querySelectorAll("#trace-account-comparison tr")
+                .length === 6,
+          );
+          await page.locator("#trace-sample").click();
+          await page.waitForFunction(
+            () => document.querySelectorAll("#trace-outcomes tr").length === 4,
+          );
+          assert.equal(
+            await page.locator("#trace-account-results").isVisible(),
+            false,
+          );
+          assert.equal(
+            await page.locator("#trace-account-comparison tr").count(),
+            0,
+          );
+          assert.equal(
+            await page.locator("#trace-account-capacity-delta").textContent(),
+            "",
+          );
+          assert.equal(
+            await page.locator("#trace-account-health-delta").textContent(),
+            "",
           );
         }),
     );
@@ -1020,6 +1722,11 @@ try {
           assert.equal(await page.locator("#trace-results").isVisible(), false);
           assert.equal(await page.locator("#trace-outcomes tr").count(), 0);
           assert.equal(await page.locator("#trace-raw").textContent(), "");
+          assert.equal(
+            await page.locator("#trace-comparison-summary").textContent(),
+            "",
+          );
+          assert.equal(await page.locator("#trace-case").textContent(), "");
           assert.equal(
             await page.locator("#trace-download").getAttribute("href"),
             null,
@@ -1181,8 +1888,16 @@ try {
     "comparison.mjs",
     "report-validation.mjs",
     "trace-report.mjs",
+    "trace-comparison.mjs",
     "trace-viewer.mjs",
+    "observed-trace.mjs",
+    "position-report.mjs",
+    "reports/aave-account-impact13.json",
+    "tests/data/position-controls.json",
+    "reports/trace-observed-price32.json",
+    "tests/data/observed-controls.json",
     "reports/trace-mainnet-prefix-four.json",
+    "tests/data/trace-oracle-prefix-32.json",
     "assets/examples/action-comparison.json",
     "reports/agent-local-codex.json",
     "style.css",

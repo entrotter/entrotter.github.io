@@ -1,0 +1,17 @@
+{
+  "source": {
+    "app.js": "36786b0c3db6a8016101648a5b86ccb3253ac8ce20867cdc01cfe48b88e8325a",
+    "index.html": "77ffb2765d289cfcee7cf37c86ece9973f71b9fc1c4024309c9e82e601a24b42"
+  },
+  "checks": [
+    {
+      "case": "valid imported agent report identifies local origin",
+      "expected": "local-report",
+      "actual": "liquidity-shock",
+      "initial": "liquidity-shock",
+      "uploads": 0
+    }
+  ],
+  "status": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'liquidity-shock'\n- 'local-report'\n"
+}

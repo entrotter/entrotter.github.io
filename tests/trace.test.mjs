@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createHash, webcrypto } from "node:crypto";
 import { traceCanonical, validateTraceReport } from "../trace-report.mjs";
+import { traceComparison } from "../trace-comparison.mjs";
 
 const sample = () =>
   JSON.parse(
@@ -11,6 +12,57 @@ const sample = () =>
       "utf8",
     ),
   );
+const oraclePrefix = () =>
+  JSON.parse(
+    readFileSync(
+      new URL("data/trace-oracle-prefix-32.json", import.meta.url),
+      "utf8",
+    ),
+  );
+
+test("original native32 report distinguishes omission and structural receipt shifts", async () => {
+  const view = await validateTraceReport(oraclePrefix());
+  const comparisons = view.candidate.rows.map(traceComparison);
+  assert.equal(comparisons.filter((r) => r.kind === "identical").length, 12);
+  assert.equal(comparisons.filter((r) => r.kind === "omitted").length, 1);
+  assert.equal(comparisons.filter((r) => r.kind === "structural").length, 19);
+  assert.equal(comparisons.filter((r) => r.kind === "execution").length, 0);
+  assert.deepEqual(comparisons[12].structuralFields, []);
+  assert.deepEqual(comparisons[13].structuralFields.sort(), [
+    "cumulativeGasUsed",
+    "transactionIndex",
+  ]);
+  assert.equal(comparisons[13].label, "Position / cumulative gas only");
+});
+
+test("a coherently resealed gas change remains an execution difference beside shifts", async () => {
+  const r = oraclePrefix();
+  for (const o of r.candidate.outcomes.slice(13)) {
+    o.receipt.cumulativeGasUsed = `0x${(BigInt(o.receipt.cumulativeGasUsed) + 1n).toString(16)}`;
+  }
+  const changed = r.candidate.outcomes[13];
+  changed.receipt.gasUsed = `0x${(BigInt(changed.receipt.gasUsed) + 1n).toString(16)}`;
+  changed.differing_fields.push("gasUsed");
+  const view = await validateTraceReport(reseal(r));
+  const comparison = traceComparison(view.candidate.rows[13]);
+  assert.equal(comparison.kind, "execution");
+  assert.deepEqual(comparison.executionFields, ["gasUsed"]);
+  assert.deepEqual(comparison.structuralFields.sort(), [
+    "cumulativeGasUsed",
+    "transactionIndex",
+  ]);
+  assert.equal(traceComparison(view.candidate.rows[14]).kind, "structural");
+});
+
+test("unavailable receipts stay separate from omitted and unchanged receipts", async () => {
+  const view = await validateTraceReport(sample());
+  assert.equal(traceComparison(view.candidate.rows[0]).kind, "omitted");
+  assert.equal(traceComparison(view.candidate.rows[3]).kind, "unavailable");
+  assert.equal(
+    traceComparison(view.candidate.rows[3]).label,
+    "No candidate receipt",
+  );
+});
 function reseal(r) {
   const { artifact_id, ...body } = r;
   r.artifact_id = createHash("sha256")

@@ -1,0 +1,410 @@
+
+> entrotter-oss-website@0.1.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# Subtest: measured report passes hash and semantic validation
+ok 1 - measured report passes hash and semantic validation
+  ---
+  duration_ms: 26.940875
+  type: 'test'
+  ...
+# Subtest: rejects changed hash
+ok 2 - rejects changed hash
+  ---
+  duration_ms: 2.391083
+  type: 'test'
+  ...
+# Subtest: rejects receipt gas mismatch
+ok 3 - rejects receipt gas mismatch
+  ---
+  duration_ms: 8.610334
+  type: 'test'
+  ...
+# Subtest: rejects different starting root
+ok 4 - rejects different starting root
+  ---
+  duration_ms: 5.413125
+  type: 'test'
+  ...
+# Subtest: rejects inconsistent delta
+ok 5 - rejects inconsistent delta
+  ---
+  duration_ms: 12.261625
+  type: 'test'
+  ...
+# Subtest: rejects fake hold fee
+ok 6 - rejects fake hold fee
+  ---
+  duration_ms: 14.83
+  type: 'test'
+  ...
+# Subtest: rejects missing trial
+ok 7 - rejects missing trial
+  ---
+  duration_ms: 0.900875
+  type: 'test'
+  ...
+# Subtest: rejects wrong token
+ok 8 - rejects wrong token
+  ---
+  duration_ms: 13.277417
+  type: 'test'
+  ...
+# Subtest: rejects wrong calldata fee
+ok 9 - rejects wrong calldata fee
+  ---
+  duration_ms: 5.319708
+  type: 'test'
+  ...
+# Subtest: rejects wrong chain
+ok 10 - rejects wrong chain
+  ---
+  duration_ms: 5.887958
+  type: 'test'
+  ...
+# Subtest: rejects invalid decimals
+ok 11 - rejects invalid decimals
+  ---
+  duration_ms: 3.713459
+  type: 'test'
+  ...
+# Subtest: rejects forged policy
+ok 12 - rejects forged policy
+  ---
+  duration_ms: 2.239709
+  type: 'test'
+  ...
+# Subtest: rejects wrong input
+ok 13 - rejects wrong input
+  ---
+  duration_ms: 2.1935
+  type: 'test'
+  ...
+# Subtest: rejects missing receipt
+ok 14 - rejects missing receipt
+  ---
+  duration_ms: 3.909583
+  type: 'test'
+  ...
+# Subtest: rejects missing cleanup
+ok 15 - rejects missing cleanup
+  ---
+  duration_ms: 2.763041
+  type: 'test'
+  ...
+# Subtest: rejects unsupported format
+ok 16 - rejects unsupported format
+  ---
+  duration_ms: 0.772792
+  type: 'test'
+  ...
+# Subtest: rejects invalid amount type
+ok 17 - rejects invalid amount type
+  ---
+  duration_ms: 0.595167
+  type: 'test'
+  ...
+# Subtest: rejects malformed envelope
+ok 18 - rejects malformed envelope
+  ---
+  duration_ms: 0.169834
+  type: 'test'
+  ...
+# Subtest: exact decimals avoid floating point
+ok 19 - exact decimals avoid floating point
+  ---
+  duration_ms: 0.229917
+  type: 'test'
+  ...
+# Subtest: security policy retains explicitly reviewed findings
+ok 20 - security policy retains explicitly reviewed findings
+  ---
+  duration_ms: 2.840833
+  type: 'test'
+  ...
+# Subtest: source drift, new/missing findings and absent rationale fail review
+ok 21 - source drift, new/missing findings and absent rationale fail review
+  ---
+  duration_ms: 4.291208
+  type: 'test'
+  ...
+# Subtest: empty source scope fails review
+ok 22 - empty source scope fails review
+  ---
+  duration_ms: 0.17
+  type: 'test'
+  ...
+# Subtest: parser and suppressed diagnostics cannot be accepted as a clean scan
+ok 23 - parser and suppressed diagnostics cannot be accepted as a clean scan
+  ---
+  duration_ms: 1.24275
+  type: 'test'
+  ...
+# Subtest: production JS verifies Python artifact: liquidity-shock
+ok 24 - production JS verifies Python artifact: liquidity-shock
+  ---
+  duration_ms: 24.352208
+  type: 'test'
+  ...
+# Subtest: production JS verifies Python artifact: recovery-trap
+ok 25 - production JS verifies Python artifact: recovery-trap
+  ---
+  duration_ms: 11.597166
+  type: 'test'
+  ...
+# Subtest: production JS verifies Python artifact: depeg-stress
+ok 26 - production JS verifies Python artifact: depeg-stress
+  ---
+  duration_ms: 4.757834
+  type: 'test'
+  ...
+# Subtest: tampered metric fails integrity validation
+ok 27 - tampered metric fails integrity validation
+  ---
+  duration_ms: 3.184959
+  type: 'test'
+  ...
+# Subtest: unknown schema is not accepted
+ok 28 - unknown schema is not accepted
+  ---
+  duration_ms: 3.088167
+  type: 'test'
+  ...
+# Subtest: canonical ASCII escaping includes supplementary Unicode
+ok 29 - canonical ASCII escaping includes supplementary Unicode
+  ---
+  duration_ms: 0.2505
+  type: 'test'
+  ...
+# Subtest: finite numerical display validation
+ok 30 - finite numerical display validation
+  ---
+  duration_ms: 2.2565
+  type: 'test'
+  ...
+# Subtest: JS re-canonicalization matches exported content hash
+ok 31 - JS re-canonicalization matches exported content hash
+  ---
+  duration_ms: 1.283
+  type: 'test'
+  ...
+# Subtest: real archived-state artifact passes hash and receipt view validation
+ok 32 - real archived-state artifact passes hash and receipt view validation
+  ---
+  duration_ms: 10.972875
+  type: 'test'
+  ...
+# Subtest: token units preserve integers beyond Number safe precision
+ok 33 - token units preserve integers beyond Number safe precision
+  ---
+  duration_ms: 0.980458
+  type: 'test'
+  ...
+# Subtest: missing source hash cannot appear as a historical report
+ok 34 - missing source hash cannot appear as a historical report
+  ---
+  duration_ms: 0.500291
+  type: 'test'
+  ...
+# Subtest: mismatched token addresses cannot share a comparison row
+ok 35 - mismatched token addresses cannot share a comparison row
+  ---
+  duration_ms: 0.656792
+  type: 'test'
+  ...
+# Subtest: malformed receipt state and oversized traces fail closed
+ok 36 - malformed receipt state and oversized traces fail closed
+  ---
+  duration_ms: 0.579083
+  type: 'test'
+  ...
+# Subtest: display metrics reject coercible non-decimal strings
+ok 37 - display metrics reject coercible non-decimal strings
+  ---
+  duration_ms: 0.194583
+  type: 'test'
+  ...
+# Subtest: decimal metrics preserve supported signed/exponent values and reject overflow
+ok 38 - decimal metrics preserve supported signed/exponent values and reject overflow
+  ---
+  duration_ms: 0.212375
+  type: 'test'
+  ...
+# Subtest: hash verification rejects non-object or non-finite parsed JSON
+ok 39 - hash verification rejects non-object or non-finite parsed JSON
+  ---
+  duration_ms: 0.430375
+  type: 'test'
+  ...
+# Subtest: local EVM reports accept null/absent source while forks require their pin
+ok 40 - local EVM reports accept null/absent source while forks require their pin
+  ---
+  duration_ms: 0.935625
+  type: 'test'
+  ...
+# Subtest: recorded agent decisions join causal steps to exact candidate outcomes
+ok 41 - recorded agent decisions join causal steps to exact candidate outcomes
+  ---
+  duration_ms: 15.3025
+  type: 'test'
+  ...
+# Subtest: agent recording rejects forged steps, responses, IDs, outcomes and future history
+ok 42 - agent recording rejects forged steps, responses, IDs, outcomes and future history
+  ---
+  duration_ms: 16.098292
+  type: 'test'
+  ...
+# Subtest: agent metadata preserves built-in determinism and known generation cost
+ok 43 - agent metadata preserves built-in determinism and known generation cost
+  ---
+  duration_ms: 16.727375
+  type: 'test'
+  ...
+# Subtest: resealed agent refuses array choice disguised as hold
+ok 44 - resealed agent refuses array choice disguised as hold
+  ---
+  duration_ms: 3.967167
+  type: 'test'
+  ...
+# Subtest: resealed agent refuses held action claiming successful gas use
+ok 45 - resealed agent refuses held action claiming successful gas use
+  ---
+  duration_ms: 6.475875
+  type: 'test'
+  ...
+# Subtest: resealed agent refuses proposal unrelated to scenario
+ok 46 - resealed agent refuses proposal unrelated to scenario
+  ---
+  duration_ms: 7.614125
+  type: 'test'
+  ...
+# Subtest: resealed agent refuses receipt contradicting outcome
+ok 47 - resealed agent refuses receipt contradicting outcome
+  ---
+  duration_ms: 12.264917
+  type: 'test'
+  ...
+# Subtest: original native32 report distinguishes omission and structural receipt shifts
+ok 48 - original native32 report distinguishes omission and structural receipt shifts
+  ---
+  duration_ms: 118.361
+  type: 'test'
+  ...
+# Subtest: a coherently resealed gas change remains an execution difference beside shifts
+ok 49 - a coherently resealed gas change remains an execution difference beside shifts
+  ---
+  duration_ms: 85.914708
+  type: 'test'
+  ...
+# Subtest: unavailable receipts stay separate from omitted and unchanged receipts
+ok 50 - unavailable receipts stay separate from omitted and unchanged receipts
+  ---
+  duration_ms: 26.998708
+  type: 'test'
+  ...
+# Subtest: exact original Docker four-prefix and separate native one-prefix reports pass
+ok 51 - exact original Docker four-prefix and separate native one-prefix reports pass
+  ---
+  duration_ms: 16.968458
+  type: 'test'
+  ...
+# Subtest: unverified rejected and unmined baselines are honestly displayable
+ok 52 - unverified rejected and unmined baselines are honestly displayable
+  ---
+  duration_ms: 12.19625
+  type: 'test'
+  ...
+# Subtest: first baseline conflict shares its parent nonce anchor with candidate
+ok 53 - first baseline conflict shares its parent nonce anchor with candidate
+  ---
+  duration_ms: 8.959416
+  type: 'test'
+  ...
+# Subtest: reordered JSON keys and differing-field set order remain compatible
+ok 54 - reordered JSON keys and differing-field set order remain compatible
+  ---
+  duration_ms: 20.984791
+  type: 'test'
+  ...
+# Subtest: resealed source, prefix and intervention contradictions fail
+ok 55 - resealed source, prefix and intervention contradictions fail
+  ---
+  duration_ms: 32.372208
+  type: 'test'
+  ...
+# Subtest: resealed hashes, receipt senders, targets and signed types/nonces fail
+ok 56 - resealed hashes, receipt senders, targets and signed types/nonces fail
+  ---
+  duration_ms: 43.998291
+  type: 'test'
+  ...
+# Subtest: resealed receipt difference and verification claims fail
+ok 57 - resealed receipt difference and verification claims fail
+  ---
+  duration_ms: 58.309666
+  type: 'test'
+  ...
+# Subtest: resealed nonce repair or hidden conflict fails
+ok 58 - resealed nonce repair or hidden conflict fails
+  ---
+  duration_ms: 31.949333
+  type: 'test'
+  ...
+# Subtest: shape, unsafe integers, log/calldata and serialized quotas fail closed
+ok 59 - shape, unsafe integers, log/calldata and serialized quotas fail closed
+  ---
+  duration_ms: 309.217208
+  type: 'test'
+  ...
+# Subtest: changed unsigned checksum fails and hostile Unicode stays data
+ok 60 - changed unsigned checksum fails and hostile Unicode stays data
+  ---
+  duration_ms: 18.405375
+  type: 'test'
+  ...
+# Subtest: Python-sealed integer-valued float and exponent runtime codecs verify
+ok 61 - Python-sealed integer-valued float and exponent runtime codecs verify
+  ---
+  duration_ms: 11.236916
+  type: 'test'
+  ...
+# Subtest: 64 KiB calldata envelope fits the engine's larger raw-wire bound
+ok 62 - 64 KiB calldata envelope fits the engine's larger raw-wire bound
+  ---
+  duration_ms: 45.191625
+  type: 'test'
+  ...
+# Subtest: Python ASCII escaping includes DEL and astral Unicode
+ok 63 - Python ASCII escaping includes DEL and astral Unicode
+  ---
+  duration_ms: 4.941209
+  type: 'test'
+  ...
+# Subtest: pending digest cannot expose later caller mutations in displayed data
+ok 64 - pending digest cannot expose later caller mutations in displayed data
+  ---
+  duration_ms: 13.936166
+  type: 'test'
+  ...
+# Subtest: Unicode text limits count codepoints for assumptions and Anvil versions
+ok 65 - Unicode text limits count codepoints for assumptions and Anvil versions
+  ---
+  duration_ms: 24.324458
+  type: 'test'
+  ...
+# Subtest: resealed zero gas and reverted nonzero bloom cannot claim matching receipts
+ok 66 - resealed zero gas and reverted nonzero bloom cannot claim matching receipts
+  ---
+  duration_ms: 2.422375
+  type: 'test'
+  ...
+1..66
+# tests 66
+# suites 0
+# pass 66
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1231.631875

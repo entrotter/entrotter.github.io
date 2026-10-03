@@ -1,0 +1,203 @@
+{
+  "copies": {
+    "author/unit.log": {
+      "original_relative_path": ".quality/trace-differences/final2/unit-current.log",
+      "original_sha256": "7ba16a0dedf29958e6b7e1873270855a5e88334b7e0c695a768764b2aff62cfa",
+      "public_sha256": "7ba16a0dedf29958e6b7e1873270855a5e88334b7e0c695a768764b2aff62cfa",
+      "transformation": "byte-identical"
+    },
+    "author/lint.log": {
+      "original_relative_path": ".quality/trace-differences/final2/lint-current.log",
+      "original_sha256": "2c9dae0fc75439bb07612cbb2e9c776b1bdcd90578f5457760b94ba3e98a7393",
+      "public_sha256": "2c9dae0fc75439bb07612cbb2e9c776b1bdcd90578f5457760b94ba3e98a7393",
+      "transformation": "byte-identical"
+    },
+    "author/format.log": {
+      "original_relative_path": ".quality/trace-differences/final2/format-current.log",
+      "original_sha256": "7b7a87ecaa6a0516a9aa6870fb8f94ecd8ce2b92a336a39f646a310766a6bc6e",
+      "public_sha256": "7b7a87ecaa6a0516a9aa6870fb8f94ecd8ce2b92a336a39f646a310766a6bc6e",
+      "transformation": "byte-identical"
+    },
+    "author/types.log": {
+      "original_relative_path": ".quality/trace-differences/final2/types-current.log",
+      "original_sha256": "10886242e507423a2e416506fd816a6941e14ccaa78ba061209021fdcb79277c",
+      "public_sha256": "10886242e507423a2e416506fd816a6941e14ccaa78ba061209021fdcb79277c",
+      "transformation": "byte-identical"
+    },
+    "author/security.log": {
+      "original_relative_path": ".quality/trace-differences/final2/security-current.log",
+      "original_sha256": "f27330841cbf51b96ed73307cdcd07ad68588608b2810a6fd0029de1eba545a8",
+      "public_sha256": "f27330841cbf51b96ed73307cdcd07ad68588608b2810a6fd0029de1eba545a8",
+      "transformation": "byte-identical"
+    },
+    "author/security-review-mapping.json": {
+      "original_relative_path": ".quality/trace-differences/final2/security-review-mapping.json",
+      "original_sha256": "523a68185f0d39b1cb4bd05e33ce7a27130f282c08266b26cd1ca177df934ef7",
+      "public_sha256": "523a68185f0d39b1cb4bd05e33ce7a27130f282c08266b26cd1ca177df934ef7",
+      "transformation": "byte-identical"
+    },
+    "author/python-unit.log": {
+      "original_relative_path": ".quality/trace-differences/final2/python-unit-current.log",
+      "original_sha256": "cb5cf60da919dcdc345f5a156e491cba65625dc5ecd319eb5a2720f875a8fe44",
+      "public_sha256": "cb5cf60da919dcdc345f5a156e491cba65625dc5ecd319eb5a2720f875a8fe44",
+      "transformation": "byte-identical"
+    },
+    "author/python-lint.log": {
+      "original_relative_path": ".quality/trace-differences/final/python-lint.log",
+      "original_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "public_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "transformation": "byte-identical"
+    },
+    "author/python-format.log": {
+      "original_relative_path": ".quality/trace-differences/final/python-format.log",
+      "original_sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50",
+      "public_sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50",
+      "transformation": "byte-identical"
+    },
+    "author/python-types.log": {
+      "original_relative_path": ".quality/trace-differences/final/python-types.log",
+      "original_sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e",
+      "public_sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e",
+      "transformation": "byte-identical"
+    },
+    "author/python-security.json": {
+      "original_relative_path": ".quality/trace-differences/final/python-security.json",
+      "original_sha256": "4f040a6cf79d31a485adc9cc92b2785d2f9035c9d4bd34f9ba6e680436fca4ad",
+      "public_sha256": "4f040a6cf79d31a485adc9cc92b2785d2f9035c9d4bd34f9ba6e680436fca4ad",
+      "transformation": "byte-identical"
+    },
+    "author/python-security.log": {
+      "original_relative_path": ".quality/trace-differences/final/python-security.log",
+      "original_sha256": "c8e0ef4cb3a898425f7cad4c85213dd5d654cb0f5c8a3687aa099d91ed999512",
+      "public_sha256": "c8e0ef4cb3a898425f7cad4c85213dd5d654cb0f5c8a3687aa099d91ed999512",
+      "transformation": "byte-identical"
+    },
+    "author/npm-audit.json": {
+      "original_relative_path": ".quality/trace-differences/final/npm-audit.json",
+      "original_sha256": "a1e72e3946382350619bcc55948ae7c50e73cc7f5c165cef8657d739eb397dc3",
+      "public_sha256": "a1e72e3946382350619bcc55948ae7c50e73cc7f5c165cef8657d739eb397dc3",
+      "transformation": "byte-identical"
+    },
+    "author/python-dependencies.json": {
+      "original_relative_path": ".quality/trace-differences/final/python-dependencies.json",
+      "original_sha256": "d38e5abe49c1c04eec653478382ae28562b91c03738bcabdf560e1c7bf09ca39",
+      "public_sha256": "d38e5abe49c1c04eec653478382ae28562b91c03738bcabdf560e1c7bf09ca39",
+      "transformation": "byte-identical"
+    },
+    "author/python-audit.log": {
+      "original_relative_path": ".quality/trace-differences/final/python-audit.log",
+      "original_sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "public_sha256": "15950a68a7ed99c59779717acefdceb3f69cfd31bde67d2c954f2a3cea4d7955",
+      "transformation": "byte-identical"
+    },
+    "author/browser-prelaunch.json": {
+      "original_relative_path": ".quality/trace-differences/final2/browser-prelaunch.json",
+      "original_sha256": "176626733bf7db339077d81eb7e659dd617ddf35a255a2fe2b7c6146707fda08",
+      "public_sha256": "176626733bf7db339077d81eb7e659dd617ddf35a255a2fe2b7c6146707fda08",
+      "transformation": "byte-identical"
+    },
+    "author/security-full.json": {
+      "original_relative_path": ".quality/security.json",
+      "original_sha256": "1e237ed4bf7dcc7cab42b147315d47a0344cc95fbab8a45c1b6901bb2210a567",
+      "public_sha256": "1e237ed4bf7dcc7cab42b147315d47a0344cc95fbab8a45c1b6901bb2210a567",
+      "transformation": "byte-identical"
+    },
+    "author/source-sha256.json": {
+      "original_relative_path": ".quality/source-sha256.json",
+      "original_sha256": "4af84b38df7dcdee6b8df2808660b3bb48c66aa1e2e2086d060795cb25d7fe94",
+      "public_sha256": "4af84b38df7dcdee6b8df2808660b3bb48c66aa1e2e2086d060795cb25d7fe94",
+      "transformation": "byte-identical"
+    },
+    "browser/accessibility.json": {
+      "original_relative_path": "output/playwright/trace-differences-final2/accessibility.json",
+      "original_sha256": "c7ee8a408b11e87d3e007c24a3a7fa8ae243e727f549d2bc06d7eb1c581bbee6",
+      "public_sha256": "c7ee8a408b11e87d3e007c24a3a7fa8ae243e727f549d2bc06d7eb1c581bbee6",
+      "transformation": "byte-identical"
+    },
+    "before/inspection.json": {
+      "original_relative_path": "output/playwright/trace-differences-before/inspection.json",
+      "original_sha256": "693a6ebe93381632f00ac303c475b5ec0c62eebbe59424a4565b01701c57b7f7",
+      "public_sha256": "693a6ebe93381632f00ac303c475b5ec0c62eebbe59424a4565b01701c57b7f7",
+      "transformation": "byte-identical"
+    },
+    "before/1280-comparison.png": {
+      "original_relative_path": "output/playwright/trace-differences-before/1280-comparison.png",
+      "original_sha256": "5d754364656645e5c35fbbd888271dba19f80535fc4f4f55afa81ce070dcb0da",
+      "public_sha256": "5d754364656645e5c35fbbd888271dba19f80535fc4f4f55afa81ce070dcb0da",
+      "transformation": "byte-identical"
+    },
+    "browser/1280-original32-summary.png": {
+      "original_relative_path": "output/playwright/trace-differences-final2/1280-original32-summary.png",
+      "original_sha256": "31fda1cafc5cb3ab542f9b4ee11b265dca34bb73185b475ecf3ee17544e8c661",
+      "public_sha256": "31fda1cafc5cb3ab542f9b4ee11b265dca34bb73185b475ecf3ee17544e8c661",
+      "transformation": "byte-identical"
+    },
+    "browser/1280-original32-shift.png": {
+      "original_relative_path": "output/playwright/trace-differences-final2/1280-original32-shift.png",
+      "original_sha256": "8a1382be7ad1f59704822411b3a89390d6062d461ac5bf18624994509c259500",
+      "public_sha256": "8a1382be7ad1f59704822411b3a89390d6062d461ac5bf18624994509c259500",
+      "transformation": "byte-identical"
+    },
+    "browser/320-original32-summary.png": {
+      "original_relative_path": "output/playwright/trace-differences-final2/320-original32-summary.png",
+      "original_sha256": "fef44f069b1d0431b668fe53705e59bd8a42224807ce445086ee1a70c6665d8f",
+      "public_sha256": "fef44f069b1d0431b668fe53705e59bd8a42224807ce445086ee1a70c6665d8f",
+      "transformation": "byte-identical"
+    },
+    "browser/320-original32-shift.png": {
+      "original_relative_path": "output/playwright/trace-differences-final2/320-original32-shift.png",
+      "original_sha256": "7afbc83db93b4639e14eee8643ec9d2dcdbcd646b4a7ad693fa2d61b281df9b3",
+      "public_sha256": "7afbc83db93b4639e14eee8643ec9d2dcdbcd646b4a7ad693fa2d61b281df9b3",
+      "transformation": "byte-identical"
+    },
+    "author/initial-new-findings.json": {
+      "original_relative_path": ".quality/trace-differences/final/security-review-mapping.json",
+      "original_sha256": "24c335d1da8b8cbc56835f2a2dc3d4f62002b470624c8cf16b45824a322444fa",
+      "public_sha256": "24c335d1da8b8cbc56835f2a2dc3d4f62002b470624c8cf16b45824a322444fa",
+      "transformation": "byte-identical"
+    },
+    "prior/accessibility-before-caption-fix.json": {
+      "original_relative_path": "output/playwright/trace-differences-final/accessibility.json",
+      "original_sha256": "2bae0841a7adff26f31f8574bb933bf8d4d6924295d3dc04070759fac8adcf6a",
+      "public_sha256": "2bae0841a7adff26f31f8574bb933bf8d4d6924295d3dc04070759fac8adcf6a",
+      "transformation": "byte-identical"
+    }
+  },
+  "axe_archive": {
+    "file": "browser/axe-raw.zip",
+    "sha256": "5abf5495dc838a8e9d6e1e56d52cef355b13268addc344855da676cbf50c0a65",
+    "encoding": "ZIP Deflate, original JSON contents byte-identical; fixed filenames and normalized ZIP metadata only",
+    "entries_sha256": {
+      "axe-1280-agent-local-codex.json": "23251afe64a4594d03c5e0b41d18d3f9816899be652cbaca3fd8eaa7d8daab46",
+      "axe-1280-console.json": "004c89c82e1b2b84e41e718e8b30380e2454df4aba6d961b6835a65b7ba9d680",
+      "axe-1280-depeg-stress.json": "4e71ac3452f136ec56a1d773d6bf0965c37e5646da8a5fa6ceb744497cac8abf",
+      "axe-1280-ethereum-uniswap-slippage.json": "c369621196e4d839a15fe29ead83f3c694719adfe76ad53698be337ec3aca05b",
+      "axe-1280-liquidity-shock.json": "a826c27cf46746de0639033468e845cac45f08135b485b2339f1f45c897f198d",
+      "axe-1280-recovery-trap.json": "18b5cfd93d2b3d170e014707ae8288c076485fd9629a88ec4e1c80c2a60e6585",
+      "axe-320-agent-local-codex.json": "4295521da33608df34bb839c3f6a92cdb2ebdfdd0d354cedc614a40ee93da067",
+      "axe-320-console.json": "91bbf6e52a35597dace06a673e3521b596a6f2082a3541843adba0e5c5346868",
+      "axe-320-depeg-stress.json": "ac8d848411aebebe16ffc1a3d4505946a9b9689b1ac4fab1146cd7e8c347d4ef",
+      "axe-320-ethereum-uniswap-slippage.json": "b594011d9e66ae2da7917d82cbd565fb2f007a4bc3e585a9cf55e36cabb874e0",
+      "axe-320-liquidity-shock.json": "540e8897bf12ba58c8a6fa535c1e33cfa93952b6ce81423c30ab4d637b4f9a12",
+      "axe-320-recovery-trap.json": "c6144c7b565fd4a15d6f386adc234ca7ea45b34a2fc4480ab0c6f12ac5bb8c6f",
+      "axe-390-agent-local-codex.json": "1cb3406c160ef1386e863fea3e2ab6d61145d3642e9388889b82a0ceebd15c15",
+      "axe-390-console.json": "4840653aefdffd6559dff1cb2509a0032a15a45d0c4716f0fb1b416f4a1dd352",
+      "axe-390-depeg-stress.json": "dd6aae322f1bb060eef3bfcb14cfabde208d4d125fe62ad03027d4ab3d1adaf6",
+      "axe-390-ethereum-uniswap-slippage.json": "8690642cf899101d99ab6437a04d18b8b36517962ad83ef2f643ee0b4f5e5932",
+      "axe-390-liquidity-shock.json": "dc9c89bcf0611a61cf7eba59be363f3fa313e789d1cdc6137d4548763d1b6828",
+      "axe-390-recovery-trap.json": "b7843d51585c5998f9410e55852526f521290bf772d82fe254d78ecf3ad92c90",
+      "axe-404.json": "a3ca4f5012623b5594c3731abf3e754c010d6eb8fff6ffdad5c298ddbd3713f1",
+      "axe-console-import.json": "ef1848f0fce7294c7c8e5e63671ce04f8c378090bb092fee79766d18f74b34d2",
+      "axe-error.json": "9a15434d812ad64b3dd2634497155c9213babfc64d5fa0c79f668ea9aa5c3a20",
+      "axe-original32-1280.json": "f9e713f929d48db5a3b0d021dd3266c2da32b4ca8b977f595b5135861eb8a84e",
+      "axe-original32-320.json": "d3a7313e1ad140e77feeb089c2edeedf5cb64ede3bb39162d20fb564b06be9bf",
+      "axe-original32-390.json": "8f87d89c14ee106b5c44ed258e6b53e0cfffaf34bd26e05ff3c4a15631a1c069",
+      "axe-signed-prefix-1280.json": "c450e97b912f29b82c55c243756d15c48ad81cab6da9a8ba3d32c85a6ae24e84",
+      "axe-signed-prefix-320.json": "3cc4f646f7821531f30b5df337c8185b466f8585d72628958bc7d51553027983",
+      "axe-signed-prefix-390.json": "618bdb40c7acd47dc7e2237c5748d151bbc367dcf577c4ec032eef4f661b72bc",
+      "axe-signed-prefix-unverified.json": "5f0ae0d7a2800f467c4971f89e920fde34bf68728b5559f6fd392e27de5cd3be"
+    }
+  },
+  "reuse_scope": "One unchanged Python source static/Bandit and unchanged exact109Node/42Python dependency audits reused from prior1710 proof; fresh11Python HTML units,66Node/static/security and full browser after caption fix. No duplicate audit/network/chain work.",
+  "limits": "Ephemeral loopback origin in raw axe retained; no research/provider endpoint, credentials or private home paths."
+}

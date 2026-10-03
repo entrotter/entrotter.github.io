@@ -1,0 +1,5 @@
+
+> entrotter-oss-website@0.1.0 security
+> node scripts/check_quality.mjs
+
+{"sources":19,"type_inputs":20,"security_findings":139}

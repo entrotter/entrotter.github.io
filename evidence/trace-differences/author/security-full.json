@@ -1,0 +1,1078 @@
+[
+  {
+    "filePath": "app.js",
+    "messages": [
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 31,
+        "column": 52,
+        "endLine": 31,
+        "endColumn": 68
+      },
+      {
+        "ruleId": "security/detect-unsafe-regex",
+        "severity": 1,
+        "message": "Unsafe Regular Expression",
+        "line": 76,
+        "column": 6,
+        "endLine": 76,
+        "endColumn": 62
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 158,
+        "column": 18,
+        "endLine": 158,
+        "endColumn": 25
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 159,
+        "column": 18,
+        "endLine": 159,
+        "endColumn": 25
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 209,
+        "column": 22,
+        "endLine": 209,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 210,
+        "column": 18,
+        "endLine": 210,
+        "endColumn": 23
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Variable Assigned to Object Injection Sink",
+        "line": 297,
+        "column": 21,
+        "endLine": 297,
+        "endColumn": 32
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 306,
+        "column": 26,
+        "endLine": 306,
+        "endColumn": 46
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 521,
+        "column": 16,
+        "endLine": 521,
+        "endColumn": 21
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 540,
+        "column": 35,
+        "endLine": 540,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 540,
+        "column": 50,
+        "endLine": 540,
+        "endColumn": 57
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 541,
+        "column": 35,
+        "endLine": 541,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 541,
+        "column": 50,
+        "endLine": 541,
+        "endColumn": 57
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 13,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "\"use strict\";\n/** @param {string} id */\nfunction $(id) {\n  const element = document.getElementById(id);\n  if (!element) throw new Error(`Missing interface element: ${id}`);\n  return element;\n}\n/** @param {unknown} value @returns {Record<string, unknown>} */\nfunction record(value) {\n  if (value === null || typeof value !== \"object\" || Array.isArray(value))\n    throw new Error(\"Invalid report object.\");\n  return /** @type {Record<string, unknown>} */ (value);\n}\nconst allowedSamples = new Set([\n  \"liquidity-shock\",\n  \"recovery-trap\",\n  \"depeg-stress\",\n  \"ethereum-uniswap-slippage\",\n  \"agent-local-codex\",\n]);\nlet generation = 0;\n// The backend canonicalizes JSON with sorted keys and ensure_ascii=True.\n/** @param {unknown} value @returns {string} */\nfunction canonical(value) {\n  if (Array.isArray(value)) return \"[\" + value.map(canonical).join(\",\") + \"]\";\n  if (value !== null && typeof value === \"object\")\n    return (\n      \"{\" +\n      Object.keys(value)\n        .sort()\n        .map((k) => canonical(k) + \":\" + canonical(record(value)[k]))\n        .join(\",\") +\n      \"}\"\n    );\n  if (typeof value === \"number\" && !Number.isFinite(value))\n    throw new Error(\"Invalid JSON number.\");\n  const serialized = JSON.stringify(value);\n  if (serialized === undefined) throw new Error(\"Invalid JSON value.\");\n  return serialized.replace(\n    /[\\u0080-\\uffff]/g,\n    (c) => \"\\\\u\" + c.charCodeAt(0).toString(16).padStart(4, \"0\"),\n  );\n}\n/** @param {unknown} input */\nasync function checkHash(input) {\n  const report = record(input);\n  if (\n    report.schema_version !== \"0.1.0\" ||\n    typeof report.artifact_id !== \"string\" ||\n    !/^[a-f0-9]{64}$/.test(report.artifact_id)\n  )\n    throw new Error(\"Unsupported schema or missing hash.\");\n  const { artifact_id, ...body } = report;\n  const actual = await hashValue(body);\n  if (actual !== artifact_id)\n    throw new Error(\n      \"Content hash mismatch. The result was changed or damaged.\",\n    );\n}\n/** @param {unknown} value */\nasync function hashValue(value) {\n  const hash = await crypto.subtle.digest(\n    \"SHA-256\",\n    new TextEncoder().encode(canonical(value)),\n  );\n  return Array.from(new Uint8Array(hash), (b) =>\n    b.toString(16).padStart(2, \"0\"),\n  ).join(\"\");\n}\n/** @param {unknown} value */\nfunction finite(value) {\n  if (\n    typeof value !== \"string\" ||\n    value.length > 100 ||\n    value.trim() !== value ||\n    !/^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?$/.test(value) ||\n    !Number.isFinite(Number(value))\n  )\n    throw new Error(\"Invalid metric.\");\n  return Number(value);\n}\n/** @param {unknown} value @param {number} [digits] */\nfunction fmt(value, digits = 2) {\n  return finite(value).toLocaleString(\"en-US\", {\n    maximumFractionDigits: digits,\n  });\n}\n/** @param {unknown} value */\nfunction rawInteger(value) {\n  if (\n    typeof value !== \"string\" ||\n    value.trim() !== value ||\n    !/^-?(0|[1-9][0-9]{0,79})$/.test(value)\n  )\n    throw new Error(\"Invalid raw integer.\");\n  return value;\n}\n/** @param {unknown} input @param {unknown} decimals */\nfunction tokenUnits(input, decimals) {\n  const value = rawInteger(input);\n  if (\n    typeof decimals !== \"number\" ||\n    !Number.isInteger(decimals) ||\n    decimals < 0 ||\n    decimals > 36\n  )\n    throw new Error(\"Invalid token decimals.\");\n  const negative = value.startsWith(\"-\"),\n    digits = (negative ? value.slice(1) : value).padStart(decimals + 1, \"0\");\n  return (\n    (negative ? \"-\" : \"\") +\n    (decimals\n      ? digits.slice(0, -decimals) + \".\" + digits.slice(-decimals)\n      : digits)\n  );\n}\n/** @param {unknown} input */\nfunction evmViewModel(input) {\n  const report = record(input);\n  if (report.mode !== \"evm-local\" && report.mode !== \"evm-fork\")\n    throw new Error(\"Unsupported EVM report.\");\n  if (\n    record(record(report.scenario).provenance).kind !==\n    (report.mode === \"evm-fork\" ? \"historical-fork\" : \"local-evm\")\n  )\n    throw new Error(\"Invalid EVM provenance.\");\n  const source =\n    report.source === undefined || report.source === null\n      ? null\n      : record(report.source);\n  const baseline = record(report.baseline),\n    candidate = record(report.candidate);\n  const bm = record(baseline.metrics),\n    cm = record(candidate.metrics);\n  if (\n    report.mode === \"evm-fork\" &&\n    (source === null ||\n      typeof source.chain_id !== \"number\" ||\n      !Number.isSafeInteger(source.chain_id) ||\n      source.chain_id < 1 ||\n      typeof source.block_number !== \"number\" ||\n      !Number.isSafeInteger(source.block_number) ||\n      source.block_number < 1 ||\n      typeof source.block_hash !== \"string\" ||\n      !/^0x[0-9a-fA-F]{64}$/.test(source.block_hash))\n  )\n    throw new Error(\"Missing historical source pin.\");\n  const rows = [],\n    traces = [];\n  for (const key of [\n    \"initial_balance_wei\",\n    \"final_balance_wei\",\n    \"balance_delta_wei\",\n    \"gas_used\",\n  ]) {\n    rows.push([\n      key.replaceAll(\"_\", \" \"),\n      rawInteger(bm[key]),\n      rawInteger(cm[key]),\n    ]);\n  }\n  if (bm.gas_cost_wei !== undefined || cm.gas_cost_wei !== undefined)\n    rows.push([\n      \"Gas cost (wei)\",\n      rawInteger(bm.gas_cost_wei),\n      rawInteger(cm.gas_cost_wei),\n    ]);\n  for (const { name, branch } of [\n    { name: \"Baseline\", branch: baseline },\n    { name: \"Candidate\", branch: candidate },\n  ]) {\n    if (\n      !Array.isArray(branch.trace) ||\n      branch.trace.length < 1 ||\n      branch.trace.length > 32\n    )\n      throw new Error(\"Invalid EVM trace.\");\n    for (const inputStep of branch.trace) {\n      const step = record(inputStep);\n      if (\n        typeof step.step !== \"number\" ||\n        !Number.isInteger(step.step) ||\n        step.step < 0 ||\n        step.step > 31 ||\n        typeof step.status !== \"string\" ||\n        ![\"noop\", \"success\", \"reverted\", \"rejected\"].includes(step.status)\n      )\n        throw new Error(\"Invalid EVM step.\");\n      traces.push([\n        name,\n        String(step.step),\n        step.status,\n        rawInteger(step.gas_used),\n        rawInteger(step.actor_balance_wei),\n      ]);\n    }\n  }\n  const bt = baseline.tokens ?? [],\n    ct = candidate.tokens ?? [];\n  if (\n    !Array.isArray(bt) ||\n    !Array.isArray(ct) ||\n    bt.length !== ct.length ||\n    bt.length > 8\n  )\n    throw new Error(\"Invalid token observations.\");\n  const seen = new Set();\n  for (let i = 0; i < bt.length; i++) {\n    const b = record(bt[i]),\n      c = record(ct[i]);\n    if (\n      typeof b.address !== \"string\" ||\n      typeof c.address !== \"string\" ||\n      !/^0x[0-9a-fA-F]{40}$/.test(b.address) ||\n      b.address.toLowerCase() !== c.address.toLowerCase() ||\n      seen.has(b.address.toLowerCase()) ||\n      b.decimals !== c.decimals ||\n      typeof b.symbol !== \"string\" ||\n      !/^[A-Z0-9_-]{1,12}$/.test(b.symbol) ||\n      b.symbol !== c.symbol\n    )\n      throw new Error(\"Mismatched token metadata.\");\n    seen.add(b.address.toLowerCase());\n    rows.push([\n      b.symbol + \" final token units\",\n      tokenUnits(b.final_balance_raw, b.decimals),\n      tokenUnits(c.final_balance_raw, c.decimals),\n    ]);\n    rows.push([\n      b.symbol + \" change in raw units\",\n      rawInteger(b.balance_delta_raw),\n      rawInteger(c.balance_delta_raw),\n    ]);\n  }\n  return {\n    rows,\n    traces,\n    source: source\n      ? `Chain ${source.chain_id} · Block ${source.block_number}\\n${source.block_hash}`\n      : \"Local disposable chain; no historical source\",\n  };\n}\n/** @param {unknown} input */\nasync function agentViewModel(input) {\n  const report = record(input);\n  if (report.agent === undefined) return null;\n  const agent = record(report.agent);\n  if (\n    ![\"evm-local\", \"evm-fork\"].includes(String(report.mode)) ||\n    agent.agent_version !== \"0.1.0\" ||\n    !Array.isArray(agent.exchanges) ||\n    agent.exchanges.length < 1 ||\n    agent.exchanges.length > 32\n  )\n    throw new Error(\"Invalid agent recording.\");\n  evmViewModel(report);\n  const candidate = record(report.candidate);\n  const trace = /** @type {unknown[]} */ (candidate.trace).map(record);\n  const scenario = record(report.scenario);\n  if (!Array.isArray(scenario.steps) || scenario.steps.length !== trace.length)\n    throw new Error(\"Invalid agent scenario steps.\");\n  if (trace.some((point, index) => point.step !== index))\n    throw new Error(\"Invalid agent candidate order.\");\n  const rows = [];\n  let previous = -1;\n  for (const value of agent.exchanges) {\n    const exchange = record(value),\n      request = record(exchange.request),\n      response = record(exchange.response),\n      observation = record(request.observation),\n      proposal = record(request.proposed_action),\n      limits = record(request.limits),\n      preflight = record(request.preflight);\n    const step = observation.step;\n    if (\n      request.agent_version !== \"0.1.0\" ||\n      typeof step !== \"number\" ||\n      !Number.isInteger(step) ||\n      step <= previous ||\n      step >= trace.length ||\n      typeof request.request_id !== \"string\" ||\n      !/^[a-f0-9]{64}$/.test(request.request_id) ||\n      Object.keys(response).sort().join(\",\") !== \"choice,reason,request_id\" ||\n      response.request_id !== request.request_id ||\n      typeof response.choice !== \"string\" ||\n      ![\"execute\", \"hold\"].includes(String(response.choice)) ||\n      typeof response.reason !== \"string\" ||\n      [...response.reason].length < 1 ||\n      [...response.reason].length > 1000 ||\n      typeof preflight.status !== \"string\" ||\n      ![\"success\", \"rejected\"].includes(String(preflight.status))\n    )\n      throw new Error(\"Invalid agent observation or response.\");\n    const { request_id, ...body } = request;\n    if ((await hashValue(body)) !== request_id)\n      throw new Error(\"Agent observation digest mismatch.\");\n    const outcome = trace[step];\n    const history = trace.slice(0, step).map((point) => ({\n      step: point.step,\n      status: point.status,\n      gas_used: point.gas_used,\n    }));\n    if (\n      canonical(observation.completed_actions) !== canonical(history) ||\n      canonical(proposal) !==\n        canonical(record(scenario.steps[step]).candidate) ||\n      canonical(outcome.agent_decision) !== canonical(response) ||\n      canonical(outcome.action) !==\n        canonical(response.choice === \"hold\" ? null : proposal)\n    )\n      throw new Error(\"Agent recording and candidate outcome disagree.\");\n    if (response.choice === \"hold\" || outcome.status === \"rejected\") {\n      if (\n        (response.choice === \"hold\" && outcome.status !== \"noop\") ||\n        outcome.gas_used !== \"0\" ||\n        outcome.receipt !== undefined ||\n        outcome.transaction_hash !== undefined\n      )\n        throw new Error(\"Invalid agent held or rejected outcome.\");\n    } else {\n      const receipt = record(outcome.receipt);\n      if (\n        ![\"success\", \"reverted\"].includes(String(outcome.status)) ||\n        receipt.status !== (outcome.status === \"success\" ? \"0x1\" : \"0x0\") ||\n        typeof receipt.gasUsed !== \"string\" ||\n        !/^0x[0-9a-fA-F]{1,16}$/.test(receipt.gasUsed) ||\n        BigInt(receipt.gasUsed) !== BigInt(rawInteger(outcome.gas_used)) ||\n        receipt.transactionHash !== outcome.transaction_hash\n      )\n        throw new Error(\"Agent receipt and outcome disagree.\");\n    }\n    const requested = proposal.gas ?? 21000,\n      remaining = limits.remaining_requested_gas;\n    if (\n      typeof requested !== \"number\" ||\n      !Number.isSafeInteger(requested) ||\n      requested < 1 ||\n      typeof remaining !== \"number\" ||\n      !Number.isSafeInteger(remaining) ||\n      remaining < 0 ||\n      (response.choice === \"execute\" && requested > remaining)\n    )\n      throw new Error(\"Invalid agent gas budget.\");\n    rows.push([\n      String(step),\n      String(preflight.status),\n      `${requested} / ${remaining}`,\n      String(response.choice),\n      response.reason,\n      String(outcome.status),\n      rawInteger(outcome.gas_used),\n    ]);\n    previous = step;\n  }\n  if (\n    trace.filter((point) => point.agent_decision !== undefined).length !==\n    rows.length\n  )\n    throw new Error(\"Missing agent exchange for a candidate decision.\");\n  const provider = record(agent.provider);\n  /** @param {unknown} value */\n  function metadata(value) {\n    if (value === undefined || value === null) return \"Unavailable\";\n    if (typeof value !== \"string\" || value.length > 1000)\n      throw new Error(\"Invalid agent provenance.\");\n    return value;\n  }\n  if (\n    provider.deterministic !== undefined &&\n    typeof provider.deterministic !== \"boolean\"\n  )\n    throw new Error(\"Invalid agent determinism metadata.\");\n  const cost = provider.cost_usd;\n  if (cost !== undefined && cost !== null && finite(cost) < 0)\n    throw new Error(\"Invalid agent generation cost.\");\n  const seed = provider.seed;\n  if (\n    seed !== undefined &&\n    seed !== null &&\n    !(typeof seed === \"number\" && Number.isFinite(seed)) &&\n    !(typeof seed === \"string\" && seed.length <= 1000)\n  )\n    throw new Error(\"Invalid agent seed.\");\n  return {\n    rows,\n    provenance: [\n      `Provider: ${metadata(provider.provider)}`,\n      `Original model/policy: ${metadata(provider.model)}`,\n      `Model identity scope: ${metadata(provider.model_identity_scope)}`,\n      `Prompt version: ${metadata(provider.prompt_version)}`,\n      `Generation: ${provider.deterministic === true ? \"Deterministic\" : provider.deterministic === false ? \"Nondeterministic\" : \"Unspecified\"}`,\n      `Seed: ${seed === undefined || seed === null ? \"Unavailable\" : String(seed)}`,\n      `Original generation cost (USD): ${cost === undefined || cost === null ? \"Unavailable\" : String(cost)}`,\n      `Cost note: ${metadata(provider.cost_note)}`,\n    ].join(\"\\n\"),\n  };\n}\n/** @param {string} id @param {string[][]} rows @param {boolean} [rowHeaders] */\nfunction tableRows(id, rows, rowHeaders = false) {\n  $(id).replaceChildren();\n  for (const row of rows) {\n    const tr = document.createElement(\"tr\");\n    row.forEach((value, index) => {\n      const cell = document.createElement(\n        rowHeaders && index === 0 ? \"th\" : \"td\",\n      );\n      if (rowHeaders && index === 0) cell.scope = \"row\";\n      cell.textContent = value;\n      tr.appendChild(cell);\n    });\n    $(id).appendChild(tr);\n  }\n}\n/** @param {string} message */\nfunction setError(message) {\n  $(\"report-status\").textContent = message;\n  $(\"report-status\").classList.add(\"error\");\n  [\"baseline-value\", \"candidate-value\", \"delta-value\", \"hash\"].forEach(\n    (id) => ($(id).textContent = \"—\"),\n  );\n  $(\"baseline-line\").setAttribute(\"points\", \"\");\n  $(\"candidate-line\").setAttribute(\"points\", \"\");\n  $(\"metric-table\").hidden = true;\n  $(\"metric-rows\").replaceChildren();\n  $(\"assumptions\").replaceChildren();\n  $(\"raw-report\").textContent = \"\";\n  $(\"download\").hidden = true;\n  $(\"evm-details\").hidden = true;\n  $(\"evm-traces\").replaceChildren();\n  $(\"source-pin\").textContent = \"\";\n  $(\"fixture-chart\").hidden = true;\n  $(\"equity-rows\").replaceChildren();\n  $(\"chart-description\").textContent = \"\";\n  $(\"agent-details\").hidden = true;\n  $(\"agent-rows\").replaceChildren();\n  $(\"agent-provenance\").textContent = \"\";\n}\n/** @param {unknown} input @param {number} seq */\nasync function render(input, seq) {\n  const report = record(input);\n  await checkHash(report);\n  const agent = await agentViewModel(report);\n  if (seq !== generation) return;\n  const baseline = record(report.baseline),\n    candidate = record(report.candidate);\n  const bm = record(baseline.metrics),\n    cm = record(candidate.metrics);\n  const comparison = record(report.comparison);\n  const scenario = record(report.scenario);\n  const evm = report.mode !== \"fixture\";\n  $(\"agent-details\").hidden = agent === null;\n  tableRows(\"agent-rows\", agent?.rows ?? []);\n  $(\"agent-provenance\").textContent = agent?.provenance ?? \"\";\n  $(\"fixture-chart\").hidden = evm;\n  $(\"evm-details\").hidden = !evm;\n  $(\"baseline-label\").textContent = evm ? \"Baseline actions\" : \"Hold baseline\";\n  $(\"candidate-label\").textContent = evm\n    ? \"Changed actions\"\n    : \"Circuit-breaker policy\";\n  $(\"baseline-unit\").textContent = $(\"candidate-unit\").textContent = evm\n    ? \"Approximate native balance (ETH)\"\n    : \"Final model equity\";\n  $(\"delta-unit\").textContent = evm\n    ? \"Approximate ETH; not profit\"\n    : \"Model quote units, not USD\";\n  if (evm) {\n    const view = evmViewModel(report);\n    $(\"baseline-value\").textContent = Number(\n      tokenUnits(bm.final_balance_wei, 18),\n    ).toFixed(6);\n    $(\"candidate-value\").textContent = Number(\n      tokenUnits(cm.final_balance_wei, 18),\n    ).toFixed(6);\n    $(\"delta-value\").textContent = Number(\n      tokenUnits(comparison.final_balance_delta_wei, 18),\n    ).toFixed(6);\n    tableRows(\"metric-rows\", view.rows, true);\n    tableRows(\"evm-traces\", view.traces);\n    $(\"equity-rows\").replaceChildren();\n    $(\"chart-description\").textContent = \"\";\n    $(\"source-pin\").textContent = view.source;\n  } else {\n    if (record(record(report.scenario).provenance).kind !== \"synthetic\")\n      throw new Error(\"A fixture must be labelled synthetic.\");\n    const b = baseline,\n      c = candidate;\n    if (\n      !Array.isArray(b?.trace) ||\n      !Array.isArray(c?.trace) ||\n      b.trace.length !== c.trace.length ||\n      b.trace.length < 2 ||\n      b.trace.length > 4096\n    )\n      throw new Error(\"Invalid trace.\");\n    const bt = b.trace.map(record),\n      ct = c.trace.map(record);\n    const yb = bt.map((x) => finite(x.equity)),\n      yc = ct.map((x) => finite(x.equity));\n    const values = [...yb, ...yc],\n      min = Math.min(...values),\n      max = Math.max(...values),\n      spread = max - min || 1;\n    /** @param {number[]} ys */\n    function line(ys) {\n      return ys\n        .map(\n          (y, i) =>\n            `${45 + (i / (ys.length - 1)) * 925},${210 - ((y - min) / spread) * 165}`,\n        )\n        .join(\" \");\n    }\n    $(\"baseline-line\").setAttribute(\"points\", line(yb));\n    $(\"candidate-line\").setAttribute(\"points\", line(yc));\n    $(\"chart-description\").textContent =\n      `${yb.length} observations, in recorded order. Dashed line: baseline. Solid line: candidate. Open Equity values by observation for every exact value.`;\n    tableRows(\n      \"equity-rows\",\n      bt.map((point, i) => [\n        String(i + 1),\n        String(point.equity),\n        String(ct[i].equity),\n      ]),\n      true,\n    );\n    $(\"baseline-value\").textContent = fmt(bm.final_equity);\n    $(\"candidate-value\").textContent = fmt(cm.final_equity);\n    const delta = finite(comparison.final_equity_delta);\n    $(\"delta-value\").textContent =\n      (delta > 0 ? \"+\" : \"\") + fmt(comparison.final_equity_delta);\n    $(\"metric-rows\").replaceChildren();\n    for (const [label, key, suffix] of [\n      [\"Model return\", \"return_pct\", \"%\"],\n      [\"Maximum drawdown\", \"max_drawdown_pct\", \"%\"],\n      [\"Fees (quote units)\", \"fees\", \"\"],\n      [\"Number of trades\", \"trades\", \"\"],\n    ]) {\n      const tr = document.createElement(\"tr\");\n      [\n        label,\n        key === \"trades\" ? String(bm[key]) : fmt(bm[key]) + suffix,\n        key === \"trades\" ? String(cm[key]) : fmt(cm[key]) + suffix,\n      ].forEach((text, index) => {\n        const cell = document.createElement(index === 0 ? \"th\" : \"td\");\n        if (index === 0) cell.scope = \"row\";\n        cell.textContent = text;\n        tr.appendChild(cell);\n      });\n      $(\"metric-rows\").appendChild(tr);\n    }\n  }\n  if (!Array.isArray(report.assumptions) || report.assumptions.length > 32)\n    throw new Error(\"Invalid assumptions.\");\n  $(\"assumptions\").replaceChildren();\n  for (const text of report.assumptions) {\n    if (typeof text !== \"string\" || text.length > 4000)\n      throw new Error(\"Invalid assumption.\");\n    const li = document.createElement(\"li\");\n    li.textContent = text;\n    $(\"assumptions\").appendChild(li);\n  }\n  $(\"hash\").textContent = String(report.artifact_id);\n  $(\"raw-report\").textContent = JSON.stringify(report, null, 2);\n  $(\"report-status\").classList.remove(\"error\");\n  $(\"report-status\").textContent =\n    \"Integrity verified locally · \" +\n    (evm\n      ? report.mode === \"evm-fork\"\n        ? \"Archived-state actions; not historical replay\"\n        : \"Local EVM actions\"\n      : \"Synthetic fixture\") +\n    \" · \" +\n    String(scenario.title).slice(0, 120);\n  $(\"metric-table\").hidden = false;\n  $(\"download\").hidden = false;\n}\nasync function loadSample() {\n  const seq = ++generation;\n  const selection = $(\"scenario\");\n  if (!(\"value\" in selection) || typeof selection.value !== \"string\")\n    throw new Error(\"Missing scenario selector.\");\n  const name = selection.value;\n  if (!allowedSamples.has(name)) return;\n  try {\n    const response = await fetch(\"reports/\" + name + \".json\");\n    if (!response.ok)\n      throw new Error(\"The recorded sample could not be loaded.\");\n    const text = await response.text();\n    if (text.length > 4 * 1024 * 1024) throw new Error(\"Report too large.\");\n    await render(JSON.parse(text), seq);\n    if (seq === generation)\n      $(\"download\").setAttribute(\"href\", \"reports/\" + name + \".json\");\n  } catch (error) {\n    if (seq === generation)\n      setError(\n        error instanceof Error ? error.message : \"Could not load this report.\",\n      );\n  }\n}\n$(\"scenario\").addEventListener(\"change\", loadSample);\n$(\"import\").addEventListener(\"change\", async (event) => {\n  if (!(event.target instanceof HTMLInputElement)) return;\n  const file = event.target.files?.[0];\n  if (!file) return;\n  const seq = ++generation;\n  try {\n    if (file.size > 4 * 1024 * 1024)\n      throw new Error(\"Local report limit is 4 MiB.\");\n    await render(JSON.parse(await file.text()), seq);\n    // No blob links or network upload are needed for an already-local file.\n    if (seq === generation) $(\"download\").hidden = true;\n  } catch (error) {\n    if (seq === generation)\n      setError(error instanceof Error ? error.message : \"Invalid report file.\");\n  }\n});\nloadSample();\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "comparison.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-possible-timing-attacks",
+        "severity": 1,
+        "message": "Potential timing attack, left side: true",
+        "line": 161,
+        "column": 5,
+        "endLine": 161,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "security/detect-possible-timing-attacks",
+        "severity": 1,
+        "message": "Potential timing attack, left side: true",
+        "line": 164,
+        "column": 5,
+        "endLine": 164,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "security/detect-unsafe-regex",
+        "severity": 1,
+        "message": "Unsafe Regular Expression",
+        "line": 206,
+        "column": 27,
+        "endLine": 206,
+        "endColumn": 50
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 3,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { validate, decimal } from \"./report-validation.mjs\";\n/** @param {string} id */\nfunction $(id) {\n  const node = document.getElementById(\"c-\" + id);\n  if (!node) throw new Error(`Missing console element: ${id}`);\n  return node;\n}\n/** @param {string} id */\nfunction input(id) {\n  const node = $(id);\n  if (!(node instanceof HTMLInputElement)) throw new Error(\"Expected input\");\n  return node;\n}\nfunction downloadButton() {\n  const node = $(\"download\");\n  if (!(node instanceof HTMLButtonElement)) throw new Error(\"Expected button\");\n  return node;\n}\nconst download = downloadButton();\n/** @type {Record<string, string>} */\nconst titles = {\n  proposed: \"Proposed swap\",\n  reduced: \"Reduce the size\",\n  \"strict-minimum\": \"Raise the minimum\",\n  hold: \"Keep the position\",\n};\n/** @type {unknown} */\nlet current;\nlet generation = 0;\n/** @template {keyof HTMLElementTagNameMap} T @param {T} tag @param {string} text @param {string} [cls] */\nfunction el(tag, text, cls) {\n  const n = document.createElement(tag);\n  n.textContent = text;\n  if (cls) n.className = cls;\n  return n;\n}\n/** @param {Awaited<ReturnType<typeof validate>>} r @param {unknown} envelope @param {string} label */\nfunction display(r, envelope, label) {\n  current = envelope;\n  $(\"mode\").textContent = label;\n  $(\"source-summary\").textContent =\n    `Ethereum block ${r.source.blockNumber.toLocaleString()} · WETH → USDC · 0.30% pool · Local Anvil execution`;\n  $(\"message\").textContent = \"\";\n  $(\"constraints\").replaceChildren(\n    ...[\n      `Spend cap: ${decimal(r.constraints.maxSpend, 18)} WETH`,\n      `Minimum rate: ${decimal(r.constraints.minRateUSDCPerWETH, 6)} USDC / WETH`,\n      `Gas cap: ${r.constraints.maxGas.toLocaleString()} units`,\n      \"Setup funding + approval excluded from trial gas\",\n    ].map((s) => el(\"span\", s)),\n  );\n  $(\"cards\").replaceChildren();\n  for (const [i, t] of r.trials.entries()) {\n    const card = el(\n      \"article\",\n      \"\",\n      \"card\" + (t.verdict === \"PROCEED\" ? \" recommended\" : \"\"),\n    );\n    const top = el(\"div\", \"\", \"card-top\");\n    top.append(\n      el(\n        \"span\",\n        `0${i + 1} / ${t.id === \"hold\" ? \"NO TRANSACTION\" : \"LOCAL TRIAL\"}`,\n      ),\n      el(\"span\", t.status, \"status \" + t.status),\n    );\n    card.append(top, el(\"h3\", titles[t.id]));\n    const amount = el(\"div\", decimal(t.delta.USDC, 6), \"amount\");\n    amount.append(el(\"small\", \"USDC\"));\n    card.append(amount, el(\"div\", \"Actual token balance change\", \"label\"));\n    const dl = el(\"dl\", \"\");\n    for (const [label, value] of [\n      [\"WETH change\", decimal(t.delta.WETH, 18) + \" WETH\"],\n      [\"Gas used\", t.gasUsed.toLocaleString() + \" units\"],\n      [\"Native gas cost\", decimal(t.gasCostWei, 18) + \" ETH\"],\n      [\"Minimum output\", decimal(t.minimumOut, 6) + \" USDC\"],\n    ]) {\n      const row = el(\"div\", \"\");\n      row.append(el(\"dt\", label), el(\"dd\", value));\n      dl.append(row);\n    }\n    card.append(\n      dl,\n      el(\n        \"div\",\n        t.verdict === \"PROCEED\"\n          ? \"WITHIN YOUR CONSTRAINTS\"\n          : \"HOLD / DO NOT PROCEED\",\n        \"verdict\",\n      ),\n      el(\"p\", t.reason, \"reason\"),\n    );\n    const d = el(\"details\", \"\");\n    d.append(\n      el(\n        \"summary\",\n        t.execution\n          ? \"Inspect receipt & exact balances\"\n          : \"Inspect zero-change evidence\",\n      ),\n      el(\n        \"pre\",\n        JSON.stringify(\n          {\n            initialStateFingerprint: t.initialStateFingerprint,\n            initialObservation: t.initialObservation,\n            before: t.before,\n            after: t.after,\n            delta: t.delta,\n            execution: t.execution,\n          },\n          null,\n          2,\n        ),\n      ),\n    );\n    card.append(d);\n    $(\"cards\").append(card);\n  }\n  const good = r.trials.filter((t) => t.verdict === \"PROCEED\");\n  $(\"takeaway\").textContent = good.length\n    ? `${good.map((t) => titles[t.id]).join(\" and \")} meets the supplied constraints in this recorded run. Success alone is not permission: check the spending cap, minimum output and gas together. Holding spends no execution gas.`\n    : \"None of the tested swaps meets every constraint. Holding leaves balances unchanged and spends no execution gas.\";\n  $(\"pins\").textContent = JSON.stringify(\n    {\n      source: r.source,\n      contracts: r.contracts,\n      decimals: r.decimals,\n      overrides: r.overrides,\n      tools: r.tools,\n      sha256:\n        typeof envelope === \"object\" &&\n        envelope !== null &&\n        \"sha256\" in envelope\n          ? envelope.sha256\n          : null,\n      nodeCleanedUp: r.nodeCleanedUp,\n      limitations: r.limitations,\n    },\n    null,\n    2,\n  );\n  $(\"setup\").textContent = JSON.stringify(r.setup, null, 2);\n  $(\"results\").hidden = false;\n  download.disabled = false;\n}\n/** @param {() => Promise<unknown>} read @param {string} label */\nasync function load(read, label) {\n  const token = ++generation;\n  $(\"results\").hidden = true;\n  download.disabled = true;\n  current = null;\n  $(\"mode\").textContent = \"Validating report…\";\n  $(\"message\").textContent = \"\";\n  $(\"source-summary\").textContent = \"\";\n  for (const id of [\"cards\", \"constraints\", \"takeaway\", \"pins\", \"setup\"])\n    $(id).replaceChildren();\n  try {\n    const envelope = await read();\n    const report = await validate(envelope);\n    if (token !== generation) return;\n    display(report, envelope, label);\n  } catch (error) {\n    if (token !== generation) return;\n    $(\"mode\").textContent = \"Report rejected\";\n    $(\"message\").textContent =\n      \"Could not load report: \" +\n      (error instanceof Error ? error.message : String(error));\n  }\n}\nasync function sample() {\n  await load(async () => {\n    const response = await fetch(\"./assets/examples/action-comparison.json\");\n    if (!response.ok) throw Error(\"Example unavailable\");\n    return response.json();\n  }, \"Recorded local execution · not a live run\");\n}\n$(\"sample\").onclick = sample;\ninput(\"report-file\").onchange = async () => {\n  const chooser = input(\"report-file\");\n  const file = chooser.files?.[0];\n  if (!file) return;\n  chooser.value = \"\";\n  await load(async () => {\n    if (file.size > 2_000_000) throw Error(\"Maximum report size is 2 MB\");\n    return JSON.parse(await file.text());\n  }, \"Imported local report · validated in your browser\");\n};\n$(\"download\").onclick = () => {\n  if (!current) return;\n  const u = URL.createObjectURL(\n    new Blob([JSON.stringify(current, null, 2)], { type: \"application/json\" }),\n  );\n  const a = el(\"a\", \"\");\n  a.href = u;\n  a.download = \"entrotter-comparison.json\";\n  a.click();\n  setTimeout(() => URL.revokeObjectURL(u), 1000);\n};\n$(\"command-form\").onsubmit = (e) => {\n  e.preventDefault();\n  const values = [\"amount\", \"spend\", \"rate\"].map((id) => input(id).value);\n  if (\n    values.some(\n      (v) =>\n        v.length > 13 || !/^\\d{1,6}(\\.\\d{1,6})?$/.test(v) || Number(v) <= 0,\n    )\n  ) {\n    $(\"command\").textContent =\n      \"Enter positive decimal amounts (up to six decimal places).\";\n    return;\n  }\n  $(\"command\").textContent =\n    `python3 compare.py --amount ${values[0]} --max-spend ${values[1]} --min-rate ${values[2]} --output report.json`;\n};\nsample();\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "eslint.config.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "eslint.security.config.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "report-validation.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 17,
+        "column": 32,
+        "endLine": 17,
+        "endColumn": 42
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 60,
+        "column": 21,
+        "endLine": 60,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 95,
+        "column": 57,
+        "endLine": 95,
+        "endColumn": 69
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Variable Assigned to Object Injection Sink",
+        "line": 186,
+        "column": 15,
+        "endLine": 186,
+        "endColumn": 26
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 188,
+        "column": 16,
+        "endLine": 188,
+        "endColumn": 24
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 231,
+        "column": 17,
+        "endLine": 231,
+        "endColumn": 30
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 232,
+        "column": 19,
+        "endLine": 232,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 233,
+        "column": 19,
+        "endLine": 233,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 237,
+        "column": 16,
+        "endLine": 237,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 238,
+        "column": 18,
+        "endLine": 238,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 239,
+        "column": 18,
+        "endLine": 239,
+        "endColumn": 28
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 239,
+        "column": 39,
+        "endLine": 239,
+        "endColumn": 50
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 239,
+        "column": 63,
+        "endLine": 239,
+        "endColumn": 73
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 13,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "/**\n * @typedef {Record<\"ETH\"|\"WETH\"|\"USDC\", string>} Balances\n * @typedef {{status:string, transactionHash:string, blockHash:string, gasUsed:string, effectiveGasPrice:string}} Receipt\n * @typedef {{receipt:Receipt, transaction:{to:string, data:string}}} Execution\n * @typedef {{id:string, status:string, verdict:string, reason:string, amountIn:string, minimumOut:string, gasUsed:number, gasCostWei:string, before:Balances, after:Balances, delta:Balances, initialStateRoot:string, initialBlockHash:string, initialStateFingerprint:string, initialObservation:Record<string,unknown>, execution:Execution|null}} Trial\n * @typedef {{format:string, mode:string, source:{chainId:number, blockNumber:number, blockHash:string, stateRoot:string}, decimals:Record<string,number>, constraints:{amountIn:string, maxSpend:string, minRateUSDCPerWETH:string, maxGas:number}, contracts:{router:string}, trials:Trial[], setup:{receipt:Receipt}[], nodeCleanedUp:boolean, overrides:unknown, tools:unknown, limitations:unknown}} Report\n */\n/** @param {unknown} value @returns {Record<string, unknown>} */\nfunction record(value) {\n  if (!value || typeof value !== \"object\" || Array.isArray(value))\n    throw new Error(\"Expected report object\");\n  return /** @type {Record<string, unknown>} */ (value);\n}\n/** @param {Record<string, unknown>} value @param {string[]} keys @param {\"string\"|\"number\"} type */\nfunction fields(value, keys, type) {\n  ensure(\n    keys.every((key) => typeof value[key] === type),\n    \"Invalid field type\",\n  );\n}\n/** Validate accessed shapes before giving imported JSON a static type. @param {unknown} value @returns {Report} */\nfunction shapedReport(value) {\n  const r = record(value);\n  fields(r, [\"format\", \"mode\"], \"string\");\n  const source = record(r.source);\n  fields(source, [\"chainId\", \"blockNumber\"], \"number\");\n  fields(source, [\"blockHash\", \"stateRoot\"], \"string\");\n  fields(record(r.decimals), [\"ETH\", \"WETH\", \"USDC\"], \"number\");\n  fields(\n    record(r.constraints),\n    [\"amountIn\", \"maxSpend\", \"minRateUSDCPerWETH\"],\n    \"string\",\n  );\n  fields(record(r.constraints), [\"maxGas\"], \"number\");\n  fields(record(r.contracts), [\"router\", \"WETH\", \"USDC\", \"pool\"], \"string\");\n  ensure(\n    Array.isArray(r.trials) && r.trials.length === 4,\n    \"Expected four alternatives\",\n  );\n  for (const value of /** @type {unknown[]} */ (r.trials)) {\n    const t = record(value);\n    fields(\n      t,\n      [\n        \"id\",\n        \"status\",\n        \"verdict\",\n        \"reason\",\n        \"amountIn\",\n        \"minimumOut\",\n        \"gasCostWei\",\n        \"initialStateRoot\",\n        \"initialBlockHash\",\n        \"initialStateFingerprint\",\n      ],\n      \"string\",\n    );\n    fields(t, [\"gasUsed\"], \"number\");\n    for (const name of [\"before\", \"after\", \"delta\"])\n      fields(record(t[name]), [\"ETH\", \"WETH\", \"USDC\"], \"string\");\n    record(record(t.initialObservation).balances);\n    if (t.execution !== null) {\n      const e = record(t.execution);\n      fields(\n        record(e.receipt),\n        [\n          \"status\",\n          \"transactionHash\",\n          \"blockHash\",\n          \"gasUsed\",\n          \"effectiveGasPrice\",\n        ],\n        \"string\",\n      );\n      fields(record(e.transaction), [\"to\", \"data\"], \"string\");\n    }\n  }\n  ensure(\n    Array.isArray(r.setup) && r.setup.length === 2,\n    \"Missing setup receipts\",\n  );\n  for (const value of /** @type {unknown[]} */ (r.setup))\n    fields(record(record(value).receipt), [\"status\"], \"string\");\n  ensure(typeof r.nodeCleanedUp === \"boolean\", \"Missing cleanup flag\");\n  return /** @type {Report} */ (/** @type {unknown} */ (r));\n}\n/** @param {unknown} x @returns {string} */\nexport function canonical(x) {\n  if (Array.isArray(x)) return \"[\" + x.map(canonical).join(\",\") + \"]\";\n  if (x && typeof x === \"object\")\n    return (\n      \"{\" +\n      Object.keys(x)\n        .sort()\n        .map((k) => JSON.stringify(k) + \":\" + canonical(record(x)[k]))\n        .join(\",\") +\n      \"}\"\n    );\n  const serialized = JSON.stringify(x);\n  if (\n    serialized === undefined ||\n    (typeof x === \"number\" && !Number.isFinite(x))\n  )\n    throw new Error(\"Invalid JSON value\");\n  return serialized;\n}\n/** @param {unknown} ok @param {string} message */\nconst ensure = (ok, message) => {\n  if (!ok) throw new Error(message);\n};\n/** @param {unknown} x */\nconst integer = (x) => typeof x === \"string\" && /^-?\\d{1,78}$/.test(x);\n/** @param {unknown} x */\nconst hash = (x) => typeof x === \"string\" && /^0x[\\da-f]{64}$/i.test(x);\n/** @param {unknown} input */\nexport async function validate(input) {\n  const envelope = record(input);\n  const r = shapedReport(envelope.report);\n  ensure(\n    r &&\n      r.format === \"tokyo-compare/1\" &&\n      r.mode === \"archived-state-local-execution\",\n    \"Unsupported report format or mode\",\n  );\n  const bytes = new TextEncoder().encode(canonical(r));\n  ensure(bytes.length < 2_000_000, \"Report too large\");\n  const actual = [\n    ...new Uint8Array(await crypto.subtle.digest(\"SHA-256\", bytes)),\n  ]\n    .map((b) => b.toString(16).padStart(2, \"0\"))\n    .join(\"\");\n  ensure(actual === envelope.sha256, \"Report hash mismatch\");\n  ensure(\n    r.source?.chainId === 1 &&\n      Number.isSafeInteger(r.source.blockNumber) &&\n      r.source.blockNumber > 0 &&\n      hash(r.source.blockHash) &&\n      hash(r.source.stateRoot),\n    \"Invalid chain / block pin\",\n  );\n  ensure(\n    r.decimals?.ETH === 18 && r.decimals.WETH === 18 && r.decimals.USDC === 6,\n    \"Unsupported decimals\",\n  );\n  ensure(\n    integer(r.constraints?.amountIn) &&\n      BigInt(r.constraints.amountIn) > 0n &&\n      integer(r.constraints.maxSpend) &&\n      BigInt(r.constraints.maxSpend) > 0n &&\n      integer(r.constraints.minRateUSDCPerWETH) &&\n      BigInt(r.constraints.minRateUSDCPerWETH) > 0n &&\n      Number.isSafeInteger(r.constraints.maxGas) &&\n      r.constraints.maxGas >= 21000 &&\n      r.constraints.maxGas <= 500000,\n    \"Invalid constraints\",\n  );\n  ensure(\n    Array.isArray(r.trials) && r.trials.length === 4,\n    \"Expected four alternatives\",\n  );\n  ensure(\n    Array.isArray(r.setup) &&\n      r.setup.length === 2 &&\n      r.setup.every((t) => t?.receipt?.status === \"0x1\"),\n    \"Missing successful setup receipts\",\n  );\n  ensure(\n    r.contracts?.router?.toLowerCase() ===\n      \"0xe592427a0aece92de3edee1f18e0157c05861564\",\n    \"Unexpected router\",\n  );\n  const contracts = record(r.contracts);\n  ensure(\n    String(contracts.WETH).toLowerCase() ===\n      \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\" &&\n      String(contracts.USDC).toLowerCase() ===\n        \"0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\" &&\n      String(contracts.pool).toLowerCase() ===\n        \"0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8\",\n    \"Unexpected token or pool\",\n  );\n  ensure(r.nodeCleanedUp === true, \"Node cleanup not confirmed\");\n  const names = [\"proposed\", \"reduced\", \"strict-minimum\", \"hold\"];\n  const first = r.trials[0];\n  for (let i = 0; i < 4; i++) {\n    const t = r.trials[i];\n    ensure(\n      t.id === names[i] && [\"success\", \"revert\", \"hold\"].includes(t.status),\n      \"Invalid trial identity or status\",\n    );\n    ensure(\n      hash(t.initialStateRoot) &&\n        hash(t.initialBlockHash) &&\n        t.initialStateRoot === first.initialStateRoot &&\n        t.initialBlockHash === first.initialBlockHash &&\n        canonical(t.before) === canonical(first.before) &&\n        canonical(t.initialObservation) === canonical(first.initialObservation),\n      \"Alternatives have different initial states\",\n    );\n    const fp = [\n      ...new Uint8Array(\n        await crypto.subtle.digest(\n          \"SHA-256\",\n          new TextEncoder().encode(canonical(t.initialObservation)),\n        ),\n      ),\n    ]\n      .map((b) => b.toString(16).padStart(2, \"0\"))\n      .join(\"\");\n    ensure(\n      fp === t.initialStateFingerprint &&\n        canonical(t.initialObservation.balances) === canonical(t.before),\n      \"Initial observation fingerprint mismatch\",\n    );\n    ensure(\n      integer(t.amountIn) &&\n        BigInt(t.amountIn) >= 0n &&\n        integer(t.minimumOut) &&\n        BigInt(t.minimumOut) >= 0n,\n      \"Invalid swap amount\",\n    );\n    ensure(\n      Number.isSafeInteger(t.gasUsed) &&\n        t.gasUsed >= 0 &&\n        t.gasUsed <= 500000 &&\n        integer(t.gasCostWei),\n      \"Invalid gas\",\n    );\n    for (const k of [\"ETH\", \"WETH\", \"USDC\"]) {\n      ensure(\n        integer(t.before?.[k]) &&\n          integer(t.after?.[k]) &&\n          integer(t.delta?.[k]),\n        \"Invalid balance\",\n      );\n      ensure(\n        BigInt(t.before[k]) >= 0n &&\n          BigInt(t.after[k]) >= 0n &&\n          BigInt(t.after[k]) - BigInt(t.before[k]) === BigInt(t.delta[k]),\n        \"Balance delta mismatch\",\n      );\n    }\n    ensure(\n      BigInt(t.delta.ETH) === -BigInt(t.gasCostWei),\n      \"Native fee mismatch\",\n    );\n    if (t.id === \"hold\") {\n      ensure(\n        t.status === \"hold\" &&\n          t.execution === null &&\n          t.gasUsed === 0 &&\n          t.gasCostWei === \"0\" &&\n          t.amountIn === \"0\" &&\n          Object.values(t.delta).every((v) => v === \"0\"),\n        \"Hold must have no execution or balance change\",\n      );\n    } else {\n      const e = t.execution;\n      if (!e) throw new Error(\"Missing execution\");\n      const receipt = e.receipt;\n      ensure(\n        receipt && hash(receipt.transactionHash) && hash(receipt.blockHash),\n        \"Missing receipt\",\n      );\n      ensure(\n        receipt.status === (t.status === \"success\" ? \"0x1\" : \"0x0\") &&\n          t.status !== \"hold\",\n        \"Receipt status mismatch\",\n      );\n      ensure(\n        /^0x[0-9a-f]+$/i.test(receipt.gasUsed) &&\n          /^0x[0-9a-f]+$/i.test(receipt.effectiveGasPrice),\n        \"Invalid receipt gas\",\n      );\n      ensure(\n        BigInt(receipt.gasUsed) === BigInt(t.gasUsed) &&\n          BigInt(receipt.gasUsed) * BigInt(receipt.effectiveGasPrice) ===\n            BigInt(t.gasCostWei),\n        \"Receipt gas mismatch\",\n      );\n      ensure(\n        e.transaction?.to?.toLowerCase() === r.contracts.router.toLowerCase() &&\n          typeof e.transaction.data === \"string\" &&\n          /^0x[0-9a-f]+$/i.test(e.transaction.data) &&\n          e.transaction.data.length === 522,\n        \"Invalid swap calldata\",\n      );\n      const data = e.transaction.data.toLowerCase();\n      ensure(\n        data.slice(10, 74) ===\n          \"000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\" &&\n          data.slice(74, 138) ===\n            \"000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48\" &&\n          BigInt(\"0x\" + data.slice(138, 202)) === 3000n,\n        \"Swap token or fee mismatch\",\n      );\n      ensure(\n        data.slice(0, 10) === \"0x414bf389\" &&\n          BigInt(\"0x\" + data.slice(330, 394)) === BigInt(t.amountIn) &&\n          BigInt(\"0x\" + data.slice(394, 458)) === BigInt(t.minimumOut),\n        \"Swap calldata disagrees with action\",\n      );\n      if (t.status === \"revert\")\n        ensure(\n          t.delta.WETH === \"0\" && t.delta.USDC === \"0\",\n          \"Revert changed token balances\",\n        );\n      else\n        ensure(\n          BigInt(t.delta.WETH) === -BigInt(t.amountIn) &&\n            BigInt(t.delta.USDC) >= BigInt(t.minimumOut),\n          \"Successful swap violates amounts\",\n        );\n    }\n    const proceed =\n      t.status === \"success\" &&\n      BigInt(t.amountIn) <= BigInt(r.constraints.maxSpend) &&\n      BigInt(t.delta.USDC) >= BigInt(t.minimumOut) &&\n      t.gasUsed <= r.constraints.maxGas;\n    ensure(\n      t.verdict === (proceed ? \"PROCEED\" : \"HOLD\"),\n      \"Decision inconsistent with constraints\",\n    );\n    ensure(\n      typeof t.reason === \"string\" && t.reason.length < 1000,\n      \"Invalid decision explanation\",\n    );\n  }\n  ensure(\n    first.amountIn === r.constraints.amountIn &&\n      r.trials[2].amountIn === first.amountIn,\n    \"Proposed amount mismatch\",\n  );\n  const reduced =\n    BigInt(first.amountIn) / 2n < BigInt(r.constraints.maxSpend)\n      ? BigInt(first.amountIn) / 2n\n      : BigInt(r.constraints.maxSpend);\n  ensure(BigInt(r.trials[1].amountIn) === reduced, \"Reduced amount mismatch\");\n  for (const t of r.trials.slice(0, 2))\n    ensure(\n      BigInt(t.minimumOut) ===\n        (BigInt(t.amountIn) * BigInt(r.constraints.minRateUSDCPerWETH)) /\n          10n ** 18n,\n      \"Minimum rate mismatch\",\n    );\n  return r;\n}\n/** @param {string} raw @param {number} places */\nexport function decimal(raw, places) {\n  const n = BigInt(raw),\n    sign = n < 0n ? \"-\" : \"\",\n    a = (n < 0n ? -n : n).toString().padStart(places + 1, \"0\");\n  return (\n    sign +\n    a.slice(0, -places) +\n    (a.slice(-places).replace(/0+$/, \"\")\n      ? \".\" + a.slice(-places).replace(/0+$/, \"\")\n      : \"\")\n  );\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "scripts/check_accessibility.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 12,
+        "column": 17,
+        "endLine": 12,
+        "endColumn": 51
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found mkdir from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 16,
+        "column": 7,
+        "endLine": 16,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 17,
+        "column": 25,
+        "endLine": 20,
+        "endColumn": 2
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 42,
+        "column": 25,
+        "endLine": 42,
+        "endColumn": 54
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found writeFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 163,
+        "column": 9,
+        "endLine": 166,
+        "endColumn": 4
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 246,
+        "column": 52,
+        "endLine": 246,
+        "endColumn": 56
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 292,
+        "column": 17,
+        "endLine": 295,
+        "endColumn": 12
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 372,
+        "column": 27,
+        "endLine": 375,
+        "endColumn": 16
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 455,
+        "column": 17,
+        "endLine": 455,
+        "endColumn": 80
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 485,
+        "column": 17,
+        "endLine": 488,
+        "endColumn": 12
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 597,
+        "column": 21,
+        "endLine": 597,
+        "endColumn": 78
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 662,
+        "column": 19,
+        "endLine": 662,
+        "endColumn": 44
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 731,
+        "column": 17,
+        "endLine": 731,
+        "endColumn": 80
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 765,
+        "column": 19,
+        "endLine": 768,
+        "endColumn": 14
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 929,
+        "column": 19,
+        "endLine": 932,
+        "endColumn": 14
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 1085,
+        "column": 17,
+        "endLine": 1088,
+        "endColumn": 12
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 1161,
+        "column": 17,
+        "endLine": 1164,
+        "endColumn": 12
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 1167,
+        "column": 17,
+        "endLine": 1170,
+        "endColumn": 12
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 1175,
+        "column": 19,
+        "endLine": 1178,
+        "endColumn": 14
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 1211,
+        "column": 32,
+        "endLine": 1214,
+        "endColumn": 10
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 1304,
+        "column": 7,
+        "endLine": 1304,
+        "endColumn": 19
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 1305,
+        "column": 23,
+        "endLine": 1305,
+        "endColumn": 52
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 1308,
+        "column": 7,
+        "endLine": 1308,
+        "endColumn": 19
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found writeFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 1335,
+        "column": 9,
+        "endLine": 1338,
+        "endColumn": 4
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 24,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "// Real Chromium, keyboard and axe checks; no Playwright test runner or app mocks.\nimport assert from \"node:assert/strict\";\nimport { createHash } from \"node:crypto\";\nimport { createServer } from \"node:http\";\nimport { readFile, mkdir, writeFile } from \"node:fs/promises\";\nimport { resolve, extname } from \"node:path\";\nimport { createRequire } from \"node:module\";\nimport { chromium } from \"playwright\";\n\nconst require = createRequire(import.meta.url);\nconst runnerHash = createHash(\"sha256\")\n  .update(await readFile(new URL(import.meta.url)))\n  .digest(\"hex\");\nconst root = resolve(process.env.SITE_DIR || \".\");\nconst output = resolve(process.env.A11Y_OUTPUT || \"output/playwright\");\nawait mkdir(output, { recursive: true });\nconst axeSource = await readFile(\n  require.resolve(\"axe-core/axe.min.js\"),\n  \"utf8\",\n);\nconst types = {\n  \".html\": \"text/html\",\n  \".js\": \"text/javascript\",\n  \".mjs\": \"text/javascript\",\n  \".webp\": \"image/webp\",\n  \".css\": \"text/css\",\n  \".json\": \"application/json\",\n  \".png\": \"image/png\",\n};\nconst server = createServer(async (request, response) => {\n  try {\n    const pathname = new URL(request.url || \"/\", \"http://127.0.0.1\").pathname;\n    const name = pathname === \"/\" ? \"index.html\" : pathname.slice(1);\n    if (\n      !/^(index\\.html|404\\.html|style\\.css|app\\.js|comparison\\.mjs|report-validation\\.mjs|trace-report\\.mjs|trace-comparison\\.mjs|trace-viewer\\.mjs|(?:assets|reports|schemas)\\/(?:examples\\/)?[a-zA-Z0-9_.-]+)$/.test(\n        name,\n      )\n    ) {\n      response.writeHead(404).end();\n      return;\n    }\n    const bytes = await readFile(resolve(root, name));\n    response\n      .writeHead(200, {\n        \"Content-Type\": types[extname(name)] || \"application/octet-stream\",\n        \"Cache-Control\": \"no-store\",\n      })\n      .end(bytes);\n  } catch {\n    response.writeHead(404).end();\n  }\n});\nawait new Promise((resolve) =>\n  server.listen(0, \"127.0.0.1\", () => resolve(undefined)),\n);\nconst address = server.address();\nif (address === null || typeof address === \"string\")\n  throw new Error(\"Missing server address\");\nconst origin = `http://127.0.0.1:${address.port}`;\nconst checks = [],\n  scans = [],\n  errors = [],\n  requests = [];\n/** @type {import(\"playwright\").Browser | undefined} */\nlet browser;\n/** @param {string} name @param {() => Promise<void>} work */\nasync function check(name, work) {\n  try {\n    await work();\n    checks.push({ name, status: \"passed\" });\n  } catch (error) {\n    checks.push({\n      name,\n      status: \"failed\",\n      error: error instanceof Error ? error.stack : String(error),\n    });\n  }\n}\nasync function pageAt(width = 1280, path = \"/\") {\n  if (!browser) throw new Error(\"Browser is not running\");\n  const page = await browser.newPage({\n    viewport: { width, height: 900 },\n    reducedMotion: \"reduce\",\n  });\n  page.setDefaultTimeout(5000);\n  page.on(\"pageerror\", (error) => errors.push(String(error)));\n  page.on(\"request\", (request) =>\n    requests.push({ url: request.url(), method: request.method() }),\n  );\n  await page.goto(origin + path);\n  if (path === \"/\") {\n    await page.waitForFunction(() =>\n      document\n        .querySelector(\"#report-status\")\n        ?.textContent?.includes(\"Integrity verified locally\"),\n    );\n    await page.waitForFunction(\n      () =>\n        document.querySelector(\"#c-results\") instanceof HTMLElement &&\n        !document.getElementById(\"c-results\")?.hidden,\n    );\n    await page\n      .locator(\"details.archive\")\n      .evaluate((node) => node.setAttribute(\"open\", \"\"));\n  }\n  return page;\n}\n/** @param {number} width @param {(page: import(\"playwright\").Page) => Promise<void>} work @param {string} [path] */\nasync function withPage(width, work, path = \"/\") {\n  const page = await pageAt(width, path);\n  try {\n    await work(page);\n  } finally {\n    await page.close();\n  }\n}\n/** @param {import(\"playwright\").Page} page */\nasync function noOverflow(page) {\n  const size = await page.evaluate(() => ({\n    width: innerWidth,\n    scroll: document.documentElement.scrollWidth,\n  }));\n  assert.ok(size.scroll <= size.width, JSON.stringify(size));\n}\n/** @param {import(\"playwright\").Page} page @param {string} id */\nasync function focusIs(page, id) {\n  assert.equal(await page.evaluate(() => document.activeElement?.id), id);\n}\n/** @param {import(\"playwright\").Page} page */\nasync function visibleFocus(page) {\n  assert.ok(\n    await page.evaluate(() => {\n      const active = document.activeElement;\n      if (!active) return false;\n      const style = getComputedStyle(active);\n      return (\n        style.outlineStyle !== \"none\" && parseFloat(style.outlineWidth) >= 2\n      );\n    }),\n    \"Focused control has no visible outline\",\n  );\n}\n/** @param {import(\"playwright\").Page} page @param {string} name */\nasync function scan(page, name) {\n  // Diagnostic injection through DevTools only. The website ships no axe script,\n  // retains its production CSP, and makes no analyzer/network request.\n  await page.evaluate(axeSource);\n  const result = await page.evaluate(() =>\n    axe.run(document, {\n      runOnly: {\n        type: \"tag\",\n        values: [\n          \"wcag2a\",\n          \"wcag2aa\",\n          \"wcag21a\",\n          \"wcag21aa\",\n          \"wcag22aa\",\n          \"best-practice\",\n        ],\n      },\n    }),\n  );\n  await writeFile(\n    resolve(output, `axe-${name}.json`),\n    JSON.stringify(result, null, 2) + \"\\n\",\n  );\n  const supplemental = [];\n  scans.push({\n    name,\n    violations: result.violations.map((x) => ({\n      id: x.id,\n      targets: x.nodes.map((n) => n.target),\n    })),\n    incomplete: result.incomplete.map((x) => x.id),\n    supplemental,\n  });\n  for (const item of result.incomplete) {\n    assert.equal(\n      item.id,\n      \"color-contrast\",\n      `Unreviewed incomplete rule: ${item.id}`,\n    );\n    for (const node of item.nodes) {\n      assert.equal(node.target.length, 1, \"Unexpected shadow/frame target\");\n      const target = node.target[0];\n      assert.equal(typeof target, \"string\", \"Unexpected frame/shadow selector\");\n      if (typeof target !== \"string\")\n        throw new Error(\"Selector must be a string\");\n      const colors = await page.locator(target).evaluate((element) => {\n        const foreground = getComputedStyle(element).color;\n        let background;\n        /** @type {Element | null} */\n        let parent = element;\n        for (; parent; parent = parent.parentElement) {\n          const style = getComputedStyle(parent);\n          if (\n            style.backgroundImage !== \"none\" ||\n            style.opacity !== \"1\" ||\n            style.filter !== \"none\"\n          )\n            throw new Error(\"Contrast requires visual review of effects\");\n          if (style.backgroundColor !== \"rgba(0, 0, 0, 0)\") {\n            background = style.backgroundColor;\n            break;\n          }\n        }\n        return { foreground, background };\n      });\n      function luminance(css) {\n        const match = /^rgb\\((\\d+), (\\d+), (\\d+)\\)$/.exec(css);\n        assert.ok(match, `Non-opaque/non-RGB color needs review: ${css}`);\n        const values = match\n          .slice(1)\n          .map((x) => Number(x) / 255)\n          .map((x) =>\n            x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4,\n          );\n        return values[0] * 0.2126 + values[1] * 0.7152 + values[2] * 0.0722;\n      }\n      const a = luminance(colors.foreground),\n        b = luminance(colors.background);\n      const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);\n      supplemental.push({\n        target: node.target,\n        colors,\n        ratio,\n        scope:\n          \"Opaque CSS contrast for clipped/decorative nodes; not an axe pass or screen-reader certification\",\n      });\n      assert.ok(ratio >= 4.5, `Insufficient supplemental contrast: ${ratio}`);\n    }\n  }\n  assert.equal(\n    result.violations.length,\n    0,\n    JSON.stringify(scans.at(-1).violations),\n  );\n}\nfunction canonical(x) {\n  if (Array.isArray(x)) return \"[\" + x.map(canonical).join(\",\") + \"]\";\n  if (x !== null && typeof x === \"object\")\n    return (\n      \"{\" +\n      Object.keys(x)\n        .sort()\n        .map((k) => canonical(k) + \":\" + canonical(x[k]))\n        .join(\",\") +\n      \"}\"\n    );\n  return JSON.stringify(x).replace(\n    /[\\u0080-\\uffff]/g,\n    (c) => \"\\\\u\" + c.charCodeAt(0).toString(16).padStart(4, \"0\"),\n  );\n}\n\ntry {\n  browser = await chromium.launch();\n  for (const width of [1280, 390, 320]) {\n    await check(`${width}px console: recorded cards, command and axe`, () =>\n      withPage(width, async (page) => {\n        await page\n          .locator(\"details.archive\")\n          .evaluate((node) => node.removeAttribute(\"open\"));\n        assert.equal(await page.locator(\"#c-cards .card\").count(), 4);\n        assert.equal(await page.locator(\"#c-cards .recommended\").count(), 1);\n        await page.locator(\"#c-amount\").fill(\"0.3\");\n        await page.getByRole(\"button\", { name: \"Build local command\" }).click();\n        assert.match(\n          await page.locator(\"#c-command\").innerText(),\n          /--amount 0\\.3 /,\n        );\n        await page.locator(\"#c-amount\").fill(\"1; curl attacker\");\n        await page.getByRole(\"button\", { name: \"Build local command\" }).click();\n        assert.match(\n          await page.locator(\"#c-command\").innerText(),\n          /positive decimal/,\n        );\n        await noOverflow(page);\n        await scan(page, `${width}-console`);\n        await page.screenshot({\n          path: resolve(output, `${width}-console.png`),\n          fullPage: true,\n        });\n      }),\n    );\n  }\n  await check(\n    \"Console imports stay local, reject invalid evidence and recover\",\n    () =>\n      withPage(390, async (page) => {\n        const original = JSON.parse(\n          await readFile(\n            resolve(root, \"assets/examples/action-comparison.json\"),\n            \"utf8\",\n          ),\n        );\n        const hostile = structuredClone(original);\n        hostile.report.trials[0].reason = \"<img src=x onerror=alert(1)>\";\n        // This format uses UTF-8 canonical JSON, unlike the older ASCII v0.1 format.\n        const { canonical: canonicalComparison } =\n          await import(\"../report-validation.mjs\");\n        hostile.sha256 = createHash(\"sha256\")\n          .update(canonicalComparison(hostile.report))\n          .digest(\"hex\");\n        const count = requests.length;\n        await page.locator(\"#c-report-file\").setInputFiles({\n          name: \"local.json\",\n          mimeType: \"application/json\",\n          buffer: Buffer.from(JSON.stringify(hostile)),\n        });\n        await page.waitForFunction(() =>\n          document\n            .querySelector(\"#c-mode\")\n            ?.textContent?.includes(\"Imported local\"),\n        );\n        assert.equal(await page.locator(\"#c-cards img\").count(), 0);\n        assert.match(await page.locator(\"#c-cards\").innerText(), /<img/);\n        assert.equal(requests.length, count);\n        for (const bytes of [\n          \"{\",\n          JSON.stringify({ ...original, sha256: \"0\".repeat(64) }),\n          \" \".repeat(2_000_001),\n        ]) {\n          await page.locator(\"#c-report-file\").setInputFiles({\n            name: \"invalid.json\",\n            mimeType: \"application/json\",\n            buffer: Buffer.from(bytes),\n          });\n          await page.waitForFunction(\n            () =>\n              document.querySelector(\"#c-mode\")?.textContent ===\n              \"Report rejected\",\n          );\n          assert.equal(await page.locator(\"#c-results\").isVisible(), false);\n          assert.equal(await page.locator(\"#c-download\").isDisabled(), true);\n          assert.equal(await page.locator(\"#c-cards\").innerHTML(), \"\");\n          assert.equal(requests.length, count);\n        }\n        await page.locator(\"#c-report-file\").setInputFiles({\n          name: \"valid.json\",\n          mimeType: \"application/json\",\n          buffer: Buffer.from(JSON.stringify(original)),\n        });\n        await page.waitForFunction(() =>\n          document\n            .querySelector(\"#c-mode\")\n            ?.textContent?.includes(\"Imported local\"),\n        );\n        assert.equal(await page.locator(\"#c-results\").isVisible(), true);\n        await scan(page, \"console-import\");\n      }),\n  );\n  await check(\n    \"A slow recorded load cannot replace a newer rejected import\",\n    () =>\n      withPage(390, async (page) => {\n        let release;\n        const held = new Promise((resolve) => {\n          release = resolve;\n        });\n        let started;\n        const intercepted = new Promise((resolve) => {\n          started = resolve;\n        });\n        await page.route(\n          \"**/assets/examples/action-comparison.json\",\n          async (route) => {\n            started();\n            await held;\n            await route.fulfill({\n              contentType: \"application/json\",\n              body: await readFile(\n                resolve(root, \"assets/examples/action-comparison.json\"),\n                \"utf8\",\n              ),\n            });\n          },\n        );\n        await page.locator(\"#c-sample\").click();\n        await intercepted;\n        await page.locator(\"#c-report-file\").setInputFiles({\n          name: \"invalid.json\",\n          mimeType: \"application/json\",\n          buffer: Buffer.from(\"{\"),\n        });\n        await page.waitForFunction(\n          () =>\n            document.querySelector(\"#c-mode\")?.textContent ===\n            \"Report rejected\",\n        );\n        const response = page.waitForResponse(\n          \"**/assets/examples/action-comparison.json\",\n        );\n        release();\n        await (await response).finished();\n        // Wait for the stale response's validation digests to drain, with no sleep.\n        await page.evaluate(async () => {\n          for (let i = 0; i < 8; i++)\n            await crypto.subtle.digest(\"SHA-256\", new Uint8Array());\n        });\n        assert.equal(\n          await page.locator(\"#c-mode\").innerText(),\n          \"Report rejected\",\n        );\n        assert.equal(await page.locator(\"#c-results\").isVisible(), false);\n      }),\n  );\n  await check(\n    \"Keyboard skip link moves focus into main and skips navigation\",\n    () =>\n      withPage(1280, async (page) => {\n        await page.keyboard.press(\"Tab\");\n        assert.equal(\n          await page.locator(\":focus\").innerText(),\n          \"Skip to content\",\n        );\n        await visibleFocus(page);\n        await page.keyboard.press(\"Enter\");\n        await focusIs(page, \"main\");\n        await page.keyboard.press(\"Tab\");\n        assert.match(\n          await page.locator(\":focus\").innerText(),\n          /Enter the console/,\n        );\n      }),\n  );\n  await check(\n    \"Keyboard sample selection, native local-file chooser, live status and inert import\",\n    () =>\n      withPage(1280, async (page) => {\n        await page.locator(\"#scenario\").focus();\n        await visibleFocus(page);\n        await page.keyboard.press(\"r\");\n        await page.keyboard.press(\"Tab\");\n        await page.waitForFunction(() =>\n          document\n            .querySelector(\"#report-status\")\n            ?.textContent?.includes(\"recovery trap\"),\n        );\n        assert.ok(\n          (await page.locator(\"#delta-value\").innerText()).startsWith(\"-\"),\n        );\n        assert.equal(\n          await page.locator(\"#report-status\").getAttribute(\"aria-atomic\"),\n          \"true\",\n        );\n        assert.equal(\n          await page.locator(\".metrics\").getAttribute(\"aria-live\"),\n          null,\n        );\n        await focusIs(page, \"import\");\n        const chooser = page.waitForEvent(\"filechooser\");\n        await page.keyboard.press(\"Enter\");\n        const report = JSON.parse(\n          await readFile(resolve(root, \"reports/liquidity-shock.json\"), \"utf8\"),\n        );\n        delete report.artifact_id;\n        report.scenario.title = \"<img src=x onerror=alert(1)> 🛸\";\n        report.artifact_id = createHash(\"sha256\")\n          .update(canonical(report))\n          .digest(\"hex\");\n        const count = requests.length;\n        await (\n          await chooser\n        ).setFiles({\n          name: \"local-report.json\",\n          mimeType: \"application/json\",\n          buffer: Buffer.from(JSON.stringify(report)),\n        });\n        await page.waitForFunction(() =>\n          document\n            .querySelector(\"#report-status\")\n            ?.textContent?.includes(\"<img\"),\n        );\n        assert.equal(await page.locator(\"#report-status img\").count(), 0);\n        assert.equal(requests.length, count);\n        assert.equal(await page.locator(\"#download\").isVisible(), false);\n      }),\n  );\n  await check(\n    \"Recorded agent imports preserve reasons, reject resealed mismatches, clear and recover\",\n    () =>\n      withPage(1280, async (page) => {\n        const original = JSON.parse(\n          await readFile(\n            resolve(root, \"reports/agent-local-codex.json\"),\n            \"utf8\",\n          ),\n        );\n        const upload = async (report) => {\n          delete report.artifact_id;\n          report.artifact_id = createHash(\"sha256\")\n            .update(canonical(report))\n            .digest(\"hex\");\n          await page.locator(\"#import\").setInputFiles({\n            name: \"agent.json\",\n            mimeType: \"application/json\",\n            buffer: Buffer.from(JSON.stringify(report)),\n          });\n        };\n        const hostile = structuredClone(original);\n        hostile.agent.exchanges[0].response.reason =\n          \"<img src=x onerror=alert(1)> 🛸\";\n        hostile.candidate.trace[0].agent_decision.reason =\n          hostile.agent.exchanges[0].response.reason;\n        const count = requests.length;\n        await upload(hostile);\n        await page.waitForFunction(() =>\n          document.querySelector(\"#agent-rows\")?.textContent?.includes(\"<img\"),\n        );\n        assert.equal(await page.locator(\"#agent-rows img\").count(), 0);\n        assert.equal(requests.length, count);\n        for (const mutate of [\n          (r) => {\n            r.agent.exchanges[0].response.step = 31;\n          },\n          (r) => {\n            r.candidate.trace[0].agent_decision.reason = \"unrelated\";\n          },\n          (r) => {\n            r.agent.exchanges[0].request.observation.step = 31;\n          },\n          (r) => {\n            r.agent.exchanges[0].response.choice = [\"hold\"];\n            r.candidate.trace[0].agent_decision.choice = [\"hold\"];\n          },\n          (r) => {\n            r.candidate.trace[1].status = \"success\";\n            r.candidate.trace[1].gas_used = \"21000\";\n          },\n          (r) => {\n            r.agent.exchanges[0].request.proposed_action.to =\n              \"0x\" + \"f\".repeat(40);\n            r.candidate.trace[0].action.to = \"0x\" + \"f\".repeat(40);\n          },\n          (r) => {\n            r.candidate.trace[0].receipt.status = \"0x0\";\n          },\n        ]) {\n          const report = structuredClone(original);\n          mutate(report);\n          for (const exchange of report.agent.exchanges) {\n            const { request_id, ...request } = exchange.request;\n            const id = createHash(\"sha256\")\n              .update(canonical(request))\n              .digest(\"hex\");\n            exchange.request.request_id = id;\n            exchange.response.request_id = id;\n            if (request.observation.step < report.candidate.trace.length)\n              report.candidate.trace[\n                request.observation.step\n              ].agent_decision.request_id = id;\n          }\n          await upload(report);\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#report-status\")\n              ?.classList.contains(\"error\"),\n          );\n          assert.equal(await page.locator(\"#agent-details\").isVisible(), false);\n          assert.equal(await page.locator(\"#agent-rows tr\").count(), 0);\n          assert.equal(await page.locator(\"#agent-provenance\").innerText(), \"\");\n          assert.equal(await page.locator(\"#download\").isVisible(), false);\n          assert.equal(requests.length, count);\n          await upload(structuredClone(original));\n          await page.waitForFunction(\n            () =>\n              !document\n                .querySelector(\"#report-status\")\n                ?.classList.contains(\"error\"),\n          );\n          assert.equal(await page.locator(\"#agent-rows tr\").count(), 2);\n        }\n        await page.selectOption(\"#scenario\", \"liquidity-shock\");\n        await page.waitForFunction(\n          () =>\n            document.querySelector(\"#fixture-chart\") instanceof HTMLElement &&\n            !document.getElementById(\"fixture-chart\")?.hidden,\n        );\n        assert.equal(await page.locator(\"#agent-details\").isVisible(), false);\n        assert.equal(await page.locator(\"#agent-rows tr\").count(), 0);\n      }),\n  );\n  for (const width of [1280, 390, 320]) {\n    for (const sample of [\n      \"liquidity-shock\",\n      \"recovery-trap\",\n      \"depeg-stress\",\n      \"ethereum-uniswap-slippage\",\n      \"agent-local-codex\",\n    ]) {\n      await check(\n        `${width}px ${sample}: reflow, exact accessible data and axe`,\n        () =>\n          withPage(width, async (page) => {\n            const report = JSON.parse(\n              await readFile(resolve(root, `reports/${sample}.json`), \"utf8\"),\n            );\n            await page.selectOption(\"#scenario\", sample);\n            await page.waitForFunction(\n              (id) => document.querySelector(\"#hash\")?.textContent === id,\n              report.artifact_id,\n            );\n            await noOverflow(page);\n            if (report.agent) {\n              assert.equal(\n                await page.locator(\"#agent-rows tr\").count(),\n                report.agent.exchanges.length,\n              );\n              const text = await page.locator(\"#agent-provenance\").innerText();\n              assert.match(text, /requested alias/);\n              assert.match(text, /Nondeterministic/);\n              assert.match(text, /Original generation cost.*Unavailable/);\n              for (const exchange of report.agent.exchanges)\n                assert.ok(\n                  (await page.locator(\"#agent-rows\").innerText()).includes(\n                    exchange.response.reason,\n                  ),\n                );\n              await page.locator(\"#agent-details .table-wrap\").focus();\n              await visibleFocus(page);\n              if (width === 320) {\n                await page.keyboard.press(\"ArrowRight\");\n                await page.waitForFunction(\n                  () =>\n                    (document.querySelector(\"#agent-details .table-wrap\")\n                      ?.scrollLeft ?? 0) > 0,\n                );\n              }\n              await page.locator(\"#agent-details\").screenshot({\n                path: resolve(output, `${width}-agent-evidence.png`),\n              });\n            } else\n              assert.equal(\n                await page.locator(\"#agent-details\").isVisible(),\n                false,\n              );\n            if (report.mode === \"fixture\") {\n              const summary = page.getByText(\"Equity values by observation\", {\n                exact: true,\n              });\n              await summary.focus();\n              await page.keyboard.press(\"Enter\");\n              const rows = await page\n                .locator(\"#equity-rows tr\")\n                .allTextContents();\n              assert.equal(rows.length, report.baseline.trace.length);\n              const actual = await page\n                .locator(\"#equity-rows tr\")\n                .evaluateAll((rows) =>\n                  rows.map((row) => {\n                    if (!(row instanceof HTMLTableRowElement))\n                      throw new Error(\"Expected table row\");\n                    return [...row.cells].map((cell) => cell.textContent);\n                  }),\n                );\n              assert.deepEqual(\n                actual,\n                report.baseline.trace.map((point, i) => [\n                  String(i + 1),\n                  point.equity,\n                  report.candidate.trace[i].equity,\n                ]),\n              );\n              assert.equal(\n                await page.locator('#equity-rows th[scope=\"row\"]').count(),\n                rows.length,\n              );\n            } else {\n              assert.equal(\n                await page.locator(\"#fixture-chart\").isVisible(),\n                false,\n              );\n              assert.match(\n                await page.locator(\"#source-pin\").innerText(),\n                report.mode === \"evm-fork\"\n                  ? /19000000/\n                  : /Local disposable chain/,\n              );\n              const region = page.getByRole(\"region\", {\n                name: \"Supplied actions on isolated local forks\",\n              });\n              if (width === 320) {\n                await region.focus();\n                await visibleFocus(page);\n                await page.keyboard.press(\"ArrowRight\");\n                await page.waitForFunction(\n                  () =>\n                    (document.querySelector(\"#evm-details .table-wrap\")\n                      ?.scrollLeft ?? 0) > 0,\n                );\n              }\n            }\n            assert.ok(\n              (await page.locator('#metric-rows th[scope=\"row\"]').count()) > 0,\n            );\n            await page.getByText(\"Full result JSON\", { exact: true }).focus();\n            await page.keyboard.press(\"Enter\");\n            await page.keyboard.press(\"Tab\");\n            await focusIs(page, \"raw-report\");\n            await visibleFocus(page);\n            await page.keyboard.press(\"PageDown\");\n            await page.waitForFunction(\n              () => (document.querySelector(\"#raw-report\")?.scrollTop ?? 0) > 0,\n            );\n            await scan(page, `${width}-${sample}`);\n            if (\n              sample === \"ethereum-uniswap-slippage\" ||\n              (sample === \"liquidity-shock\" && width === 1280)\n            ) {\n              await page.screenshot({\n                path: resolve(output, `${width}-${sample}.png`),\n                fullPage: true,\n              });\n              await page\n                .locator(\"#reports .section-head\")\n                .scrollIntoViewIfNeeded();\n              await page.screenshot({\n                path: resolve(output, `${width}-${sample}-viewport.png`),\n              });\n            }\n          }),\n      );\n    }\n  }\n  await check(\n    \"Tampered import clears data, reports an accessible error and recovers\",\n    () =>\n      withPage(390, async (page) => {\n        const report = JSON.parse(\n          await readFile(resolve(root, \"reports/liquidity-shock.json\"), \"utf8\"),\n        );\n        report.candidate.metrics.final_equity = \"999999\";\n        await page.locator(\"#import\").setInputFiles({\n          name: \"tampered.json\",\n          mimeType: \"application/json\",\n          buffer: Buffer.from(JSON.stringify(report)),\n        });\n        await page.waitForFunction(() =>\n          document\n            .querySelector(\"#report-status\")\n            ?.textContent?.includes(\"mismatch\"),\n        );\n        assert.equal(await page.locator(\"#candidate-value\").innerText(), \"—\");\n        assert.equal(await page.locator(\"#equity-rows tr\").count(), 0);\n        assert.equal(await page.locator(\"#fixture-chart\").isVisible(), false);\n        await scan(page, \"error\");\n        await page.selectOption(\"#scenario\", \"recovery-trap\");\n        await page.waitForFunction(() =>\n          document\n            .querySelector(\"#report-status\")\n            ?.textContent?.includes(\"Synthetic recovery trap\"),\n        );\n        assert.equal(await page.locator(\"#metric-table\").isVisible(), true);\n        assert.equal(await page.locator(\"#fixture-chart\").isVisible(), true);\n        assert.ok((await page.locator(\"#equity-rows tr\").count()) > 0);\n      }),\n  );\n  await check(\n    \"Correctly hashed non-decimal metrics fail, clear data and recover without uploads\",\n    () =>\n      withPage(390, async (page) => {\n        for (const value of [\"\", \" \", \"\\t\", \"0x10\", \"0b11\", \"0o10\"]) {\n          const report = JSON.parse(\n            await readFile(\n              resolve(root, \"reports/liquidity-shock.json\"),\n              \"utf8\",\n            ),\n          );\n          delete report.artifact_id;\n          report.candidate.metrics.final_equity = value;\n          report.artifact_id = createHash(\"sha256\")\n            .update(canonical(report))\n            .digest(\"hex\");\n          const count = requests.length;\n          await page.locator(\"#import\").setInputFiles({\n            name: \"invalid-metric.json\",\n            mimeType: \"application/json\",\n            buffer: Buffer.from(JSON.stringify(report)),\n          });\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#report-status\")\n              ?.textContent?.includes(\"Invalid metric\"),\n          );\n          assert.equal(await page.locator(\"#candidate-value\").innerText(), \"—\");\n          assert.equal(await page.locator(\"#equity-rows tr\").count(), 0);\n          assert.equal(await page.locator(\"#raw-report\").innerText(), \"\");\n          assert.equal(await page.locator(\"#metric-table\").isVisible(), false);\n          assert.equal(await page.locator(\"#download\").isVisible(), false);\n          assert.equal(requests.length, count);\n          // Force a different selection after every invalid local import.\n          await page.selectOption(\"#scenario\", \"liquidity-shock\");\n          await page.selectOption(\"#scenario\", \"recovery-trap\");\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#report-status\")\n              ?.textContent?.includes(\"Synthetic recovery trap\"),\n          );\n          assert.equal(await page.locator(\"#metric-table\").isVisible(), true);\n        }\n      }),\n  );\n  await check(\n    \"Forced colors, reduced motion and keyboard focus remain usable\",\n    () =>\n      withPage(320, async (page) => {\n        await page.emulateMedia({\n          forcedColors: \"active\",\n          reducedMotion: \"reduce\",\n        });\n        assert.equal(\n          await page.evaluate(\n            () => getComputedStyle(document.documentElement).scrollBehavior,\n          ),\n          \"auto\",\n        );\n        await page.locator(\"#scenario\").focus();\n        await visibleFocus(page);\n        await noOverflow(page);\n        const strokes = await page\n          .locator(\"#chart .line\")\n          .evaluateAll((lines) =>\n            lines.map((x) => ({\n              color: getComputedStyle(x).stroke,\n              dash: getComputedStyle(x).strokeDasharray,\n            })),\n          );\n        assert.equal(strokes[0].color, strokes[1].color);\n        assert.notEqual(strokes[0].dash, strokes[1].dash);\n        await page.screenshot({\n          path: resolve(output, \"forced-colors.png\"),\n          fullPage: true,\n        });\n      }),\n  );\n  await check(\n    \"404 page at 320px: keyboard home link, no overflow and axe\",\n    () =>\n      withPage(\n        320,\n        async (page) => {\n          await noOverflow(page);\n          await page.keyboard.press(\"Tab\");\n          assert.match(\n            await page.locator(\":focus\").innerText(),\n            /Back to Entrotter/,\n          );\n          await scan(page, \"404\");\n          await page.keyboard.press(\"Enter\");\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#report-status\")\n              ?.textContent?.includes(\"Integrity verified locally\"),\n          );\n        },\n        \"/404.html\",\n      ),\n  );\n  for (const width of [1280, 390, 320]) {\n    await check(\n      `${width}px signed prefix: exact evidence, keyboard, reflow and axe`,\n      () =>\n        withPage(width, async (page) => {\n          await page.locator(\".trace-archive > summary\").focus();\n          await visibleFocus(page);\n          await page.keyboard.press(\"Enter\");\n          await page.locator(\"#trace-sample\").focus();\n          await page.keyboard.press(\"Enter\");\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#trace-status\")\n              ?.textContent?.includes(\"matches all original\"),\n          );\n          assert.equal(\n            await page.locator(\"#trace-case\").innerText(),\n            \"Loaded prefix: 4 original transactions · through_index 3 · skip_indices [0]\",\n          );\n          assert.equal(await page.locator(\"#trace-inputs tr\").count(), 4);\n          const table = await page.locator(\"#trace-outcomes\").innerText();\n          for (const value of [\n            \"208144\",\n            \"245136\",\n            \"185721\",\n            \"nonce_conflict\",\n            \"expected 5522, original 5523\",\n            \"gasUsed, cumulativeGasUsed, transactionIndex, logs\",\n          ])\n            assert.ok(table.includes(value), value);\n          assert.equal(\n            await page.locator(\"#trace-download\").getAttribute(\"href\"),\n            \"reports/trace-mainnet-prefix-four.json\",\n          );\n          await page\n            .locator(\"#trace-receipts details\")\n            .nth(1)\n            .locator(\"summary\")\n            .focus();\n          await page.keyboard.press(\"Enter\");\n          assert.ok(\n            (\n              await page.locator(\"#trace-receipts pre\").nth(1).innerText()\n            ).includes('\"logs\"'),\n          );\n          await page\n            .locator(\"#trace-outcomes\")\n            .locator(\"..\")\n            .locator(\"..\")\n            .focus();\n          await page.keyboard.press(\"ArrowRight\");\n          if (width < 700)\n            await page.waitForFunction(() => {\n              const wrapper =\n                document.querySelector(\"#trace-outcomes\")?.parentElement\n                  ?.parentElement;\n              return (\n                wrapper !== null &&\n                wrapper !== undefined &&\n                wrapper.scrollLeft > 0\n              );\n            });\n          await noOverflow(page);\n          await scan(page, `signed-prefix-${width}`);\n          await page.locator(\"#transaction-replay\").screenshot({\n            path: resolve(output, `${width}-signed-prefix.png`),\n          });\n          // Import through the actual keyboard file chooser; no upload or fetch.\n          const original = JSON.parse(\n            await readFile(\n              resolve(root, \"reports/trace-mainnet-prefix-four.json\"),\n              \"utf8\",\n            ),\n          );\n          original.assumptions[0] = \"<img src=x onerror=alert(1)> 🛸\";\n          delete original.artifact_id;\n          original.artifact_id = createHash(\"sha256\")\n            .update(canonical(original))\n            .digest(\"hex\");\n          const count = requests.length;\n          // Enter the native file control through sequential keyboard focus,\n          // as in the existing console chooser check, after leaving the table.\n          await page.locator(\"#trace-sample\").focus();\n          await page.keyboard.press(\"Tab\");\n          await focusIs(page, \"trace-import\");\n          await visibleFocus(page);\n          const chooser = page.waitForEvent(\"filechooser\");\n          await page.keyboard.press(\"Enter\");\n          await (\n            await chooser\n          ).setFiles({\n            name: \"local-trace.json\",\n            mimeType: \"application/json\",\n            buffer: Buffer.from(JSON.stringify(original)),\n          });\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#trace-origin\")\n              ?.textContent?.includes(\"Local import\"),\n          );\n          assert.equal(requests.length, count);\n          assert.equal(\n            await page.locator(\"#trace-download\").isVisible(),\n            false,\n          );\n          assert.equal(await page.locator(\"#trace-assumptions img\").count(), 0);\n          assert.ok(\n            (\n              (await page.locator(\"#trace-assumptions\").textContent()) || \"\"\n            ).includes(\"<img\"),\n          );\n          // Existing v0.1 pane retains its selected report and original rows.\n          assert.ok(\n            (await page.locator(\"#report-status\").innerText()).includes(\n              \"Integrity verified locally\",\n            ),\n          );\n        }),\n    );\n  }\n  for (const width of [1280, 390, 320]) {\n    await check(\n      `${width}px original32 local import: omission, structural shifts and exact fields`,\n      () =>\n        withPage(width, async (page) => {\n          await page.locator(\".trace-archive > summary\").click();\n          const before = requests.length;\n          await page\n            .locator(\"#trace-import\")\n            .setInputFiles(\n              resolve(root, \"tests/data/trace-oracle-prefix-32.json\"),\n            );\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#trace-comparison-summary\")\n              ?.textContent?.includes(\"19 position / cumulative gas only\"),\n          );\n          const summary = await page\n            .locator(\"#trace-comparison-summary\")\n            .innerText();\n          for (const value of [\n            \"1 omitted\",\n            \"0 execution receipt differences\",\n            \"12 exact original receipt matches\",\n            \"0 unavailable receipts\",\n          ])\n            assert.ok(summary.includes(value), value);\n          assert.equal(requests.length, before);\n          assert.equal(\n            await page.locator(\"#trace-case\").innerText(),\n            \"Loaded prefix: 32 original transactions · through_index 31 · skip_indices [12]\",\n          );\n          assert.equal(await page.locator(\"#trace-outcomes tr\").count(), 32);\n          const omitted = page.locator(\"#trace-outcomes tr\").nth(12);\n          assert.ok(\n            (await omitted.innerText()).includes(\"Omitted · no receipt\"),\n          );\n          const shifted = page.locator(\"#trace-outcomes tr\").nth(13);\n          assert.ok(\n            (await shifted.innerText()).includes(\n              \"Position / cumulative gas only\",\n            ),\n          );\n          assert.equal(\n            await shifted.locator(\"td\").last().innerText(),\n            \"cumulativeGasUsed, transactionIndex\",\n          );\n          await page\n            .locator(\"#trace-receipts details\")\n            .nth(13)\n            .locator(\"summary\")\n            .focus();\n          await page.keyboard.press(\"Enter\");\n          const exact = JSON.parse(\n            await page.locator(\"#trace-receipts pre\").nth(13).innerText(),\n          );\n          assert.equal(exact.original.gasUsed, exact.candidate.gasUsed);\n          assert.deepEqual(exact.original.logs, exact.candidate.logs);\n          assert.notEqual(\n            exact.original.transactionIndex,\n            exact.candidate.transactionIndex,\n          );\n          assert.equal(\n            await page.locator(\"#trace-download\").isVisible(),\n            false,\n          );\n          await page\n            .locator(\"#trace-outcomes\")\n            .locator(\"..\")\n            .locator(\"..\")\n            .focus();\n          await visibleFocus(page);\n          await page.keyboard.press(\"ArrowRight\");\n          if (width < 700)\n            await page.waitForFunction(() => {\n              const wrapper =\n                document.querySelector(\"#trace-outcomes\")?.parentElement\n                  ?.parentElement;\n              return (\n                wrapper !== null &&\n                wrapper !== undefined &&\n                wrapper.scrollLeft > 0\n              );\n            });\n          await noOverflow(page);\n          await scan(page, `original32-${width}`);\n          await page\n            .locator(\"#trace-comparison-summary\")\n            .scrollIntoViewIfNeeded();\n          await page.screenshot({\n            path: resolve(output, `${width}-original32-summary.png`),\n          });\n          await shifted.scrollIntoViewIfNeeded();\n          await page.screenshot({\n            path: resolve(output, `${width}-original32-shift.png`),\n          });\n        }),\n    );\n  }\n  await check(\n    \"Signed prefix: resealed contradictions, oversized import and honest unverified recovery\",\n    () =>\n      withPage(390, async (page) => {\n        await page.locator(\".trace-archive > summary\").click();\n        const template = JSON.parse(\n          await readFile(\n            resolve(root, \"reports/trace-mainnet-prefix-four.json\"),\n            \"utf8\",\n          ),\n        );\n        const bad = [];\n        for (const change of [\n          (r) => {\n            r.candidate.outcomes[3].expected_nonce++;\n          },\n          (r) => {\n            r.candidate.outcomes[1].differing_fields = [];\n          },\n          (r) => {\n            r.baseline_verified = false;\n          },\n        ]) {\n          const r = structuredClone(template);\n          change(r);\n          delete r.artifact_id;\n          r.artifact_id = createHash(\"sha256\")\n            .update(canonical(r))\n            .digest(\"hex\");\n          bad.push(Buffer.from(JSON.stringify(r)));\n        }\n        bad.push(Buffer.alloc(8 * 1024 * 1024 + 1, 32));\n        for (const [i, buffer] of bad.entries()) {\n          const count = requests.length;\n          await page.locator(\"#trace-import\").setInputFiles({\n            name: `bad-${i}.json`,\n            mimeType: \"application/json\",\n            buffer,\n          });\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#trace-status\")\n              ?.classList.contains(\"error\"),\n          );\n          assert.equal(await page.locator(\"#trace-results\").isVisible(), false);\n          assert.equal(await page.locator(\"#trace-outcomes tr\").count(), 0);\n          assert.equal(await page.locator(\"#trace-raw\").textContent(), \"\");\n          assert.equal(\n            await page.locator(\"#trace-comparison-summary\").textContent(),\n            \"\",\n          );\n          assert.equal(await page.locator(\"#trace-case\").textContent(), \"\");\n          assert.equal(\n            await page.locator(\"#trace-download\").getAttribute(\"href\"),\n            null,\n          );\n          assert.equal(requests.length, count);\n        }\n        const r = structuredClone(template),\n          o = r.baseline.outcomes[3];\n        r.baseline.outcomes[3] = {\n          index: o.index,\n          hash: o.hash,\n          status: \"rejected\",\n        };\n        r.baseline.matches_original_receipts = false;\n        r.baseline_verified = false;\n        delete r.artifact_id;\n        r.artifact_id = createHash(\"sha256\").update(canonical(r)).digest(\"hex\");\n        await page.locator(\"#trace-import\").setInputFiles({\n          name: \"unverified.json\",\n          mimeType: \"application/json\",\n          buffer: Buffer.from(JSON.stringify(r)),\n        });\n        await page.waitForFunction(() =>\n          document\n            .querySelector(\"#trace-status\")\n            ?.textContent?.includes(\"UNVERIFIED\"),\n        );\n        assert.equal(await page.locator(\"#trace-outcomes tr\").count(), 4);\n        await scan(page, \"signed-prefix-unverified\");\n        const numeric = JSON.parse(\n          await readFile(\n            resolve(root, \"tests/data/trace-mainnet-prefix-one.json\"),\n            \"utf8\",\n          ),\n        );\n        const codecs = JSON.parse(\n          await readFile(\n            resolve(root, \"tests/data/trace-runtime-codecs.json\"),\n            \"utf8\",\n          ),\n        );\n        const count = requests.length;\n        codecs.push(\n          ...JSON.parse(\n            await readFile(\n              resolve(root, \"tests/data/trace-unicode-codecs.unit.json\"),\n              \"utf8\",\n            ),\n          ),\n        );\n        for (const testCase of codecs) {\n          numeric.runtime_seconds = testCase.runtime_seconds;\n          numeric.artifact_id = testCase.artifact_id;\n          if (testCase.assumption !== undefined)\n            numeric.assumptions[0] = testCase.assumption;\n          await page.locator(\"#trace-import\").setInputFiles({\n            name: \"python-runtime.json\",\n            mimeType: \"application/json\",\n            buffer: Buffer.from(JSON.stringify(numeric)),\n          });\n          await page.waitForFunction(\n            (id) => document.querySelector(\"#trace-hash\")?.textContent === id,\n            testCase.artifact_id,\n          );\n          assert.equal(await page.locator(\"#trace-outcomes tr\").count(), 1);\n          assert.equal(\n            await page\n              .locator(\"#trace-status\")\n              .evaluate((el) => el.classList.contains(\"error\")),\n            false,\n          );\n        }\n        assert.equal(requests.length, count);\n      }),\n  );\n  await check(\n    \"Signed prefix: delayed sample cannot replace a newer local import\",\n    () =>\n      withPage(390, async (page) => {\n        await page.locator(\".trace-archive > summary\").click();\n        const original = await readFile(\n          resolve(root, \"reports/trace-mainnet-prefix-four.json\"),\n          \"utf8\",\n        );\n        let release;\n        const blocked = new Promise((resolve) => {\n          release = resolve;\n        });\n        let arrived;\n        const intercepted = new Promise((resolve) => {\n          arrived = resolve;\n        });\n        await page.route(\n          \"**/reports/trace-mainnet-prefix-four.json\",\n          async (route) => {\n            arrived();\n            await blocked;\n            await route.fulfill({\n              status: 200,\n              contentType: \"application/json\",\n              body: original,\n            });\n          },\n        );\n        try {\n          await page.locator(\"#trace-sample\").click();\n          await intercepted;\n          await page.locator(\"#trace-import\").setInputFiles({\n            name: \"newer.json\",\n            mimeType: \"application/json\",\n            buffer: Buffer.from(original),\n          });\n          await page.waitForFunction(() =>\n            document\n              .querySelector(\"#trace-origin\")\n              ?.textContent?.includes(\"Local import\"),\n          );\n          const response = page.waitForResponse(\n            \"**/reports/trace-mainnet-prefix-four.json\",\n          );\n          release();\n          await response;\n          await page.waitForTimeout(100);\n          assert.ok(\n            (await page.locator(\"#trace-origin\").innerText()).includes(\n              \"Local import\",\n            ),\n          );\n          assert.equal(\n            await page.locator(\"#trace-download\").isVisible(),\n            false,\n          );\n        } finally {\n          release();\n        }\n      }),\n  );\n  await check(\n    \"No JavaScript exceptions, uploads or unexpected third-party requests\",\n    async () => {\n      assert.deepEqual(errors, []);\n      assert.ok(requests.length > 0);\n      assert.ok(\n        requests.every(\n          (x) => x.url.startsWith(origin + \"/\") && x.method === \"GET\",\n        ),\n        JSON.stringify(requests),\n      );\n    },\n  );\n} finally {\n  const version = browser?.version();\n  if (browser) await browser.close();\n  await new Promise((resolve) => server.close(resolve));\n  const source = {};\n  for (const name of [\n    \"index.html\",\n    \"app.js\",\n    \"comparison.mjs\",\n    \"report-validation.mjs\",\n    \"trace-report.mjs\",\n    \"trace-comparison.mjs\",\n    \"trace-viewer.mjs\",\n    \"reports/trace-mainnet-prefix-four.json\",\n    \"tests/data/trace-oracle-prefix-32.json\",\n    \"assets/examples/action-comparison.json\",\n    \"reports/agent-local-codex.json\",\n    \"style.css\",\n    \"404.html\",\n    \"package.json\",\n    \"package-lock.json\",\n  ]) {\n    try {\n      source[name] = createHash(\"sha256\")\n        .update(await readFile(resolve(root, name)))\n        .digest(\"hex\");\n    } catch {\n      source[name] = null;\n    }\n  }\n  const report = {\n    checked_at: new Date().toISOString(),\n    node: process.version,\n    platform: process.platform,\n    runner_sha256: runnerHash,\n    status:\n      checks.length > 0 && checks.every((x) => x.status === \"passed\")\n        ? \"passed\"\n        : \"failed\",\n    browser: version,\n    axe: require(\"axe-core/package.json\").version,\n    playwright: require(\"playwright/package.json\").version,\n    source_sha256: source,\n    checks,\n    scans,\n    request_count: requests.length,\n    errors,\n    limitations: [\n      \"Automated Chromium and accessibility-tree/keyboard evidence; no claim of manual screen-reader certification or complete WCAG conformance.\",\n      \"320 CSS-pixel viewport checks reflow; it is not a hardware/browser zoom measurement.\",\n      \"Axe incomplete contrast items remain explicit; supplemental checks apply only to opaque solid CSS colors.\",\n      \"Local fixture/archived report display; no new chain/model execution.\",\n    ],\n  };\n  await writeFile(\n    resolve(output, \"accessibility.json\"),\n    JSON.stringify(report, null, 2) + \"\\n\",\n  );\n  console.log(\n    JSON.stringify(\n      { status: report.status, browser: version, checks, scans: scans.length },\n      null,\n      2,\n    ),\n  );\n  if (report.status !== \"passed\") process.exitCode = 1;\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "scripts/check_quality.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 59,
+        "column": 3,
+        "endLine": 59,
+        "endColumn": 16
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFile from package \"node:fs/promises\" with non literal argument at index 0",
+        "line": 60,
+        "column": 19,
+        "endLine": 60,
+        "endColumn": 33
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 2,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "// Full findings are retained before the exact source-bound review gate is applied.\nimport assert from \"node:assert/strict\";\nimport { execFileSync } from \"node:child_process\";\nimport { createHash } from \"node:crypto\";\nimport { mkdir, readFile, writeFile } from \"node:fs/promises\";\nimport { resolve, relative } from \"node:path\";\nimport { ESLint } from \"eslint\";\nimport security from \"eslint-plugin-security\";\nimport { findings, verifyReview } from \"./quality_policy.mjs\";\n\nconst root = process.cwd();\nconst paths = execFileSync(\n  \"git\",\n  [\"ls-files\", \"-z\", \"--cached\", \"--others\", \"--exclude-standard\"],\n  { encoding: \"utf8\" },\n)\n  .split(\"\\0\")\n  .filter(Boolean);\nconst jsFiles = [...new Set(paths.filter((p) => /\\.(js|mjs)$/.test(p)))].sort();\nassert.ok(jsFiles.length > 0, \"No tracked JavaScript sources\");\nawait mkdir(\".quality\", { recursive: true });\n// TypeScript 7 exposes the compiler through its CLI, not the former compiler API.\nconst listed = execFileSync(\n  process.execPath,\n  [\n    resolve(\"node_modules/typescript/bin/tsc\"),\n    \"--listFilesOnly\",\n    \"--pretty\",\n    \"false\",\n  ],\n  { encoding: \"utf8\" },\n);\nconst typeInputs = listed\n  .trim()\n  .split(\"\\n\")\n  .map((name) => relative(root, name.trim()))\n  .filter(\n    (name) => !name.startsWith(\"node_modules/\") && !name.startsWith(\"../\"),\n  )\n  .sort();\nassert.deepEqual(\n  typeInputs.filter((name) => /\\.(js|mjs)$/.test(name)),\n  jsFiles,\n  \"Type checking omits source files\",\n);\n/** @type {Record<string, string>} */\nconst sources = {};\nconst configurationInputs = [\n  \"package.json\",\n  \"package-lock.json\",\n  \"tsconfig.json\",\n  \"pyproject.toml\",\n  \"requirements-quality.in\",\n  \"requirements-quality.txt\",\n];\nfor (const path of [\n  ...new Set([...jsFiles, ...typeInputs, ...configurationInputs]),\n].sort()) {\n  sources[path] = createHash(\"sha256\")\n    .update(await readFile(path))\n    .digest(\"hex\");\n}\nawait writeFile(\n  \".quality/source-sha256.json\",\n  JSON.stringify(sources, null, 2) + \"\\n\",\n);\nconst checker = new ESLint({\n  overrideConfigFile: \"eslint.security.config.mjs\",\n  allowInlineConfig: false,\n});\nfor (const path of jsFiles) {\n  const config = await checker.calculateConfigForFile(path);\n  for (const rule of Object.keys(security.rules)) {\n    assert.ok(\n      config.rules[\"security/\" + rule]?.[0] > 0,\n      \"Missing security rule: \" + rule,\n    );\n  }\n}\nconst reports = await checker.lintFiles(jsFiles);\nawait writeFile(\n  \".quality/security.json\",\n  JSON.stringify(\n    reports.map((report) => ({\n      ...report,\n      filePath: relative(root, report.filePath),\n    })),\n    null,\n    2,\n  ) + \"\\n\",\n);\nassert.deepEqual(\n  reports.map((report) => relative(root, report.filePath)).sort(),\n  jsFiles,\n  \"Incomplete security scan\",\n);\nconst rows = findings(reports, root);\nconst review = JSON.parse(await readFile(\"security-reviewed.json\", \"utf8\"));\nverifyReview(rows, sources, review);\nawait writeFile(\n  \".quality/scope.json\",\n  JSON.stringify(\n    {\n      status: \"passed\",\n      js_files: jsFiles,\n      type_inputs: typeInputs,\n      security_rules: Object.keys(security.rules),\n      retained_security_findings: rows.length,\n      limitations: [\n        \"Source-bound author review, not independent approval or proof of security\",\n        \"Normal checkJs with strict null checks and unknown report inputs; noImplicitAny is disabled for JS tooling\",\n      ],\n    },\n    null,\n    2,\n  ) + \"\\n\",\n);\nconsole.log(\n  JSON.stringify({\n    sources: jsFiles.length,\n    type_inputs: typeInputs.length,\n    security_findings: rows.length,\n  }),\n);\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "scripts/quality_policy.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "tests/comparison.test.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 7,
+        "column": 3,
+        "endLine": 10,
+        "endColumn": 4
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 1,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import test from \"node:test\";\nimport assert from \"node:assert/strict\";\nimport { readFileSync } from \"node:fs\";\nimport { createHash } from \"node:crypto\";\nimport { validate, canonical, decimal } from \"../report-validation.mjs\";\nconst original = JSON.parse(\n  readFileSync(\n    new URL(\"../assets/examples/action-comparison.json\", import.meta.url),\n    \"utf8\",\n  ),\n);\nfunction tamper(fn, rehash = true) {\n  const e = structuredClone(original);\n  fn(e.report);\n  if (rehash)\n    e.sha256 = createHash(\"sha256\").update(canonical(e.report)).digest(\"hex\");\n  return e;\n}\ntest(\"measured report passes hash and semantic validation\", async () =>\n  assert.equal((await validate(original)).trials.length, 4));\n/** @type {Array<[string, (report: typeof original.report) => unknown, boolean]>} */\nconst invalidReports = [\n  [\"changed hash\", (r) => r.trials[0].gasUsed++, false],\n  [\"receipt gas mismatch\", (r) => r.trials[0].gasUsed++, true],\n  [\n    \"different starting root\",\n    (r) => (r.trials[1].initialStateRoot = \"0x\" + \"f\".repeat(64)),\n    true,\n  ],\n  [\"inconsistent delta\", (r) => (r.trials[0].delta.USDC = \"1\"), true],\n  [\"fake hold fee\", (r) => (r.trials[3].gasCostWei = \"1\"), true],\n  [\"missing trial\", (r) => (r.trials[0] = null), true],\n  [\"wrong token\", (r) => (r.contracts.WETH = \"0x\" + \"1\".repeat(40)), true],\n  [\n    \"wrong calldata fee\",\n    (r) =>\n      (r.trials[0].execution.transaction.data =\n        r.trials[0].execution.transaction.data.slice(0, 138) +\n        \"0\".repeat(64) +\n        r.trials[0].execution.transaction.data.slice(202)),\n    true,\n  ],\n  [\"wrong chain\", (r) => (r.source.chainId = 2), true],\n  [\"invalid decimals\", (r) => (r.decimals.USDC = 18), true],\n  [\"forged policy\", (r) => (r.trials[0].verdict = \"PROCEED\"), true],\n  [\"wrong input\", (r) => (r.trials[1].amountIn = \"1\"), true],\n  [\"missing receipt\", (r) => (r.trials[0].execution = null), true],\n  [\"missing cleanup\", (r) => (r.nodeCleanedUp = false), true],\n  [\"unsupported format\", (r) => (r.format = \"other\"), true],\n  [\"invalid amount type\", (r) => (r.trials[0].amountIn = 1e18), true],\n];\nfor (const [name, fn, rehash] of invalidReports)\n  test(\"rejects \" + name, async () =>\n    assert.rejects(() => validate(tamper(fn, rehash))),\n  );\ntest(\"rejects malformed envelope\", async () =>\n  assert.rejects(() => validate(null)));\ntest(\"exact decimals avoid floating point\", () => {\n  assert.equal(decimal(\"741110419\", 6), \"741.110419\");\n  assert.equal(decimal(\"-263476000000000\", 18), \"-0.000263476\");\n  assert.equal(decimal(\"0\", 6), \"0\");\n});\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "tests/quality.test.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "tests/report.test.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 22,
+        "column": 3,
+        "endLine": 22,
+        "endColumn": 62
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 27,
+        "column": 5,
+        "endLine": 30,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 36,
+        "column": 9,
+        "endLine": 39,
+        "endColumn": 10
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 74,
+        "column": 5,
+        "endLine": 77,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 154,
+        "column": 5,
+        "endLine": 157,
+        "endColumn": 6
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 5,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import test from \"node:test\";\nimport assert from \"node:assert/strict\";\nimport { readFileSync } from \"node:fs\";\nimport { createHash, webcrypto } from \"node:crypto\";\nimport vm from \"node:vm\";\n\n// No browser/network needed: exercise the exact production hash/number functions.\nconst context = vm.createContext({\n  document: {\n    getElementById: () => ({\n      value: \"not-an-allowed-sample\",\n      addEventListener: () => {},\n    }),\n  },\n  crypto: webcrypto,\n  TextEncoder,\n  fetch: () => {\n    throw new Error(\"Unit tests must not contact the network\");\n  },\n});\nvm.runInContext(\n  readFileSync(new URL(\"../app.js\", import.meta.url), \"utf8\"),\n  context,\n);\nconst sample = () =>\n  JSON.parse(\n    readFileSync(\n      new URL(\"../reports/liquidity-shock.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\nfor (const name of [\"liquidity-shock\", \"recovery-trap\", \"depeg-stress\"]) {\n  test(`production JS verifies Python artifact: ${name}`, async () => {\n    await context.checkHash(\n      JSON.parse(\n        readFileSync(\n          new URL(`../reports/${name}.json`, import.meta.url),\n          \"utf8\",\n        ),\n      ),\n    );\n  });\n}\ntest(\"tampered metric fails integrity validation\", async () => {\n  const r = sample();\n  r.candidate.metrics.final_equity = \"999999\";\n  await assert.rejects(context.checkHash(r), /mismatch/);\n});\ntest(\"unknown schema is not accepted\", async () => {\n  const r = sample();\n  r.schema_version = \"9\";\n  await assert.rejects(context.checkHash(r), /Unsupported/);\n});\ntest(\"canonical ASCII escaping includes supplementary Unicode\", () => {\n  assert.equal(\n    context.canonical({ x: \"🛸\", a: \"é\" }),\n    '\\x7b\"a\":\"\\\\u00e9\",\"x\":\"\\\\ud83d\\\\udef8\"\\x7d',\n  );\n});\ntest(\"finite numerical display validation\", () => {\n  assert.equal(context.finite(\"8557.0516\"), 8557.0516);\n  assert.throws(() => context.finite(\"Infinity\"), /Invalid metric/);\n  assert.throws(() => context.finite(2), /Invalid metric/);\n});\ntest(\"JS re-canonicalization matches exported content hash\", () => {\n  const { artifact_id, ...r } = sample();\n  assert.equal(\n    createHash(\"sha256\").update(context.canonical(r)).digest(\"hex\"),\n    artifact_id,\n  );\n});\nconst evm = () =>\n  JSON.parse(\n    readFileSync(\n      new URL(\"../reports/ethereum-uniswap-slippage.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\ntest(\"real archived-state artifact passes hash and receipt view validation\", async () => {\n  const r = evm();\n  await context.checkHash(r);\n  const view = context.evmViewModel(r);\n  assert.equal(view.traces.length, 6);\n  assert.equal(view.traces.at(-1)[2], \"reverted\");\n  assert.match(view.source, /19000000/);\n  assert.equal(\n    view.rows.find((r) => r[0] === \"USDC final token units\")[1],\n    \"2556.134769\",\n  );\n});\ntest(\"token units preserve integers beyond Number safe precision\", () => {\n  assert.equal(\n    context.tokenUnits(\"123456789012345678901\", 18),\n    \"123.456789012345678901\",\n  );\n  assert.equal(context.tokenUnits(\"-1\", 6), \"-0.000001\");\n  assert.equal(context.tokenUnits(\"42\", 0), \"42\");\n  assert.throws(() => context.tokenUnits(\"1e18\", 18), /Invalid/);\n  assert.throws(() => context.tokenUnits(\"1\", 1000), /Invalid/);\n});\ntest(\"missing source hash cannot appear as a historical report\", () => {\n  const r = evm();\n  delete r.source.block_hash;\n  assert.throws(() => context.evmViewModel(r), /source pin/);\n});\ntest(\"mismatched token addresses cannot share a comparison row\", () => {\n  const r = evm();\n  r.candidate.tokens[0].address = \"0x\" + \"f\".repeat(40);\n  assert.throws(() => context.evmViewModel(r), /metadata/);\n});\ntest(\"malformed receipt state and oversized traces fail closed\", () => {\n  const r = evm();\n  r.candidate.trace[0].status = \"<img>\";\n  assert.throws(() => context.evmViewModel(r), /step/);\n  const many = evm();\n  many.baseline.trace = Array(33).fill(many.baseline.trace[0]);\n  assert.throws(() => context.evmViewModel(many), /trace/);\n});\n\ntest(\"display metrics reject coercible non-decimal strings\", () => {\n  for (const value of [\"\", \" \", \"\\t\", \"0x10\", \"0b11\", \"0o10\"]) {\n    assert.throws(() => context.finite(value), /Invalid metric/);\n  }\n});\n\ntest(\"decimal metrics preserve supported signed/exponent values and reject overflow\", () => {\n  assert.equal(context.finite(\"-1.25\"), -1.25);\n  assert.equal(context.finite(\"1e2\"), 100);\n  for (const value of [\"1e999\", \"1\\n\", \"1 \", \"NaN\", \"1\".repeat(101)])\n    assert.throws(() => context.finite(value), /Invalid metric/);\n  assert.throws(() => context.rawInteger(\"1\\n\"), /Invalid raw integer/);\n});\ntest(\"hash verification rejects non-object or non-finite parsed JSON\", async () => {\n  for (const value of [null, [], true, 42, \"report\"])\n    await assert.rejects(context.checkHash(value), /Invalid report object/);\n  assert.throws(() => context.canonical(Infinity), /Invalid JSON number/);\n});\n\ntest(\"local EVM reports accept null/absent source while forks require their pin\", () => {\n  const r = evm();\n  r.mode = \"evm-local\";\n  r.scenario.provenance.kind = \"local-evm\";\n  r.source = null;\n  assert.match(context.evmViewModel(r).source, /Local disposable chain/);\n  delete r.source;\n  assert.match(context.evmViewModel(r).source, /Local disposable chain/);\n  const fork = evm();\n  fork.source = null;\n  assert.throws(() => context.evmViewModel(fork), /source pin/);\n});\n\nconst agent = () =>\n  JSON.parse(\n    readFileSync(\n      new URL(\"../reports/agent-local-codex.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\ntest(\"recorded agent decisions join causal steps to exact candidate outcomes\", async () => {\n  const r = agent();\n  await context.checkHash(r);\n  const view = await context.agentViewModel(r);\n  assert.equal(view.rows.length, 2);\n  assert.deepEqual(Array.from(view.rows[0]), [\n    \"0\",\n    \"success\",\n    \"21000 / 2000000\",\n    \"execute\",\n    r.agent.exchanges[0].response.reason,\n    \"success\",\n    \"21000\",\n  ]);\n  assert.deepEqual(Array.from(view.rows[1]).slice(0, 4), [\n    \"1\",\n    \"rejected\",\n    \"50000 / 1979000\",\n    \"hold\",\n  ]);\n  assert.match(view.provenance, /gpt-5.6-sol/);\n  assert.match(view.provenance, /requested alias/);\n  assert.match(view.provenance, /Nondeterministic/);\n  assert.match(view.provenance, /Original generation cost.*Unavailable/);\n  assert.equal(await context.agentViewModel(evm()), null);\n});\ntest(\"agent recording rejects forged steps, responses, IDs, outcomes and future history\", async () => {\n  const mutations = [\n    (r) => {\n      r.agent.exchanges[0].response.step = 31;\n    },\n    (r) => {\n      r.agent.exchanges[0].request.observation.step = 31;\n    },\n    (r) => {\n      r.agent.exchanges[0].request.request_id = \"a\".repeat(64);\n    },\n    (r) => {\n      r.candidate.trace[0].agent_decision.reason = \"unrelated\";\n    },\n    (r) => {\n      r.candidate.trace[1].action =\n        r.agent.exchanges[1].request.proposed_action;\n    },\n    (r) => {\n      r.agent.exchanges[0].request.observation.completed_actions.push({\n        step: 1,\n        status: \"noop\",\n        gas_used: \"0\",\n      });\n    },\n    (r) => {\n      r.agent.exchanges = Array(33).fill(r.agent.exchanges[0]);\n    },\n  ];\n  for (const mutate of mutations) {\n    const r = agent();\n    mutate(r);\n    await assert.rejects(\n      context.agentViewModel(r),\n      /agent|Agent|observation|Observation/,\n    );\n  }\n});\ntest(\"agent metadata preserves built-in determinism and known generation cost\", async () => {\n  const r = agent();\n  r.agent.provider = {\n    provider: \"builtin\",\n    model: \"preflight-risk-v1\",\n    deterministic: true,\n    cost_usd: \"0\",\n  };\n  assert.match((await context.agentViewModel(r)).provenance, /Deterministic/);\n  assert.match(\n    (await context.agentViewModel(r)).provenance,\n    /Original generation cost.*0/,\n  );\n  r.agent.provider.cost_usd = \" \";\n  await assert.rejects(context.agentViewModel(r), /metric/);\n});\n\n/** @type {Array<[string, (r: ReturnType<typeof agent>) => void]>} */\nconst contradictoryAgents = [\n  [\n    \"array choice disguised as hold\",\n    (r) => {\n      r.agent.exchanges[0].response.choice = [\"hold\"];\n      r.candidate.trace[0].agent_decision.choice = [\"hold\"];\n    },\n  ],\n  [\n    \"held action claiming successful gas use\",\n    (r) => {\n      r.candidate.trace[1].status = \"success\";\n      r.candidate.trace[1].gas_used = \"21000\";\n    },\n  ],\n  [\n    \"proposal unrelated to scenario\",\n    (r) => {\n      r.agent.exchanges[0].request.proposed_action.to = \"0x\" + \"f\".repeat(40);\n      r.candidate.trace[0].action.to = \"0x\" + \"f\".repeat(40);\n    },\n  ],\n  [\n    \"receipt contradicting outcome\",\n    (r) => {\n      r.candidate.trace[0].receipt.status = \"0x0\";\n    },\n  ],\n];\nfor (const [name, mutate] of contradictoryAgents)\n  test(`resealed agent refuses ${name}`, async () => {\n    const r = agent();\n    mutate(r);\n    for (const exchange of r.agent.exchanges) {\n      const { request_id, ...request } = exchange.request;\n      const id = createHash(\"sha256\")\n        .update(context.canonical(request))\n        .digest(\"hex\");\n      exchange.request.request_id = id;\n      exchange.response.request_id = id;\n      r.candidate.trace[request.observation.step].agent_decision.request_id =\n        id;\n    }\n    const { artifact_id, ...body } = r;\n    r.artifact_id = createHash(\"sha256\")\n      .update(context.canonical(body))\n      .digest(\"hex\");\n    await context.checkHash(r);\n    await assert.rejects(context.agentViewModel(r), /agent|Agent/);\n  });\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "tests/trace.test.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 10,
+        "column": 5,
+        "endLine": 13,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 17,
+        "column": 5,
+        "endLine": 20,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 93,
+        "column": 5,
+        "endLine": 96,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 116,
+        "column": 5,
+        "endLine": 116,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 118,
+        "column": 13,
+        "endLine": 118,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 121,
+        "column": 23,
+        "endLine": 121,
+        "endColumn": 41
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 125,
+        "column": 5,
+        "endLine": 125,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 125,
+        "column": 46,
+        "endLine": 125,
+        "endColumn": 69
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 320,
+        "column": 5,
+        "endLine": 323,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 327,
+        "column": 7,
+        "endLine": 330,
+        "endColumn": 8
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 340,
+        "column": 5,
+        "endLine": 343,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 355,
+        "column": 5,
+        "endLine": 358,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 362,
+        "column": 7,
+        "endLine": 365,
+        "endColumn": 8
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 408,
+        "column": 5,
+        "endLine": 411,
+        "endColumn": 6
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 415,
+        "column": 7,
+        "endLine": 418,
+        "endColumn": 8
+      },
+      {
+        "ruleId": "security/detect-non-literal-fs-filename",
+        "severity": 1,
+        "message": "Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+        "line": 435,
+        "column": 7,
+        "endLine": 438,
+        "endColumn": 8
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 16,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import test from \"node:test\";\nimport assert from \"node:assert/strict\";\nimport { readFileSync } from \"node:fs\";\nimport { createHash, webcrypto } from \"node:crypto\";\nimport { traceCanonical, validateTraceReport } from \"../trace-report.mjs\";\nimport { traceComparison } from \"../trace-comparison.mjs\";\n\nconst sample = () =>\n  JSON.parse(\n    readFileSync(\n      new URL(\"../reports/trace-mainnet-prefix-four.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\nconst oraclePrefix = () =>\n  JSON.parse(\n    readFileSync(\n      new URL(\"data/trace-oracle-prefix-32.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\n\ntest(\"original native32 report distinguishes omission and structural receipt shifts\", async () => {\n  const view = await validateTraceReport(oraclePrefix());\n  const comparisons = view.candidate.rows.map(traceComparison);\n  assert.equal(comparisons.filter((r) => r.kind === \"identical\").length, 12);\n  assert.equal(comparisons.filter((r) => r.kind === \"omitted\").length, 1);\n  assert.equal(comparisons.filter((r) => r.kind === \"structural\").length, 19);\n  assert.equal(comparisons.filter((r) => r.kind === \"execution\").length, 0);\n  assert.deepEqual(comparisons[12].structuralFields, []);\n  assert.deepEqual(comparisons[13].structuralFields.sort(), [\n    \"cumulativeGasUsed\",\n    \"transactionIndex\",\n  ]);\n  assert.equal(comparisons[13].label, \"Position / cumulative gas only\");\n});\n\ntest(\"a coherently resealed gas change remains an execution difference beside shifts\", async () => {\n  const r = oraclePrefix();\n  for (const o of r.candidate.outcomes.slice(13)) {\n    o.receipt.cumulativeGasUsed = `0x${(BigInt(o.receipt.cumulativeGasUsed) + 1n).toString(16)}`;\n  }\n  const changed = r.candidate.outcomes[13];\n  changed.receipt.gasUsed = `0x${(BigInt(changed.receipt.gasUsed) + 1n).toString(16)}`;\n  changed.differing_fields.push(\"gasUsed\");\n  const view = await validateTraceReport(reseal(r));\n  const comparison = traceComparison(view.candidate.rows[13]);\n  assert.equal(comparison.kind, \"execution\");\n  assert.deepEqual(comparison.executionFields, [\"gasUsed\"]);\n  assert.deepEqual(comparison.structuralFields.sort(), [\n    \"cumulativeGasUsed\",\n    \"transactionIndex\",\n  ]);\n  assert.equal(traceComparison(view.candidate.rows[14]).kind, \"structural\");\n});\n\ntest(\"unavailable receipts stay separate from omitted and unchanged receipts\", async () => {\n  const view = await validateTraceReport(sample());\n  assert.equal(traceComparison(view.candidate.rows[0]).kind, \"omitted\");\n  assert.equal(traceComparison(view.candidate.rows[3]).kind, \"unavailable\");\n  assert.equal(\n    traceComparison(view.candidate.rows[3]).label,\n    \"No candidate receipt\",\n  );\n});\nfunction reseal(r) {\n  const { artifact_id, ...body } = r;\n  r.artifact_id = createHash(\"sha256\")\n    .update(traceCanonical(body))\n    .digest(\"hex\");\n  return r;\n}\nasync function refuse(change) {\n  const r = sample();\n  change(r);\n  await assert.rejects(\n    validateTraceReport(reseal(r)),\n    /Invalid transaction-prefix/,\n  );\n}\ntest(\"exact original Docker four-prefix and separate native one-prefix reports pass\", async () => {\n  const view = await validateTraceReport(sample());\n  assert.equal(view.baseline.matches, true);\n  assert.deepEqual(\n    view.candidate.rows.map((o) => o.status),\n    [\"skipped\", \"executed\", \"executed\", \"nonce_conflict\"],\n  );\n  assert.equal(\n    BigInt(String(view.candidate.rows[1].receipt?.gasUsed)),\n    245136n,\n  );\n  const one = JSON.parse(\n    readFileSync(\n      new URL(\"data/trace-mainnet-prefix-one.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\n  assert.equal((await validateTraceReport(one)).inputs.length, 1);\n});\ntest(\"unverified rejected and unmined baselines are honestly displayable\", async () => {\n  for (const status of [\"rejected\", \"not_mined\"]) {\n    const r = sample(),\n      old = r.baseline.outcomes[3];\n    r.baseline.outcomes[3] = { index: old.index, hash: old.hash, status };\n    r.baseline.matches_original_receipts = false;\n    r.baseline_verified = false;\n    assert.equal(\n      (await validateTraceReport(reseal(r))).baseline.matches,\n      false,\n    );\n  }\n});\ntest(\"first baseline conflict shares its parent nonce anchor with candidate\", async () => {\n  const r = sample();\n  for (const i of [0, 3])\n    r.baseline.outcomes[i] = {\n      index: i,\n      hash: r.source.inputs[i].hash,\n      status: \"nonce_conflict\",\n      expected_nonce: 5521,\n      original_nonce: r.source.inputs[i].nonce,\n    };\n  // Other senders mine at the candidate's indices and cumulative gas; their receipts may differ.\n  for (const i of [1, 2])\n    r.baseline.outcomes[i] = structuredClone(r.candidate.outcomes[i]);\n  r.baseline.matches_original_receipts = false;\n  r.baseline_verified = false;\n  r.candidate.outcomes[3].expected_nonce = 5521;\n  assert.equal((await validateTraceReport(reseal(r))).baseline.matches, false);\n  r.candidate.outcomes[3].expected_nonce = 5522;\n  await assert.rejects(validateTraceReport(reseal(r)), /nonce conflict/);\n});\ntest(\"reordered JSON keys and differing-field set order remain compatible\", async () => {\n  const r = sample();\n  for (const b of [r.baseline, r.candidate])\n    for (const o of b.outcomes)\n      if (o.receipt)\n        o.receipt = Object.fromEntries(Object.entries(o.receipt).reverse());\n  // Object order does not change the hash. Difference fields are a unique set.\n  await validateTraceReport(r);\n  r.candidate.outcomes[1].differing_fields.reverse();\n  await validateTraceReport(reseal(r));\n});\ntest(\"resealed source, prefix and intervention contradictions fail\", async () => {\n  for (const change of [\n    (r) => {\n      r.source.parent.block_number++;\n    },\n    (r) => {\n      r.source.parent.chain_id = 2;\n    },\n    (r) => {\n      r.plan.through_index = 2;\n    },\n    (r) => {\n      r.source.inputs[1].index = 0;\n    },\n    (r) => {\n      r.source.block_transaction_count = 3;\n    },\n    (r) => {\n      r.plan.skip_indices = [1, 0];\n    },\n    (r) => {\n      r.plan.skip_indices = [0, 0];\n    },\n    (r) => {\n      r.plan.skip_indices = [];\n    },\n    (r) => {\n      r.candidate.outcomes[3].index = 2;\n    },\n  ])\n    await refuse(change);\n});\ntest(\"resealed hashes, receipt senders, targets and signed types/nonces fail\", async () => {\n  for (const change of [\n    (r) => {\n      r.source.inputs[0].hash = \"0x\" + \"00\".repeat(32);\n    },\n    (r) => {\n      r.source.inputs[0].nonce++;\n    },\n    (r) => {\n      r.source.inputs[0].original_receipt.from = \"0x\" + \"00\".repeat(20);\n    },\n    (r) => {\n      r.candidate.outcomes[1].receipt.to = null;\n    },\n    (r) => {\n      r.candidate.outcomes[1].receipt.type = \"0x1\";\n    },\n    (r) => {\n      r.candidate.outcomes[1].receipt.transactionHash = \"0x\" + \"00\".repeat(32);\n    },\n    (r) => {\n      r.candidate.outcomes[1].receipt.from = \"0x\" + \"00\".repeat(20);\n    },\n    (r) => {\n      r.source.inputs[0].raw = \"0x00\";\n    },\n    (r) => {\n      r.source.inputs[0].raw += \"00\";\n    },\n  ])\n    await refuse(change);\n});\ntest(\"resealed receipt difference and verification claims fail\", async () => {\n  for (const change of [\n    (r) => {\n      r.candidate.outcomes[1].differing_fields = [];\n    },\n    (r) => {\n      r.candidate.outcomes[1].differing_fields.push(\"gasUsed\");\n    },\n    (r) => {\n      r.candidate.outcomes[1].differing_fields.push(\"status\");\n    },\n    (r) => {\n      r.baseline_verified = false;\n    },\n    (r) => {\n      r.candidate.matches_original_receipts = true;\n    },\n    (r) => {\n      r.baseline.matches_original_receipts = false;\n    },\n    (r) => {\n      r.baseline.outcomes[1].receipt.cumulativeGasUsed = \"0x1\";\n    },\n    (r) => {\n      r.candidate.outcomes[1].receipt.transactionIndex = \"0x1\";\n    },\n    (r) => {\n      r.candidate.outcomes[1].receipt.status = \"0x0\";\n    },\n    (r) => {\n      r.candidate.outcomes[0].receipt = r.baseline.outcomes[0].receipt;\n    },\n  ])\n    await refuse(change);\n});\ntest(\"resealed nonce repair or hidden conflict fails\", async () => {\n  for (const change of [\n    (r) => {\n      r.candidate.outcomes[3].expected_nonce++;\n    },\n    (r) => {\n      r.candidate.outcomes[3].original_nonce--;\n    },\n    (r) => {\n      r.candidate.outcomes[3] = structuredClone(r.baseline.outcomes[3]);\n    },\n    (r) => {\n      r.candidate.outcomes[3].status = \"not_mined\";\n      delete r.candidate.outcomes[3].expected_nonce;\n      delete r.candidate.outcomes[3].original_nonce;\n    },\n  ])\n    await refuse(change);\n});\ntest(\"shape, unsafe integers, log/calldata and serialized quotas fail closed\", async () => {\n  for (const change of [\n    (r) => {\n      r.rpc_url = \"https://example.com\";\n    },\n    (r) => {\n      r.schema_version = \"0.1.0\";\n    },\n    (r) => {\n      r.plan.command = \"anything\";\n    },\n    (r) => {\n      r.source.header.base_fee = Number.MAX_SAFE_INTEGER + 1;\n    },\n    (r) => {\n      r.source.inputs[0].nonce = true;\n    },\n    (r) => {\n      r.baseline.outcomes[0].receipt.logs[0].removed = false;\n    },\n    (r) => {\n      r.baseline.outcomes[0].receipt.logs = Array(513).fill(\n        r.baseline.outcomes[0].receipt.logs[0],\n      );\n    },\n    (r) => {\n      r.source.inputs[0].original_receipt.logs[0].topics = Array(5).fill(\n        \"0x\" + \"00\".repeat(32),\n      );\n    },\n    (r) => {\n      r.source.inputs[0].original_receipt.logs[0].data =\n        \"0x\" + \"00\".repeat(65537);\n    },\n    (r) => {\n      r.source.inputs[0].raw = \"0x\" + \"00\".repeat(65537);\n    },\n    (r) => {\n      r.source.inputs = Array(33).fill(r.source.inputs[0]);\n    },\n    (r) => {\n      r.assumptions = [\"<img src=x onerror=alert(1)>\".repeat(400000)];\n    },\n  ])\n    await refuse(change);\n});\ntest(\"changed unsigned checksum fails and hostile Unicode stays data\", async () => {\n  const r = sample();\n  r.assumptions[0] = \"<img src=x onerror=alert(1)> 🛸 é\";\n  await assert.rejects(validateTraceReport(r), /hash mismatch/);\n  assert.equal(\n    (await validateTraceReport(reseal(r))).assumptions[0],\n    r.assumptions[0],\n  );\n});\n\ntest(\"Python-sealed integer-valued float and exponent runtime codecs verify\", async () => {\n  const cases = JSON.parse(\n    readFileSync(\n      new URL(\"data/trace-runtime-codecs.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\n  for (const testCase of cases) {\n    const r = JSON.parse(\n      readFileSync(\n        new URL(\"data/trace-mainnet-prefix-one.json\", import.meta.url),\n        \"utf8\",\n      ),\n    );\n    r.runtime_seconds = testCase.runtime_seconds;\n    r.artifact_id = testCase.artifact_id;\n    await validateTraceReport(r);\n  }\n});\ntest(\"64 KiB calldata envelope fits the engine's larger raw-wire bound\", async () => {\n  // Resealed unit metadata only, not a new valid signature or executed report.\n  const r = JSON.parse(\n    readFileSync(\n      new URL(\"data/trace-wide-envelope.unit.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\n  assert.ok((r.source.inputs[0].raw.length - 2) / 2 > 65536);\n  await validateTraceReport(r);\n  r.baseline.anvil_version = \"a\".repeat(1001);\n  await assert.rejects(\n    validateTraceReport(reseal(r)),\n    /Invalid transaction-prefix/,\n  );\n});\ntest(\"Python ASCII escaping includes DEL and astral Unicode\", async () => {\n  const cases = JSON.parse(\n    readFileSync(\n      new URL(\"data/trace-unicode-codecs.unit.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\n  for (const testCase of cases) {\n    const r = JSON.parse(\n      readFileSync(\n        new URL(\"data/trace-mainnet-prefix-one.json\", import.meta.url),\n        \"utf8\",\n      ),\n    );\n    r.assumptions[0] = testCase.assumption;\n    r.artifact_id = testCase.artifact_id;\n    await validateTraceReport(r);\n  }\n});\ntest(\"pending digest cannot expose later caller mutations in displayed data\", async () => {\n  const originalCrypto = Object.getOwnPropertyDescriptor(globalThis, \"crypto\");\n  assert.ok(originalCrypto);\n  let finish;\n  Object.defineProperty(globalThis, \"crypto\", {\n    configurable: true,\n    value: {\n      subtle: {\n        digest: (algorithm, data) =>\n          new Promise((resolve) => {\n            finish = () => resolve(webcrypto.subtle.digest(algorithm, data));\n          }),\n      },\n    },\n  });\n  try {\n    const r = sample(),\n      before = structuredClone(r);\n    const pending = validateTraceReport(r);\n    r.baseline_verified = false;\n    r.baseline.outcomes[0].receipt.gasUsed = \"0x0\";\n    r.assumptions[0] = \"changed after validation\";\n    finish();\n    const view = await pending;\n    assert.deepEqual(view.report, before);\n    assert.equal(\n      view.baseline.rows[0].receipt?.gasUsed,\n      before.baseline.outcomes[0].receipt.gasUsed,\n    );\n    assert.equal(view.assumptions[0], before.assumptions[0]);\n  } finally {\n    Object.defineProperty(globalThis, \"crypto\", originalCrypto);\n  }\n});\ntest(\"Unicode text limits count codepoints for assumptions and Anvil versions\", async () => {\n  const cases = JSON.parse(\n    readFileSync(\n      new URL(\"data/trace-text-length.unit.json\", import.meta.url),\n      \"utf8\",\n    ),\n  );\n  for (const testCase of cases) {\n    const r = JSON.parse(\n      readFileSync(\n        new URL(\"data/trace-mainnet-prefix-one.json\", import.meta.url),\n        \"utf8\",\n      ),\n    );\n    if (testCase.field === \"assumption\")\n      r.assumptions[0] = \"🛸\".repeat(testCase.count);\n    else r.baseline.anvil_version = \"🛸\".repeat(testCase.count);\n    r.artifact_id = testCase.artifact_id;\n    if (testCase.valid) await validateTraceReport(r);\n    else\n      await assert.rejects(\n        validateTraceReport(r),\n        /Invalid transaction-prefix/,\n      );\n  }\n});\ntest(\"resealed zero gas and reverted nonzero bloom cannot claim matching receipts\", async () => {\n  for (const kind of [\"zero-gas\", \"revert-bloom\"]) {\n    const r = JSON.parse(\n      readFileSync(\n        new URL(\"data/trace-mainnet-prefix-one.json\", import.meta.url),\n        \"utf8\",\n      ),\n    );\n    for (const receipt of [\n      r.source.inputs[0].original_receipt,\n      r.baseline.outcomes[0].receipt,\n    ]) {\n      if (kind === \"zero-gas\") {\n        receipt.gasUsed = \"0x0\";\n        receipt.cumulativeGasUsed = \"0x0\";\n      } else {\n        receipt.status = \"0x0\";\n        receipt.logs = [];\n      }\n    }\n    await assert.rejects(\n      validateTraceReport(reseal(r)),\n      /Invalid transaction-prefix/,\n    );\n  }\n});\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "trace-comparison.mjs",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "trace-report.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-unsafe-regex",
+        "severity": 1,
+        "message": "Unsafe Regular Expression",
+        "line": 59,
+        "column": 6,
+        "endLine": 59,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Variable Assigned to Object Injection Sink",
+        "line": 107,
+        "column": 24,
+        "endLine": 107,
+        "endColumn": 40
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 182,
+        "column": 44,
+        "endLine": 182,
+        "endColumn": 52
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 277,
+        "column": 14,
+        "endLine": 277,
+        "endColumn": 20
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 287,
+        "column": 9,
+        "endLine": 287,
+        "endColumn": 15
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 287,
+        "column": 32,
+        "endLine": 287,
+        "endColumn": 38
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Variable Assigned to Object Injection Sink",
+        "line": 456,
+        "column": 14,
+        "endLine": 456,
+        "endColumn": 27
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 514,
+        "column": 25,
+        "endLine": 514,
+        "endColumn": 36
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 514,
+        "column": 38,
+        "endLine": 514,
+        "endColumn": 51
+      },
+      {
+        "ruleId": "security/detect-possible-timing-attacks",
+        "severity": 1,
+        "message": "Potential timing attack, left side: true",
+        "line": 569,
+        "column": 3,
+        "endLine": 570,
+        "endColumn": 66
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 10,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "// Separate trace_version family. Imported bytes never select code or an RPC URL.\nexport const MAX_TRACE_BYTES = 8 * 1024 * 1024;\nconst MAX_INPUT_BYTES = 256 * 1024;\nconst RECEIPT_KEYS = [\n  \"gasUsed\",\n  \"cumulativeGasUsed\",\n  \"effectiveGasPrice\",\n  \"transactionIndex\",\n  \"type\",\n  \"status\",\n  \"transactionHash\",\n  \"from\",\n  \"logsBloom\",\n  \"to\",\n  \"contractAddress\",\n  \"logs\",\n];\n/** @param {unknown} value @returns {Record<string, unknown>} */\nfunction object(value) {\n  if (!value || typeof value !== \"object\" || Array.isArray(value))\n    fail(\"object\");\n  return /** @type {Record<string, unknown>} */ (value);\n}\n/** @returns {never} */\nfunction fail(detail) {\n  throw new Error(`Invalid transaction-prefix report: ${detail}.`);\n}\n/** @param {unknown} value @param {string[]} keys */\nfunction exact(value, keys) {\n  const result = object(value);\n  if (\n    Object.keys(result).length !== keys.length ||\n    keys.some((k) => !Object.hasOwn(result, k))\n  )\n    fail(\"unexpected or missing fields\");\n  return result;\n}\n/** @param {unknown} value @param {number} [min] @param {number} [max] @returns {number} */\nfunction integer(value, min = 0, max = Number.MAX_SAFE_INTEGER) {\n  if (\n    typeof value !== \"number\" ||\n    !Number.isSafeInteger(value) ||\n    value < min ||\n    value > max\n  )\n    fail(\"integer outside exact browser range\");\n  return /** @type {number} */ (value);\n}\n/** @param {unknown} value @param {number} max @param {number} [min] @returns {unknown[]} */\nfunction array(value, max, min = 0) {\n  if (!Array.isArray(value) || value.length < min || value.length > max)\n    fail(\"array limit\");\n  return /** @type {unknown[]} */ (value);\n}\n/** @param {unknown} value @param {number} [size] @param {number} [limit] @returns {string} */\nfunction bytes(value, size, limit = 65536) {\n  if (\n    typeof value !== \"string\" ||\n    !/^0x(?:[0-9a-fA-F]{2})*$/.test(value) ||\n    (value.length - 2) / 2 > limit ||\n    (size !== undefined && value.length !== size * 2 + 2)\n  )\n    fail(\"hex bytes\");\n  return /** @type {string} */ (value);\n}\n/** @param {unknown} value @returns {bigint} */\nfunction quantity(value) {\n  if (\n    typeof value !== \"string\" ||\n    !/^0x(?:0|[1-9a-fA-F][0-9a-fA-F]{0,63})$/.test(value)\n  )\n    fail(\"hex quantity\");\n  return BigInt(/** @type {string} */ (value));\n}\n/** Python's finite float JSON spelling for the runtime metadata field. @param {number} value */\nfunction pythonFloat(value) {\n  if (value === 0) return Object.is(value, -0) ? \"-0.0\" : \"0.0\";\n  const magnitude = Math.abs(value);\n  if (magnitude < 1e-4 || magnitude >= 1e16) {\n    const [mantissa, exponent] = value.toExponential().split(\"e\");\n    const power = Number(exponent);\n    return (\n      mantissa +\n      \"e\" +\n      (power < 0 ? \"-\" : \"+\") +\n      String(Math.abs(power)).padStart(2, \"0\")\n    );\n  }\n  const decimal = String(value);\n  return decimal.includes(\".\") ? decimal : decimal + \".0\";\n}\n\n/** @param {unknown} value @param {boolean} runtimeFloat @returns {string} */\nexport function traceCanonical(value, runtimeFloat = true) {\n  if (Array.isArray(value))\n    return (\n      \"[\" +\n      value.map((item) => traceCanonical(item, runtimeFloat)).join(\",\") +\n      \"]\"\n    );\n  if (value !== null && typeof value === \"object\")\n    return (\n      \"{\" +\n      Object.keys(value)\n        .sort()\n        .map((k) => {\n          const item = object(value)[k];\n          return (\n            traceCanonical(k, runtimeFloat) +\n            \":\" +\n            (k === \"runtime_seconds\" && typeof item === \"number\" && runtimeFloat\n              ? pythonFloat(item)\n              : traceCanonical(item, runtimeFloat))\n          );\n        })\n        .join(\",\") +\n      \"}\"\n    );\n  if (typeof value === \"number\" && !Number.isFinite(value))\n    fail(\"non-finite number\");\n  const result = JSON.stringify(value);\n  if (result === undefined) fail(\"JSON value\");\n  return /** @type {string} */ (result).replace(\n    /[\\u007f-\\uffff]/g,\n    (c) => \"\\\\u\" + c.charCodeAt(0).toString(16).padStart(4, \"0\"),\n  );\n}\nfunction equal(a, b) {\n  return traceCanonical(a) === traceCanonical(b);\n}\nfunction identity(a, b) {\n  return a === null || b === null\n    ? a === b\n    : typeof a === \"string\" &&\n        typeof b === \"string\" &&\n        a.toLowerCase() === b.toLowerCase();\n}\nfunction byteSize(value) {\n  return new TextEncoder().encode(traceCanonical(value)).byteLength;\n}\n/** Match Python/JSON Schema codepoint limits without unbounded allocation. @param {unknown} value @param {number} limit */\nfunction boundedText(value, limit) {\n  if (typeof value !== \"string\" || !value.length || value.length > 2 * limit)\n    return false;\n  let count = 0;\n  const iterator = value[Symbol.iterator]();\n  while (!iterator.next().done) if (++count > limit) return false;\n  return true;\n}\n/** @param {unknown} value */\nfunction source(value, parent = false) {\n  const s = exact(value, [\"chain_id\", \"block_number\", \"block_hash\"]);\n  if (s.chain_id !== 1) fail(\"Ethereum mainnet source required\");\n  integer(s.block_number, parent ? 0 : 1);\n  bytes(s.block_hash, 32);\n  return s;\n}\n\n// Decode the signed wire envelope to bind type/nonce/destination to displayed data.\n// This is not signature recovery, Keccak authentication or consensus execution.\n/** @param {string} raw */\nfunction envelope(raw) {\n  const wire = Uint8Array.from(raw.slice(2).match(/../g) || [], (b) =>\n    parseInt(b, 16),\n  );\n  if (!wire.length) fail(\"empty signed transaction\");\n  const kind = wire[0] <= 2 ? wire[0] : 0;\n  if (wire[0] <= 2 && kind === 0) fail(\"unsupported typed transaction\");\n  let at = kind ? 1 : 0;\n  /** @typedef {Uint8Array | RLPItem[]} RLPItem */\n  /** @returns {RLPItem} */\n  function decode(depth = 0) {\n    if (depth > 4 || at >= wire.length) fail(\"RLP depth or truncation\");\n    const prefix = wire[at++];\n    if (prefix < 128) return Uint8Array.of(prefix);\n    const list = prefix >= 192;\n    const short = list ? 192 : 128;\n    const long = list ? 247 : 183;\n    let length = prefix - short;\n    if (prefix > long) {\n      const n = prefix - long;\n      if (n > 3 || at + n > wire.length || wire[at] === 0) fail(\"RLP length\");\n      length = 0;\n      for (let i = 0; i < n; i++) length = length * 256 + wire[at++];\n      if (length < 56) fail(\"noncanonical RLP length\");\n    }\n    const end = at + length;\n    if (end > wire.length) fail(\"RLP truncation\");\n    if (!list) {\n      const part = wire.slice(at, end);\n      at = end;\n      if (part.length === 1 && part[0] < 128) fail(\"noncanonical RLP string\");\n      return part;\n    }\n    const result = [];\n    while (at < end) result.push(decode(depth + 1));\n    if (at !== end) fail(\"RLP list boundary\");\n    return result;\n  }\n  const decoded = decode();\n  if (\n    at !== wire.length ||\n    !Array.isArray(decoded) ||\n    decoded.length !== (kind === 0 ? 9 : kind === 1 ? 11 : 12)\n  )\n    fail(\"signed envelope\");\n  /** @param {unknown} part @returns {Uint8Array} */\n  function scalar(part) {\n    if (!(part instanceof Uint8Array)) fail(\"RLP scalar\");\n    return /** @type {Uint8Array} */ (part);\n  }\n  function number(part) {\n    const b = scalar(part);\n    if (b.length > 32 || (b.length && b[0] === 0)) fail(\"RLP integer\");\n    return b.reduce((n, v) => n * 256n + BigInt(v), 0n);\n  }\n  const nonce = number(decoded[kind ? 1 : 0]);\n  const gas = number(decoded[kind === 0 ? 2 : kind === 1 ? 3 : 4]);\n  if (gas < 21000n || gas > 30000000n) fail(\"signed gas limit\");\n  number(decoded[kind === 0 ? 1 : 2]);\n  if (kind === 2) number(decoded[3]);\n  number(decoded[kind === 0 ? 4 : kind === 1 ? 5 : 6]);\n  const dest = scalar(decoded[kind === 0 ? 3 : kind === 1 ? 4 : 5]);\n  if (dest.length !== 0 && dest.length !== 20) fail(\"signed destination\");\n  const payload = scalar(decoded[kind === 0 ? 5 : kind === 1 ? 6 : 7]);\n  if (payload.length > 65536) fail(\"calldata limit\");\n  if (kind && number(decoded[0]) !== 1n) fail(\"signed chain ID\");\n  const v = number(decoded[decoded.length - 3]);\n  if (!(kind ? [0n, 1n] : [27n, 28n, 37n, 38n]).includes(v))\n    fail(\"signature parity/chain\");\n  const r = number(decoded[decoded.length - 2]),\n    s = number(decoded[decoded.length - 1]);\n  const curve =\n    0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n;\n  if (r === 0n || r >= curve || s === 0n || s > curve / 2n)\n    fail(\"signature scalars\");\n  if (kind) {\n    const access = decoded[kind === 1 ? 7 : 8];\n    if (!Array.isArray(access) || access.length > 256) fail(\"access list\");\n    let keys = 0;\n    for (const row of access) {\n      if (\n        !Array.isArray(row) ||\n        row.length !== 2 ||\n        scalar(row[0]).length !== 20 ||\n        !Array.isArray(row[1])\n      )\n        fail(\"access entry\");\n      for (const key of /** @type {unknown[]} */ (row[1])) {\n        if (scalar(key).length !== 32) fail(\"access key\");\n        keys++;\n      }\n    }\n    if (keys > 256) fail(\"access key limit\");\n    if (kind === 2 && number(decoded[2]) > number(decoded[3]))\n      fail(\"priority fee\");\n  }\n  return {\n    type: \"0x\" + kind.toString(16),\n    nonce,\n    gas,\n    to: dest.length\n      ? \"0x\" + Array.from(dest, (b) => b.toString(16).padStart(2, \"0\")).join(\"\")\n      : null,\n  };\n}\n\n/** @param {unknown} value */\nfunction receipt(value) {\n  const r = exact(value, RECEIPT_KEYS);\n  for (const key of [\n    \"gasUsed\",\n    \"cumulativeGasUsed\",\n    \"effectiveGasPrice\",\n    \"transactionIndex\",\n  ])\n    quantity(r[key]);\n  if (\n    ![\"0x0\", \"0x1\", \"0x2\"].includes(/** @type {string} */ (r.type)) ||\n    ![\"0x0\", \"0x1\"].includes(/** @type {string} */ (r.status))\n  )\n    fail(\"receipt type/status\");\n  bytes(r.transactionHash, 32);\n  bytes(r.from, 20);\n  bytes(r.logsBloom, 256);\n  for (const key of [\"to\", \"contractAddress\"])\n    if (r[key] !== null) bytes(r[key], 20);\n  for (const item of array(r.logs, 512)) {\n    const log = exact(item, [\"address\", \"topics\", \"data\"]);\n    bytes(log.address, 20);\n    bytes(log.data);\n    for (const topic of array(log.topics, 4)) bytes(topic, 32);\n  }\n  if (byteSize(r) > MAX_INPUT_BYTES) fail(\"receipt byte limit\");\n  if (\n    quantity(r.gasUsed) < 21000n ||\n    quantity(r.gasUsed) > quantity(r.cumulativeGasUsed) ||\n    (r.to !== null && r.contractAddress !== null) ||\n    (r.status === \"0x0\" &&\n      (r.contractAddress !== null ||\n        array(r.logs, 512).length ||\n        r.logsBloom !== \"0x\" + \"00\".repeat(256)))\n  )\n    fail(\"receipt contradictions\");\n  return r;\n}\n\n/** Validate every displayed field and its relationships, before computing integrity. @param {unknown} input */\nexport function traceViewModel(input) {\n  const report = exact(input, [\n    \"trace_version\",\n    \"execution_kind\",\n    \"plan\",\n    \"source\",\n    \"baseline\",\n    \"candidate\",\n    \"baseline_verified\",\n    \"runtime_seconds\",\n    \"assumptions\",\n    \"artifact_id\",\n  ]);\n  if (\n    report.trace_version !== \"0.1.0\" ||\n    report.execution_kind !== \"canonical_transaction_prefix_replay\" ||\n    typeof report.artifact_id !== \"string\" ||\n    !/^[a-f0-9]{64}$/.test(report.artifact_id)\n  )\n    fail(\"version or digest\");\n  if (byteSize(report) > MAX_TRACE_BYTES) fail(\"8 MiB report limit\");\n  const plan = exact(report.plan, [\n    \"trace_version\",\n    \"source\",\n    \"through_index\",\n    \"skip_indices\",\n  ]);\n  if (plan.trace_version !== \"0.1.0\") fail(\"plan version\");\n  const pin = source(plan.source),\n    last = integer(plan.through_index, 0, 31);\n  const skipped = array(plan.skip_indices, 32).map((i) => integer(i, 0, last));\n  if (skipped.some((i, n) => n > 0 && i <= skipped[n - 1]))\n    fail(\"sorted unique skip indices\");\n  const captured = exact(report.source, [\n    \"parent\",\n    \"header\",\n    \"inputs\",\n    \"block_transaction_count\",\n  ]);\n  const parent = source(captured.parent, true);\n  if (parent.block_number !== /** @type {number} */ (pin.block_number) - 1)\n    fail(\"pinned parent number\");\n  const header = exact(captured.header, [\n    \"timestamp\",\n    \"gas_limit\",\n    \"base_fee\",\n    \"coinbase\",\n    \"prevrandao\",\n  ]);\n  integer(header.timestamp, 1681338455, 1710338134);\n  integer(header.gas_limit, 21000, 30000000);\n  integer(header.base_fee);\n  bytes(header.coinbase, 20);\n  bytes(header.prevrandao, 32);\n  integer(captured.block_transaction_count, last + 1);\n  const inputs = array(captured.inputs, 32, 1).map((item, index) => {\n    const tx = exact(item, [\n      \"index\",\n      \"hash\",\n      \"sender\",\n      \"nonce\",\n      \"raw\",\n      \"original_receipt\",\n    ]);\n    if (integer(tx.index, 0, 31) !== index) fail(\"original prefix order\");\n    bytes(tx.hash, 32);\n    bytes(tx.sender, 20);\n    integer(tx.nonce);\n    const raw = bytes(tx.raw, undefined, 131071),\n      signed = envelope(raw),\n      original = receipt(tx.original_receipt);\n    if (\n      BigInt(/** @type {number} */ (tx.nonce)) !== signed.nonce ||\n      original.type !== signed.type ||\n      !identity(original.to, signed.to) ||\n      !identity(original.transactionHash, tx.hash) ||\n      !identity(original.from, tx.sender) ||\n      quantity(original.transactionIndex) !== BigInt(index)\n    )\n      fail(\"original signed receipt binding\");\n    return {\n      ...tx,\n      index,\n      hash: bytes(tx.hash, 32),\n      sender: bytes(tx.sender, 20),\n      nonce: integer(tx.nonce),\n      original_receipt: original,\n      signed,\n    };\n  });\n  if (inputs.length !== last + 1 || byteSize(captured.inputs) > MAX_INPUT_BYTES)\n    fail(\"prefix/input byte limit\");\n  if (\n    new Set(inputs.map((tx) => String(tx.hash).toLowerCase())).size !==\n    inputs.length\n  )\n    fail(\"duplicate transaction identity\");\n  const originalNonces = new Map();\n  let originalGas = 0n;\n  for (const tx of inputs) {\n    if (\n      originalNonces.has(tx.sender.toLowerCase()) &&\n      tx.nonce !== originalNonces.get(tx.sender.toLowerCase())\n    )\n      fail(\"original sender nonce sequence\");\n    originalNonces.set(\n      tx.sender.toLowerCase(),\n      integer(/** @type {number} */ (tx.nonce) + 1),\n    );\n    originalGas += quantity(tx.original_receipt.gasUsed);\n    if (\n      quantity(tx.original_receipt.gasUsed) > tx.signed.gas ||\n      quantity(tx.original_receipt.cumulativeGasUsed) !== originalGas ||\n      originalGas > BigInt(/** @type {number} */ (header.gas_limit))\n    )\n      fail(\"original cumulative gas\");\n  }\n  if (\n    typeof report.runtime_seconds !== \"number\" ||\n    !Number.isFinite(report.runtime_seconds) ||\n    report.runtime_seconds < 0 ||\n    typeof report.baseline_verified !== \"boolean\"\n  )\n    fail(\"runtime/verification flag\");\n  const assumptions = array(report.assumptions, 32, 1).map((s) => {\n    if (!boundedText(s, 4000)) fail(\"assumption\");\n    return /** @type {string} */ (s);\n  });\n  const initial = new Map();\n  function branch(value, candidate) {\n    const b = exact(value, [\n      \"anvil_version\",\n      \"outcomes\",\n      \"matches_original_receipts\",\n    ]);\n    if (\n      !boundedText(b.anvil_version, 1000) ||\n      typeof b.matches_original_receipts !== \"boolean\"\n    )\n      fail(\"branch metadata\");\n    const outcomes = array(b.outcomes, 32, 1);\n    if (outcomes.length !== inputs.length) fail(\"outcome prefix length\");\n    const nonces = new Map(initial);\n    let minedIndex = 0,\n      cumulative = 0n;\n    const rows = outcomes.map((item, index) => {\n      const o = object(item),\n        tx = inputs[index],\n        original = tx.original_receipt;\n      const keys = [\"index\", \"hash\", \"status\"];\n      if (o.status === \"executed\") keys.push(\"receipt\", \"differing_fields\");\n      else if (o.status === \"nonce_conflict\")\n        keys.push(\"expected_nonce\", \"original_nonce\");\n      else if (\n        ![\"skipped\", \"rejected\", \"not_mined\"].includes(\n          /** @type {string} */ (o.status),\n        )\n      )\n        fail(\"terminal outcome\");\n      exact(o, keys);\n      if (\n        o.index !== index ||\n        !identity(o.hash, tx.hash) ||\n        (o.status === \"skipped\") !== (candidate && skipped.includes(index))\n      )\n        fail(\"outcome/skip binding\");\n      if (!nonces.has(tx.sender.toLowerCase())) {\n        const start =\n          o.status === \"nonce_conflict\" ? integer(o.expected_nonce) : tx.nonce;\n        nonces.set(tx.sender.toLowerCase(), start);\n        initial.set(tx.sender.toLowerCase(), start);\n      }\n      const expected = nonces.get(tx.sender.toLowerCase());\n      if (o.status === \"nonce_conflict\") {\n        if (\n          integer(o.original_nonce) !== tx.nonce ||\n          integer(o.expected_nonce) !== expected ||\n          expected === tx.nonce\n        )\n          fail(\"nonce conflict\");\n      } else if (o.status !== \"skipped\") {\n        if (expected !== tx.nonce) fail(\"missing nonce conflict\");\n        if (o.status !== \"rejected\")\n          nonces.set(tx.sender.toLowerCase(), integer(expected + 1));\n      }\n      if (o.status !== \"executed\")\n        return { ...o, status: o.status, receipt: null, differing_fields: [] };\n      const actual = receipt(o.receipt);\n      if (\n        !identity(actual.transactionHash, tx.hash) ||\n        !identity(actual.from, tx.sender) ||\n        actual.type !== tx.signed.type ||\n        !identity(actual.to, tx.signed.to) ||\n        quantity(actual.transactionIndex) !== BigInt(minedIndex++)\n      )\n        fail(\"executed receipt identity/order\");\n      cumulative += quantity(actual.gasUsed);\n      if (\n        quantity(actual.gasUsed) > tx.signed.gas ||\n        quantity(actual.cumulativeGasUsed) !== cumulative ||\n        cumulative > BigInt(/** @type {number} */ (header.gas_limit))\n      )\n        fail(\"branch cumulative gas\");\n      const declared = array(o.differing_fields, 12);\n      const differences = RECEIPT_KEYS.filter(\n        (key) => !equal(actual[key], original[key]),\n      );\n      if (\n        new Set(declared).size !== declared.length ||\n        !equal([...declared].sort(), [...differences].sort())\n      )\n        fail(\"declared receipt differences\");\n      return {\n        ...o,\n        status: o.status,\n        receipt: actual,\n        differing_fields: differences,\n      };\n    });\n    const matches = rows.every(\n      (o) => o.status === \"executed\" && o.differing_fields.length === 0,\n    );\n    if (b.matches_original_receipts !== matches)\n      fail(\"branch verification claim\");\n    return { anvil_version: b.anvil_version, rows, matches };\n  }\n  const baseline = branch(report.baseline, false),\n    candidate = branch(report.candidate, true);\n  if (report.baseline_verified !== baseline.matches)\n    fail(\"baseline verification claim\");\n  return {\n    report,\n    pin,\n    parent,\n    header,\n    inputs,\n    baseline,\n    candidate,\n    assumptions,\n  };\n}\n\n/** @param {unknown} input */\nexport async function validateTraceReport(input) {\n  const view = traceViewModel(structuredClone(input));\n  const { artifact_id, ...body } = view.report;\n  const hashBody = async (runtimeFloat) => {\n    const digest = await crypto.subtle.digest(\n      \"SHA-256\",\n      new TextEncoder().encode(traceCanonical(body, runtimeFloat)),\n    );\n    return Array.from(new Uint8Array(digest), (b) =>\n      b.toString(16).padStart(2, \"0\"),\n    ).join(\"\");\n  };\n  let hash = await hashBody(true);\n  // JSON.parse loses the distinction between Python's 1 and 1.0. Both exact\n  // canonical encodings describe the same checked runtime numeric value.\n  if (hash !== artifact_id && Number.isSafeInteger(body.runtime_seconds))\n    hash = await hashBody(false);\n  if (hash !== artifact_id)\n    throw new Error(\"Transaction-prefix content hash mismatch.\");\n  return view;\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "trace-viewer.mjs",
+    "messages": [
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 121,
+        "column": 15,
+        "endLine": 121,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 122,
+        "column": 14,
+        "endLine": 122,
+        "endColumn": 30
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 122,
+        "column": 50,
+        "endLine": 122,
+        "endColumn": 66
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Function Call Object Injection Sink",
+        "line": 123,
+        "column": 15,
+        "endLine": 123,
+        "endColumn": 32
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 124,
+        "column": 14,
+        "endLine": 124,
+        "endColumn": 31
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 124,
+        "column": 51,
+        "endLine": 124,
+        "endColumn": 68
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 125,
+        "column": 7,
+        "endLine": 125,
+        "endColumn": 21
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 126,
+        "column": 7,
+        "endLine": 126,
+        "endColumn": 24
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 137,
+        "column": 19,
+        "endLine": 137,
+        "endColumn": 35
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 138,
+        "column": 36,
+        "endLine": 138,
+        "endColumn": 52
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 139,
+        "column": 20,
+        "endLine": 139,
+        "endColumn": 37
+      },
+      {
+        "ruleId": "security/detect-object-injection",
+        "severity": 1,
+        "message": "Generic Object Injection Sink",
+        "line": 140,
+        "column": 37,
+        "endLine": 140,
+        "endColumn": 54
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 12,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { MAX_TRACE_BYTES, validateTraceReport } from \"./trace-report.mjs\";\nimport { traceComparison } from \"./trace-comparison.mjs\";\n\n/** @param {string} id */\nfunction element(id) {\n  const node = document.getElementById(id);\n  if (!node) throw new Error(`Missing trace interface: ${id}`);\n  return node;\n}\nlet generation = 0;\nfunction clear() {\n  element(\"trace-results\").hidden = true;\n  for (const id of [\n    \"trace-pins\",\n    \"trace-inputs\",\n    \"trace-outcomes\",\n    \"trace-receipts\",\n    \"trace-assumptions\",\n    \"trace-raw\",\n    \"trace-hash\",\n    \"trace-origin\",\n    \"trace-comparison-summary\",\n    \"trace-case\",\n  ])\n    element(id).replaceChildren();\n  element(\"trace-download\").hidden = true;\n  element(\"trace-download\").removeAttribute(\"href\");\n}\nfunction status(text, error = false) {\n  element(\"trace-status\").textContent = text;\n  element(\"trace-status\").classList.toggle(\"error\", error);\n}\nfunction rows(id, values) {\n  const target = element(id);\n  for (const valuesRow of values) {\n    const tr = document.createElement(\"tr\");\n    valuesRow.forEach((text, index) => {\n      const cell = document.createElement(index ? \"td\" : \"th\");\n      if (cell instanceof HTMLTableCellElement && index === 0)\n        cell.scope = \"row\";\n      cell.textContent = String(text);\n      tr.append(cell);\n    });\n    target.append(tr);\n  }\n}\nfunction gas(receipt) {\n  return receipt ? BigInt(receipt.gasUsed).toString() : \"—\";\n}\nfunction logs(receipt) {\n  return receipt ? String(receipt.logs.length) : \"—\";\n}\nfunction outcome(row) {\n  return row.status === \"nonce_conflict\"\n    ? `nonce_conflict · expected ${row.expected_nonce}, original ${row.original_nonce}`\n    : row.status === \"executed\"\n      ? `executed · ${row.receipt.status === \"0x1\" ? \"success\" : \"revert\"}`\n      : row.status;\n}\n/** @param {unknown} input @param {number} seq @param {boolean} recorded */\nasync function render(input, seq, recorded) {\n  const view = await validateTraceReport(input);\n  if (seq !== generation) return;\n  const {\n    report,\n    pin,\n    parent,\n    header,\n    inputs,\n    baseline,\n    candidate,\n    assumptions,\n  } = view;\n  const comparisons = candidate.rows.map(traceComparison);\n  element(\"trace-case\").textContent =\n    `Loaded prefix: ${inputs.length} original transactions · through_index ${inputs.length - 1} · ` +\n    `skip_indices ${JSON.stringify(/** @type {Record<string, unknown>} */ (report.plan).skip_indices)}`;\n  element(\"trace-comparison-summary\").textContent =\n    \"Candidate vs original projected receipts: \" +\n    `${comparisons.filter((r) => r.kind === \"omitted\").length} omitted · ` +\n    `${comparisons.filter((r) => r.kind === \"structural\").length} position / cumulative gas only · ` +\n    `${comparisons.filter((r) => r.kind === \"execution\").length} execution receipt differences · ` +\n    `${comparisons.filter((r) => r.kind === \"identical\").length} exact original receipt matches · ` +\n    `${comparisons.filter((r) => r.kind === \"unavailable\").length} unavailable receipts.`;\n  element(\"trace-origin\").textContent = recorded\n    ? \"Recorded technical case · exact engine #30 Docker report. Different native/Docker environments are not a speed comparison.\"\n    : \"Local import · author and execution provenance are not authenticated. This file remains in your browser.\";\n  element(\"trace-pins\").textContent = JSON.stringify(\n    {\n      source: pin,\n      parent,\n      header,\n      through_index: inputs.length - 1,\n      skip_indices: /** @type {Record<string, unknown>} */ (report.plan)\n        .skip_indices,\n      baseline_verified: baseline.matches,\n      candidate_matches_original_receipts: candidate.matches,\n      runtime_seconds: report.runtime_seconds,\n      baseline_anvil: baseline.anvil_version,\n      candidate_anvil: candidate.anvil_version,\n    },\n    null,\n    2,\n  );\n  rows(\n    \"trace-inputs\",\n    inputs.map((tx) => [\n      tx.index,\n      tx.hash,\n      tx.sender,\n      tx.nonce,\n      tx.signed.type,\n      tx.signed.to ?? \"Contract creation\",\n    ]),\n  );\n  rows(\n    \"trace-outcomes\",\n    inputs.map((tx, i) => [\n      tx.index,\n      `${gas(tx.original_receipt)} / ${logs(tx.original_receipt)}`,\n      outcome(baseline.rows[i]),\n      `${gas(baseline.rows[i].receipt)} / ${logs(baseline.rows[i].receipt)}`,\n      outcome(candidate.rows[i]),\n      `${gas(candidate.rows[i].receipt)} / ${logs(candidate.rows[i].receipt)}`,\n      comparisons[i].label,\n      candidate.rows[i].differing_fields.join(\", \") || \"—\",\n    ]),\n  );\n  inputs.forEach((tx, i) => {\n    const details = document.createElement(\"details\"),\n      summary = document.createElement(\"summary\"),\n      pre = document.createElement(\"pre\");\n    summary.textContent = `Transaction ${i}: exact original, baseline and candidate receipt fields`;\n    pre.textContent = JSON.stringify(\n      {\n        original: tx.original_receipt,\n        baseline: baseline.rows[i].receipt,\n        baseline_differing_fields: baseline.rows[i].differing_fields,\n        candidate: candidate.rows[i].receipt,\n        candidate_differing_fields: candidate.rows[i].differing_fields,\n      },\n      null,\n      2,\n    );\n    pre.tabIndex = 0;\n    pre.setAttribute(\"role\", \"region\");\n    pre.setAttribute(\"aria-label\", `Transaction ${i} exact receipt comparison`);\n    details.append(summary, pre);\n    element(\"trace-receipts\").append(details);\n  });\n  for (const assumption of assumptions) {\n    const li = document.createElement(\"li\");\n    li.textContent = assumption;\n    element(\"trace-assumptions\").append(li);\n  }\n  element(\"trace-raw\").textContent = JSON.stringify(report, null, 2);\n  element(\"trace-hash\").textContent = String(report.artifact_id);\n  status(\n    `Integrity and display consistency checked locally · baseline ${baseline.matches ? \"matches all original projected receipts\" : \"UNVERIFIED: original projected receipts do not all match\"}. This is not authenticity or EVM proof.`,\n  );\n  element(\"trace-results\").hidden = false;\n  if (recorded) {\n    element(\"trace-download\").setAttribute(\n      \"href\",\n      \"reports/trace-mainnet-prefix-four.json\",\n    );\n    element(\"trace-download\").hidden = false;\n  }\n}\nelement(\"trace-sample\").addEventListener(\"click\", async () => {\n  const seq = ++generation;\n  clear();\n  status(\"Loading the recorded signed-prefix case…\");\n  try {\n    const response = await fetch(\"reports/trace-mainnet-prefix-four.json\");\n    if (!response.ok)\n      throw new Error(\"The signed-prefix example could not be loaded.\");\n    const text = await response.text();\n    if (new TextEncoder().encode(text).byteLength > MAX_TRACE_BYTES)\n      throw new Error(\"Trace report limit is 8 MiB.\");\n    await render(JSON.parse(text), seq, true);\n  } catch (error) {\n    if (seq === generation) {\n      clear();\n      status(\n        error instanceof Error ? error.message : \"Invalid trace report.\",\n        true,\n      );\n    }\n  }\n});\nelement(\"trace-import\").addEventListener(\"change\", async (event) => {\n  if (!(event.target instanceof HTMLInputElement)) return;\n  const file = event.target.files?.[0];\n  if (!file) return;\n  const seq = ++generation;\n  clear();\n  status(\"Checking local signed-prefix report…\");\n  try {\n    if (file.size > MAX_TRACE_BYTES)\n      throw new Error(\"Local trace report limit is 8 MiB.\");\n    await render(JSON.parse(await file.text()), seq, false);\n  } catch (error) {\n    if (seq === generation) {\n      clear();\n      status(\n        error instanceof Error ? error.message : \"Invalid trace report.\",\n        true,\n      );\n    }\n  }\n});\n",
+    "usedDeprecatedRules": []
+  }
+]

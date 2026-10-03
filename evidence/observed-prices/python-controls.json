@@ -1,0 +1,15 @@
+{
+  "kind": "synthetic mutation controls, not new EVM execution",
+  "engine": "40bea57e25ab94c0d0f6136b4c3a5af4a99e6a1d",
+  "all6_python_engine_wrapper_validators_pass": true,
+  "sample_sha256": "7010848300c353310fb78dab7f377daea4226633e49af3c1a384bcb3a579ba9d",
+  "controls_sha256": "b68865916ac365e2ca1093c16439b4baaa628e14b3b2e209f36596f2c09bba67",
+  "cases": [
+    "large_integer",
+    "missing_source",
+    "zero_code",
+    "future_feed",
+    "rpc_missing_head",
+    "negative_feed"
+  ]
+}

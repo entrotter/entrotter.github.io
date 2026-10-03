@@ -1,0 +1,8 @@
+{
+  "original_findings": 97,
+  "initial_new_findings": 2,
+  "final_full_findings": 99,
+  "all_reasons_retained": 99,
+  "mapping": "Exact unchanged-line blocks from frozen initial99 policy; file/rule/message/column same; no suppressed or removed findings",
+  "initial_new_review": ".quality/trace-differences/final/security-review-mapping.json"
+}

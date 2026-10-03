@@ -15,3 +15,15 @@ maintainers in an issue to enable a private channel without disclosing details.
 RPC URLs can contain secrets: never include them in reports, commands in
 screenshots, logs, pull requests, or issue bodies. The optional fork URL may
 be visible to other processes owned by your OS user; run on a trusted machine.
+
+
+Account-position imports use the same8 MiB/depth32/lossless integer parser and
+fixed four-phase64 KiB view bounds as recorded price observations. Only the
+closed Aave Ethereum account profile is supported; imported plan/config values
+never select executable code, a transport, ABI or callback. Raw account ABI
+requires six uint256 words, basis-point limits at most10000 and the zero-debt
+health sentinel. The recomputed classification gates normalized/delta displays.
+Three recomputable seals bind account/price/trace records and selected internal
+relationships; they do not authenticate providers, proxies, signatures or EVM
+state. Account changes include all prefix effects and are not financial advice,
+profit, signed borrowing/liquidation execution or sole-price causality.

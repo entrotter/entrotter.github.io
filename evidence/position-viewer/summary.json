@@ -1,0 +1,59 @@
+{
+  "status": "local_checks_passed_independent_stage_and_CI_pending",
+  "baseline": "a19d3b17fcf44e58a237b622de8cef89842eb6e7",
+  "node": "v22.23.1",
+  "python": "website-quality-venv",
+  "node_tests": 126,
+  "python_tests": 12,
+  "js_sources": 19,
+  "type_inputs": 20,
+  "security_findings": 137,
+  "old_rationales_preserved": 122,
+  "new_contexts": 15,
+  "node_locked_dependencies": 109,
+  "python_locked_dependencies": 42,
+  "reported_advisories": 0,
+  "browser": {
+    "platform": "darwin",
+    "browser": "153.0.8010.12",
+    "playwright": "1.63.0",
+    "axe": "4.13.0",
+    "groups": 42,
+    "scans": 49,
+    "violations": 0,
+    "exceptions": 0,
+    "viewport_widths": [
+      1280,
+      390,
+      320
+    ],
+    "request_count": 626
+  },
+  "unchanged_baseline_files": [
+    "app.js",
+    "comparison.mjs",
+    "report-validation.mjs",
+    "trace-report.mjs",
+    "trace-comparison.mjs",
+    "observed-trace.mjs",
+    "package.json",
+    "package-lock.json",
+    "requirements-quality.txt"
+  ],
+  "prior_failures": [
+    "Initial unsupported Node20.2/missing UI wiring and stale JS cache key; resolved before final-source checks.",
+    "Initial changed caller accidentally passed extra arguments to old price rows; checkJs exposed it; product call repaired.",
+    "Initial browser keyboard order/focus assertions required the new button and native Tab; assertions retained.",
+    "Mobile account address reflow failed at390/320; summary wrapping fixed.",
+    "CSS cache query stale; regression test failed before query updated to actual CSS hash.",
+    "Last complete final-source browser release failed existing320 native filechooser event at5000ms; cause unknown. Unchanged rerun passed42/49.",
+    "Initial security review metadata mapping collided on first source line. Independent review rejected rationale substitutions; exact full fingerprints and moved whole-expression occurrence mapping retain all122 reasons, add15. Scan/rules/suppressions unchanged."
+  ],
+  "limits": [
+    "No EVM/RPC/model/strategy/user evaluation run; original13 evidence copied exactly.",
+    "Checksums/internal consistency do not authenticate provider/proxy/EVM state or profit.",
+    "Axe incomplete color-contrast diagnostics retained; supplemental opaque CSS checks are not axe/manual assistive-tech/WCAG certification.",
+    "Local macOS Chromium is separate from mandatory Linux CI, protected-main human approval and live Pages.",
+    "Prior failed raw logs and pre-final browser outputs remain privately retained, never relabelled passing."
+  ]
+}

@@ -50,3 +50,11 @@ body { background: var(--bg); }
 .trace-archive > summary { display: list-item; font-size: 15px; }
 .trace-archive > summary span { display: block; color: var(--muted); font-size: 11px; font-weight: 400; margin-top: 5px; }
 @media (max-width:700px) { .trace-archive { padding: 20px 15px; } }
+
+#trace-account-summary { overflow-wrap: anywhere; }
+.account-impact-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+.account-impact-summary > div { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.account-impact-summary dt { color: var(--muted); font-size: 13px; }
+.account-impact-summary dd { margin: 8px 0 0; font-size: 24px; font-weight: 650; line-height: 1.4; overflow-wrap: anywhere; }
+@media (max-width: 680px) { .account-impact-summary { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 680px) { #trace-account-comparison th[scope="row"] { width: 8rem; max-width: 8rem; min-width: 6rem; white-space: normal; } }

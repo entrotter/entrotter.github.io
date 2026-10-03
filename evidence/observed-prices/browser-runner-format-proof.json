@@ -1,0 +1,6 @@
+{
+  "tested_runner_sha256": "94df764e50f161ac7bdf4333d0695da37aa1efb08d1465dae838989ea9d90d13",
+  "current_runner_sha256": "056f08b192c0b5a5626fe55df817a75f3b30d45bf3390c60efa4a7e3432fb330",
+  "complete_acorn_AST_equal_without_source_positions": true,
+  "runtime_inputs_unchanged": true
+}

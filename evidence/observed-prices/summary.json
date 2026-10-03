@@ -1,0 +1,42 @@
+{
+  "status": "local implementation tested; current component CI and protected-main approval/Pages are separate",
+  "base": "b1cfb001ad642d4b7423ea914045abb56166c903",
+  "engine_record_source": "40bea57e25ab94c0d0f6136b4c3a5af4a99e6a1d",
+  "sample_sha256": "7010848300c353310fb78dab7f377daea4226633e49af3c1a384bcb3a579ba9d",
+  "local_node_tests": 94,
+  "local_node_skips": 0,
+  "Python_tests": 11,
+  "browser_checks": 39,
+  "browser_widths": [
+    1280,
+    390,
+    320
+  ],
+  "browser_errors": 0,
+  "security_source_inputs": 24,
+  "JavaScript_security_findings_retained": 122,
+  "Python_security_findings": 0,
+  "runtime_sha256": {
+    "index.html": "f963ac6f1394c7037ebd94e284705a4ca6fe2897ae9e39ea9f2fe8c4d3754450",
+    "trace-viewer.mjs": "6cbe085c8fc71b870497297477d18176f255891633ebe960c5220fcf7e93e46f",
+    "observed-trace.mjs": "980ff5172f61b82413e9898955f7a60ee23ba10a6374e6b259a91034624fe9ee",
+    "trace-report.mjs": "f9217b73e0b4e3be9ce8501e980579df7624bfb5016fea21f700553a15d5fcb9",
+    "trace-comparison.mjs": "28df03d42dd2b2c71f38aa1a3d1a1acef388ef8806fa8f6592bc198d74746892",
+    "reports/trace-observed-price32.json": "7010848300c353310fb78dab7f377daea4226633e49af3c1a384bcb3a579ba9d"
+  },
+  "controls": "6 deliberately mutated synthetic controls sealed/accepted by engine40 Python validator; no new EVM calls",
+  "browser_runner_formatting": "Original39-check run retained; subsequent formatting changes only two call-chain layouts. Complete Acorn AST without positions is equal. Final CI must execute the exact published runner.",
+  "limits": [
+    "Recorded read-only price difference is not strategy, profit, provider/deployed-code authenticity, full-block/root or defaultDocker32 execution.",
+    "Existing nested trace validator browser-safe numeric limits remain. Lossless observation integers support ABI-derived large values.",
+    "Browser tests use Chromium/axe/keyboard/reflow, not complete WCAG or manual screen-reader certification.",
+    "No main merge, live Pages deployment or formal submission claimed."
+  ],
+  "local_docs": {
+    "tracked_documents": 13,
+    "links": 66,
+    "errors": 0,
+    "timeouts": 0,
+    "exclusions": 0
+  }
+}

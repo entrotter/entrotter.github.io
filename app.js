@@ -411,10 +411,16 @@ function tableRows(id, rows, rowHeaders = false) {
     $(id).appendChild(tr);
   }
 }
+/** @param {string} value */
+function selectSource(value) {
+  const selection = $("scenario");
+  if (!(selection instanceof HTMLSelectElement))
+    throw new Error("Missing scenario selector.");
+  selection.value = value;
+}
 /** @param {string} message */
-function setError(message) {
+function clearReport(message) {
   $("report-status").textContent = message;
-  $("report-status").classList.add("error");
   ["baseline-value", "candidate-value", "delta-value", "hash"].forEach(
     (id) => ($(id).textContent = "—"),
   );
@@ -434,6 +440,18 @@ function setError(message) {
   $("agent-details").hidden = true;
   $("agent-rows").replaceChildren();
   $("agent-provenance").textContent = "";
+}
+/** @param {string} message */
+function setError(message) {
+  clearReport(message);
+  $("report-status").classList.add("error");
+  selectSource("no-report");
+}
+/** @param {string} message */
+function startLoading(message) {
+  clearReport(message);
+  $("report-status").classList.remove("error");
+  selectSource("loading");
 }
 /** @param {unknown} input @param {number} seq */
 async function render(input, seq) {
@@ -574,12 +592,13 @@ async function render(input, seq) {
   $("download").hidden = false;
 }
 async function loadSample() {
-  const seq = ++generation;
   const selection = $("scenario");
   if (!("value" in selection) || typeof selection.value !== "string")
     throw new Error("Missing scenario selector.");
   const name = selection.value;
   if (!allowedSamples.has(name)) return;
+  const seq = ++generation;
+  startLoading("Loading and verifying recorded example…");
   try {
     const response = await fetch("reports/" + name + ".json");
     if (!response.ok)
@@ -587,8 +606,10 @@ async function loadSample() {
     const text = await response.text();
     if (text.length > 4 * 1024 * 1024) throw new Error("Report too large.");
     await render(JSON.parse(text), seq);
-    if (seq === generation)
+    if (seq === generation) {
+      selectSource(name);
       $("download").setAttribute("href", "reports/" + name + ".json");
+    }
   } catch (error) {
     if (seq === generation)
       setError(
@@ -602,12 +623,16 @@ $("import").addEventListener("change", async (event) => {
   const file = event.target.files?.[0];
   if (!file) return;
   const seq = ++generation;
+  startLoading("Reading and verifying local report…");
   try {
     if (file.size > 4 * 1024 * 1024)
       throw new Error("Local report limit is 4 MiB.");
     await render(JSON.parse(await file.text()), seq);
     // No blob links or network upload are needed for an already-local file.
-    if (seq === generation) $("download").hidden = true;
+    if (seq === generation) {
+      selectSource("local-report");
+      $("download").hidden = true;
+    }
   } catch (error) {
     if (seq === generation)
       setError(error instanceof Error ? error.message : "Invalid report file.");

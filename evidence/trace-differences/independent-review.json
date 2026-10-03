@@ -1,0 +1,37 @@
+{
+  "result": "passed independent final source/data/security/browser/public-copy review",
+  "base": "b7c20ce2c080427fe0742a1afcb5dbc49277de70",
+  "readiness_sha256": "eecbb683b3ff67c11264016919580cf9c7c62de667903b93d7172640d4005e8a",
+  "source_files": 24,
+  "fixture_sha256": "72b9765731a77c06df1200a2dcf46f74cb7f512758ab35029ae9cef2c6ef2120",
+  "independent_raw_receipt_counts": {
+    "identical": 12,
+    "omitted": 1,
+    "structural": 19,
+    "execution": 0,
+    "unavailable": 0
+  },
+  "full_security_findings": 99,
+  "old_exact_rationales_retained": 97,
+  "new_reviewed_findings": 2,
+  "byte_identical_public_copies": 27,
+  "exact_axe_archive_entries": 28,
+  "browser_groups": 36,
+  "axe_scans": 28,
+  "axe_violations": 0,
+  "Node_tests": 66,
+  "Python_tests": 11,
+  "npm_packages": 109,
+  "Python_packages": 42,
+  "P2": "Resolved: recorded4/skip0 context distinct from validated loaded32/through31/skip12; invalid imports clear caption/overview.",
+  "visual_review": "Root independently viewed final2 desktop1280 and mobile320 summary screenshots; current caption/counts readable, table intentionally scrollable.",
+  "findings": [],
+  "reviewer_sha256": "e113097e7648ad618baa21bcac4fa55465a55034b46031bd357fc8e35a53a780",
+  "limits": [
+    "Read-only independent artifact/source review; no repeated browser/test/chain/model execution.",
+    "Author83941 terminal0 and inspected finally ownership; no independent fresh PID/port probes claimed.",
+    "Rationales and automated Chromium/axe do not prove absence of vulnerabilities/fullWCAG/manual assistive review.",
+    "Required exact-head Linux CI/protected human approval/Pages publication remain separate.",
+    "No dependent consumer/state/profit/fullblock/provider authenticity result."
+  ]
+}

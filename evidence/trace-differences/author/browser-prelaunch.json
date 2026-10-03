@@ -1,0 +1,15 @@
+{
+  "source_sha256": {
+    "index.html": "2ff5a0831db1635cbf2f65fc2c5e7d37c20c708b000cad683be0c24c566ddeb6",
+    "trace-viewer.mjs": "65cde8a8a9ab85e91bc0ebda1160b5a76239a6d8f780881e7252b2995dbd7ed5",
+    "trace-comparison.mjs": "28df03d42dd2b2c71f38aa1a3d1a1acef388ef8806fa8f6592bc198d74746892",
+    "trace-report.mjs": "f9217b73e0b4e3be9ce8501e980579df7624bfb5016fea21f700553a15d5fcb9",
+    "app.js": "36786b0c3db6a8016101648a5b86ccb3253ac8ce20867cdc01cfe48b88e8325a",
+    "scripts/check_accessibility.mjs": "2f2e6f34083dce6dea36b36091e8413f768db10bf15a26fbc7415a0e16019b36",
+    "tests/trace.test.mjs": "f68f5e426f9cc470728c43ac58a04a49804839a7f5e647ce95ee244d60d62d21",
+    "tests/data/trace-oracle-prefix-32.json": "72b9765731a77c06df1200a2dcf46f74cb7f512758ab35029ae9cef2c6ef2120",
+    "security-reviewed.json": "c6a1ce3b4f1db333003d91f7352c3f733920bfb7417de9247726368c80781151",
+    ".github/workflows/pages.yml": "97aae19a1fe77a28151cb1ca22647c41fe8d0c7704bb5e11378057aa570d3169"
+  },
+  "scope": "P2 actual32/skip12 and default4/skip0/invalid-caption clearing; unchangedoriginal report/validator"
+}

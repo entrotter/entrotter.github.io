@@ -1,0 +1,81 @@
+{
+  "copies": [
+    {
+      "original": "output/observed-price/accessibility.json",
+      "copy": "browser.json",
+      "sha256": "ca5866c9f35539834d893e17bdaa5e26ddb7db0d72593f71ca513ae4930e0041",
+      "bytes": 915694,
+      "transformation": "byte-identical"
+    },
+    {
+      "original": ".quality/observed-price-viewer/python-controls.json",
+      "copy": "python-controls.json",
+      "sha256": "731aac55aeb6fd3afb1f1fc0d682be4ed3da93bb7c0ee64802f606c40c7f631f",
+      "bytes": 494,
+      "transformation": "byte-identical"
+    },
+    {
+      "original": ".quality/observed-price-viewer/browser-runner-format-proof.json",
+      "copy": "browser-runner-format-proof.json",
+      "sha256": "955ede31fe7ce1f8d7f907993f7b82e8920f4a89fe1273da8d853ce4851629c8",
+      "bytes": 289,
+      "transformation": "byte-identical"
+    },
+    {
+      "original": "output/observed-price/1280-observed-price.png",
+      "copy": "1280-observed-price.png",
+      "sha256": "5560d7ec4c72281d02e2ffa2e617722a211bec1cfdc79f38352591fd2863c1b4",
+      "bytes": 172759,
+      "transformation": "byte-identical"
+    },
+    {
+      "original": "output/observed-price/320-observed-price.png",
+      "copy": "320-observed-price.png",
+      "sha256": "53f87c643984f99304d22105942248ecdf23b4642bdc5016dee820d7a68a8df9",
+      "bytes": 81557,
+      "transformation": "byte-identical"
+    },
+    {
+      "original": "output/observed-price/axe-observed-price-1280.json",
+      "copy": "axe-observed-price-1280.json.gz",
+      "original_sha256": "cb3eb90b4ffefd4d2f0fc7eb2374099c11b344936d958b2b2105976cc2697841",
+      "public_sha256": "e99c85d33777647dca8920bf24b885cdb1d234c876fd372ea0a5261a95241468",
+      "transformation": "lossless deterministic gzip; original JSON bytes recover exactly"
+    },
+    {
+      "original": "output/observed-price/axe-observed-price-320.json",
+      "copy": "axe-observed-price-320.json.gz",
+      "original_sha256": "0d70f8e772bd1006a541efa2a8d7acffdec1cc36550687f63f967ab56f2897b6",
+      "public_sha256": "39ab7703add4d20af0f7bb01945ff446e6cb840fefb2f0cbe43b6c72d5fd8d7d",
+      "transformation": "lossless deterministic gzip; original JSON bytes recover exactly"
+    },
+    {
+      "original": "output/observed-price/axe-observed-price-390.json",
+      "copy": "axe-observed-price-390.json.gz",
+      "original_sha256": "67580aa6f4391bae4f2f4452333990cf45a0a435f037ba2dff975d0b71ee0b5f",
+      "public_sha256": "f06d7f5d16babb3e6b913afb03f80e0e5ac4352c37ea270908148b0fb38b3e10",
+      "transformation": "lossless deterministic gzip; original JSON bytes recover exactly"
+    },
+    {
+      "original": "output/observed-price/axe-observed-unproven-1280.json",
+      "copy": "axe-observed-unproven-1280.json.gz",
+      "original_sha256": "f1820f4cfa8492371c9bd0e6b04798c11ab6cbfe1a39ec5f24ea8979049655ba",
+      "public_sha256": "05d08761bdf8428d9fdad5e82894b93863efbeab8d01765b3b45949ac8637270",
+      "transformation": "lossless deterministic gzip; original JSON bytes recover exactly"
+    },
+    {
+      "original": "output/observed-price/axe-observed-unproven-320.json",
+      "copy": "axe-observed-unproven-320.json.gz",
+      "original_sha256": "c2893063b92bcadf238d283e1170a4ad967bf65caca9042f93427a77258ea688",
+      "public_sha256": "1fe3760fb8812fab3bcb66bed650edb1b7e816faad45184a5d080521e0bbd481",
+      "transformation": "lossless deterministic gzip; original JSON bytes recover exactly"
+    },
+    {
+      "original": "output/observed-price/axe-observed-unproven-390.json",
+      "copy": "axe-observed-unproven-390.json.gz",
+      "original_sha256": "d77ac4d2c52e230136739bd17550bf55e53cc3cd8355023052054b582355fa33",
+      "public_sha256": "50a310d4b100a563047052aabceeca257ce9995e8af1e3af38d75ef2f309eef7",
+      "transformation": "lossless deterministic gzip; original JSON bytes recover exactly"
+    }
+  ]
+}

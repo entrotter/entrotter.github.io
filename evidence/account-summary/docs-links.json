@@ -1,0 +1,1322 @@
+{
+  "checked_at": "2026-10-03T13:08:24.083430+00:00",
+  "source_commit": "4c6e27ed6db398d51d1c0d68ef429f869a61b4c3",
+  "worktree_dirty": true,
+  "checker": "lychee 0.24.2",
+  "checker_sha256": "af111b5890746a863e60b4929720ab383337843ed15b701515871aa6e8817c2b",
+  "files": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "f8840c1975bc5aabfdedbd13d69de905fc19b7c9ad4c9b965f48e2b4c20b405d",
+    "404.html": "989503fbe34687a3a04be5e0b395c05cecceda59d0ea87bb2f7a6cf7c5d1d958",
+    "AGENTS.md": "d1d8e6c41d67cbcd2ee82f7dcbb50568189acfcf92508b60731eed8de480e303",
+    "CONTRIBUTING.md": "3f4f1bb0b0c9b21635b8ba3cde4a7d34dfaad55e4c2b5ac6cd69ee905cd0e581",
+    "README.md": "d65dc6bd602e5df77be6fd62fbc50f51343912dd84e6e72229f48c29da6d3906",
+    "SECURITY.md": "0f347c7a3925e56ef8d96547b45678281493b8df64ffa2d31c09a61fdbc42dc5",
+    "STATUS.md": "c72152b0caa6a0e56706e78c7962624289f1f45b1efe5ae09963659fd1ca4c46",
+    "evidence/account-summary/README.md": "fa6f72ed4b06c34549853b7ae443871a1e22fb1f9f67d9c6f228df1db9a10239",
+    "evidence/agent-decisions/commands.md": "4a33c46c26a240b50d36bdff5d72df075ff3b6b7464585aec494b044a0f2148e",
+    "evidence/observed-prices/README.md": "fd601ef1c108e1d91cf7c83e9ce1bcd9ba78d6c1d808008c84658bf2fd04fd52",
+    "evidence/position-viewer/README.md": "1b904dfb6019453fb10ef4724b04d8f0975187d3248a28d0550f55e761d17e68",
+    "evidence/trace-differences/README.md": "97605ea3ad88f37142e6455d4f50b538c6c057d0c58a88c77d168a93a8fc7a99",
+    "evidence/trace-viewer/commands.md": "7eb9590a6e1b7b23d49eadce5efcbfa2687c09143e0e00f18bd7acb1d2c63b23",
+    "index.html": "77ffb2765d289cfcee7cf37c86ece9973f71b9fc1c4024309c9e82e601a24b42",
+    "style.css": "2e72483077e431e1c8f3091cd1d3449c05bc4e2c2b275590800af279c745fb33"
+  },
+  "lychee_exit_code": 0,
+  "passed": true,
+  "path_redaction": "Local checkout prefix replaced with /workspace/repository",
+  "report": {
+    "total": 84,
+    "unique": 73,
+    "successful": 84,
+    "unknown": 0,
+    "unsupported": 0,
+    "timeouts": 0,
+    "redirects": 0,
+    "remaps": 0,
+    "excludes": 0,
+    "errors": 0,
+    "cached": 2,
+    "success_map": {
+      "index.html": [
+        {
+          "url": "file:///workspace/repository/index.html#how",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 20,
+            "column": 76
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 300792
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/engine",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 117,
+            "column": 14
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 974608917
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/entrotter/blob/main/LICENSE",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 126,
+            "column": 181
+          },
+          "duration": {
+            "secs": 1,
+            "nanos": 175490500
+          }
+        },
+        {
+          "url": "file:///workspace/repository/index.html#main",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 17,
+            "column": 23
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 771209
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/entrotter",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 20,
+            "column": 158
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 169250
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/entrotter",
+          "status": {
+            "text": "OK (cached)",
+            "code": 200
+          },
+          "span": {
+            "line": 122,
+            "column": 14
+          }
+        },
+        {
+          "url": "file:///workspace/repository/assets/icon.png",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 10,
+            "column": 26
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7209
+          }
+        },
+        {
+          "url": "file:///workspace/repository/index.html#reproduce",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 27,
+            "column": 155
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 69500
+          }
+        },
+        {
+          "url": "file:///workspace/repository/reports/liquidity-shock.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 65,
+            "column": 94
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 48500
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/cli",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 119,
+            "column": 14
+          },
+          "duration": {
+            "secs": 1,
+            "nanos": 229335417
+          }
+        },
+        {
+          "url": "file:///workspace/repository/assets/mascot.webp",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 31,
+            "column": 27
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 42792
+          }
+        },
+        {
+          "url": "file:///workspace/repository/index.html#",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 19,
+            "column": 26
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 5209
+          }
+        },
+        {
+          "url": "file:///workspace/repository/index.html#compare",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 27,
+            "column": 56
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 68500
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/entrotter/blob/b724983a6c24fbe20473111565c8639714cb1bb0/docs/AGENT_EVALUATION.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 62,
+            "column": 1308
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 864601916
+          }
+        },
+        {
+          "url": "file:///workspace/repository/index.html#",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 126,
+            "column": 53
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 59208
+          }
+        },
+        {
+          "url": "file:///workspace/repository/index.html#reproduce",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 20,
+            "column": 107
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 87458
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/entrotter.github.io",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 121,
+            "column": 14
+          },
+          "duration": {
+            "secs": 1,
+            "nanos": 256784917
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/engine/blob/8176597af994dddb7a3dc6721db623580ebc9601/evidence/trace-mine-deadline/README.md",
+          "status": {
+            "text": "OK (cached)",
+            "code": 200
+          },
+          "span": {
+            "line": 110,
+            "column": 568
+          }
+        },
+        {
+          "url": "file:///workspace/repository/style.css?v=2e72483077e4",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 11,
+            "column": 32
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 4458
+          }
+        },
+        {
+          "url": "file:///workspace/repository/assets/icon.png",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 19,
+            "column": 67
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 5000
+          }
+        },
+        {
+          "url": "file:///workspace/repository/index.html#compare",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 20,
+            "column": 46
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 744958
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/sdk-python",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 118,
+            "column": 14
+          },
+          "duration": {
+            "secs": 1,
+            "nanos": 285566750
+          }
+        },
+        {
+          "url": "file:///workspace/repository/assets/icon.png",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 126,
+            "column": 66
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 12500
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/engine/blob/42204e0c8091143e08f9f6525cbfebde741fb74a/tokyo/README.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 43,
+            "column": 946
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 587159000
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/scenarios",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 120,
+            "column": 14
+          },
+          "duration": {
+            "secs": 1,
+            "nanos": 298946833
+          }
+        }
+      ],
+      "evidence/position-viewer/README.md": [
+        {
+          "url": "file:///workspace/repository/evidence/position-viewer/provenance.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 28,
+            "column": 29
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 11292
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/position-viewer/browser/accessibility.json.gz",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 42,
+            "column": 10
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 11958
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/engine/tree/88c6cd0d00f466ed7e870bd57c118aa50984f8b1/evidence/aave-account-impact",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 11,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 879034000
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/position-viewer/browser/axe-raw.zip",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 43,
+            "column": 17
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 12458
+          }
+        },
+        {
+          "url": "file:///workspace/repository/reports/aave-account-impact13.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 10,
+            "column": 5
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 23750
+          }
+        },
+        {
+          "url": "file:///workspace/repository/tests/data/position-controls.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 20,
+            "column": 5
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 109209
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/position-viewer/summary.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 28,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 27334
+          }
+        }
+      ],
+      "STATUS.md": [
+        {
+          "url": "file:///workspace/repository/evidence/position-viewer/README.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 214,
+            "column": 5
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 9875
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/README.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 249,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 11667
+          }
+        }
+      ],
+      "404.html": [
+        {
+          "url": "file:///workspace/repository/style.css",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 1,
+            "column": 186
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6250
+          }
+        },
+        {
+          "url": "file:///workspace/repository",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 1,
+            "column": 342
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 13208
+          }
+        }
+      ],
+      "evidence/observed-prices/README.md": [
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/1280-observed-price.png",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 24,
+            "column": 19
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7167
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/320-observed-price.png",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 25,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7459
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/axe-observed-price-320.json.gz",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 40,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6667
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/axe-observed-unproven-320.json.gz",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 40,
+            "column": 45
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6333
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/browser-runner-format-proof.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 32,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7333
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/python-controls.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 26,
+            "column": 40
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6875
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/engine/tree/40bea57e25ab94c0d0f6136b4c3a5af4a99e6a1d/evidence/owned-consumer-observations/historical-32",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 5,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 344599500
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/summary.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 21,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 39375
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/browser.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 22,
+            "column": 55
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 8792
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/axe-observed-price-390.json.gz",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 39,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7791
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/provenance.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 35,
+            "column": 9
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7125
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/axe-observed-price-1280.json.gz",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 38,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6792
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/axe-observed-unproven-1280.json.gz",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 38,
+            "column": 47
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6708
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/observed-prices/axe-observed-unproven-390.json.gz",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 39,
+            "column": 45
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6667
+          }
+        }
+      ],
+      "evidence/account-summary/README.md": [
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/axe-raw.zip",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 12,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 9209
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/node-tests.log",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 12,
+            "column": 44
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 12959
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/python-tests.log",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 13,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 10791
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/browser.json.gz",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 11,
+            "column": 48
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 9875
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/security-mapping.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 13,
+            "column": 39
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 9959
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/provenance.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 14,
+            "column": 5
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 9834
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/validation.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 11,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 11042
+          }
+        }
+      ],
+      "CONTRIBUTING.md": [
+        {
+          "url": "file:///workspace/repository/README.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 5,
+            "column": 28
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 1211584
+          }
+        }
+      ],
+      "evidence/trace-differences/README.md": [
+        {
+          "url": "https://github.com/entrotter/engine/blob/198139ff0b3bf37781b4232b27d8eeb0a5da5365/evidence/trace-parent-cache/native-005/report.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 14,
+            "column": 7
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 788734833
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/author/security-review-mapping.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 25,
+            "column": 45
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 8500
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/browser/axe-raw.zip",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 39,
+            "column": 54
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7625
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/provenance.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 41,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7375
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/prior/accessibility-before-caption-fix.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 53,
+            "column": 9
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 8875
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/browser/accessibility.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 34,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 26417
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/before/inspection.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 48,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 8083
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/author/security-full.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 24,
+            "column": 26
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 10209
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/author/unit.log",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 26,
+            "column": 5
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6792
+          }
+        },
+        {
+          "url": "file:///workspace/repository/tests/data/trace-oracle-prefix-32.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 13,
+            "column": 11
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 15042
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/author/source-sha256.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 25,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7708
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/independent-review.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 63,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 7416
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/author/npm-audit.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 30,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6959
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/summary.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 24,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 39500
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/trace-differences/author/python-dependencies.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 31,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6833
+          }
+        }
+      ],
+      "README.md": [
+        {
+          "url": "https://github.com/entrotter/engine/blob/8176597af994dddb7a3dc6721db623580ebc9601/evidence/trace-mine-deadline/README.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 219,
+            "column": 13
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 701997250
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/engine/tree/40bea57e25ab94c0d0f6136b4c3a5af4a99e6a1d/evidence/owned-consumer-observations/historical-32",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 271,
+            "column": 1
+          },
+          "duration": {
+            "secs": 1,
+            "nanos": 46940792
+          }
+        },
+        {
+          "url": "file:///workspace/repository/CONTRIBUTING.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 3,
+            "column": 108
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 10375
+          }
+        },
+        {
+          "url": "file:///workspace/repository/SECURITY.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 3,
+            "column": 142
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6625
+          }
+        },
+        {
+          "url": "file:///workspace/repository/evidence/account-summary/README.md",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 346,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 94667
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/engine/tree/88c6cd0d00f466ed7e870bd57c118aa50984f8b1/evidence/aave-account-impact",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 320,
+            "column": 1
+          },
+          "duration": {
+            "secs": 1,
+            "nanos": 141327292
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/entrotter#quick-start-without-dependencies-or-an-api-key",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 3,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 722588500
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/entrotter/blob/b724983a6c24fbe20473111565c8639714cb1bb0/evidence/agent-local-codex.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 148,
+            "column": 14
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 984493167
+          }
+        },
+        {
+          "url": "https://github.com/entrotter/engine/blob/198139ff0b3bf37781b4232b27d8eeb0a5da5365/evidence/trace-parent-cache/native-005/report.json",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 211,
+            "column": 1
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 477355500
+          }
+        },
+        {
+          "url": "https://entrotter.github.io/",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 30,
+            "column": 19
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 108462917
+          }
+        },
+        {
+          "url": "file:///workspace/repository/LICENSE",
+          "status": {
+            "text": "200 OK",
+            "code": 200
+          },
+          "span": {
+            "line": 3,
+            "column": 168
+          },
+          "duration": {
+            "secs": 0,
+            "nanos": 6792
+          }
+        }
+      ]
+    },
+    "error_map": {},
+    "timeout_map": {},
+    "suggestion_map": {},
+    "redirect_map": {},
+    "excluded_map": {},
+    "duration": {
+      "secs": 4,
+      "nanos": 533505500
+    },
+    "detailed_stats": true
+  }
+}

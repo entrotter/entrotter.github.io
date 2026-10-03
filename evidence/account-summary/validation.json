@@ -1,0 +1,100 @@
+{
+  "status": "passed",
+  "base_head": "4c6e27ed6db398d51d1c0d68ef429f869a61b4c3",
+  "feature": "Two exact candidate-minus-baseline account summaries before address/table; semantic dl, signed BigInt units and mobile stacking",
+  "browser": {
+    "groups": 42,
+    "axe_outputs": 58,
+    "violations": 0,
+    "javascript_errors": 0,
+    "node": "v22.23.1",
+    "platform": "darwin",
+    "chromium": "153.0.8010.12",
+    "playwright": "1.63.0",
+    "axe": "4.13.0",
+    "runner_sha256": "7553c6ed2a40c8de2f4b49a4b773f45e685d3fce1ab8dcd9116e13d9e706a345",
+    "sources_sha256": {
+      "index.html": "77ffb2765d289cfcee7cf37c86ece9973f71b9fc1c4024309c9e82e601a24b42",
+      "app.js": "36786b0c3db6a8016101648a5b86ccb3253ac8ce20867cdc01cfe48b88e8325a",
+      "comparison.mjs": "e0dac48fe543ce208c21a99f4a029427576e12ad867c4e3c65bdb1d0de7c2fb1",
+      "report-validation.mjs": "23149c73c022279941b291725c39924bbb69a5ab0a201b7cee224dd23a084ad5",
+      "trace-report.mjs": "f9217b73e0b4e3be9ce8501e980579df7624bfb5016fea21f700553a15d5fcb9",
+      "trace-comparison.mjs": "28df03d42dd2b2c71f38aa1a3d1a1acef388ef8806fa8f6592bc198d74746892",
+      "trace-viewer.mjs": "e87805dcef59dce8905671c73802c42448abee827c4d12bd0abfd7adb1bda06a",
+      "observed-trace.mjs": "980ff5172f61b82413e9898955f7a60ee23ba10a6374e6b259a91034624fe9ee",
+      "position-report.mjs": "38f31262e2248ae6af2d07bf7ee02de3d24316eaaac164e3dc2ae597e00c8f7f",
+      "reports/aave-account-impact13.json": "cd96e04c837fa1dcc6b6cf009d58adffe3ffdaebc9fbd5b3b900d71cd2912978",
+      "tests/data/position-controls.json": "033383cc85af549cf4f9e1bda7d506e342af2a1f385a6afe88025e9dcd2deb9f",
+      "reports/trace-observed-price32.json": "7010848300c353310fb78dab7f377daea4226633e49af3c1a384bcb3a579ba9d",
+      "tests/data/observed-controls.json": "b68865916ac365e2ca1093c16439b4baaa628e14b3b2e209f36596f2c09bba67",
+      "reports/trace-mainnet-prefix-four.json": "1bc41a9375017d601f0a8a027ca59977afedbbb109f5089b5b09eaac3f831db2",
+      "tests/data/trace-oracle-prefix-32.json": "72b9765731a77c06df1200a2dcf46f74cb7f512758ab35029ae9cef2c6ef2120",
+      "assets/examples/action-comparison.json": "ea92887ff54232e60f0440ea6f290de9cb7cd82ed9ba57d72dcc63ca7f045d67",
+      "reports/agent-local-codex.json": "802683e5b42c066a08016c87f51679986715add21f661d7d6c4cc7e563e320e6",
+      "style.css": "2e72483077e431e1c8f3091cd1d3449c05bc4e2c2b275590800af279c745fb33",
+      "404.html": "989503fbe34687a3a04be5e0b395c05cecceda59d0ea87bb2f7a6cf7c5d1d958",
+      "package.json": "d4ae0a0b1a412c70cf38bace34efd9fd459736f0e8c4d13ded0c53cab43e772d",
+      "package-lock.json": "199e29dcafd62edef5bef2483a66dbc200601458ac797f6032ecef688a116342"
+    },
+    "scope": "All original42groups and49scans retained; 9 additional scans from debt-transition and explicit synthetic negative/zero controls across1280/390/320",
+    "raw_summary": "browser.json.gz",
+    "raw_axe": "axe-raw.zip"
+  },
+  "units": {
+    "node": 126,
+    "python": 12,
+    "skips": 0,
+    "logs": [
+      "node-tests.log",
+      "python-tests.log"
+    ]
+  },
+  "quality": {
+    "lint": "PASS19JS",
+    "format": "PASS; Python test formatting corrected with AST equality, failed format check alone rerun",
+    "types": "PASS20inputs",
+    "security": "PASS137 unsuppressed, all137 prior individual rationales retained; full current raw scan and source-bound required gate pass",
+    "python": "Ruff/mypy/full Bandit0 pass, no suppressed/skipped diagnostics",
+    "advisory_scope": "Package and requirements locks unchanged from verified4c6e audits109Node/42Python0reported advisories; local advisory results reused, current mandatory CI queries afresh"
+  },
+  "baseline_regression": {
+    "status": "baseline_regression_failed_as_expected",
+    "commit": "4c6e27ed6db398d51d1c0d68ef429f869a61b4c3",
+    "width": 320,
+    "old_comparison_rows": 6,
+    "new_capacity_elements": 0,
+    "failure": "AssertionError [ERR_ASSERTION]: Borrowing-capacity difference should be visible before the wide table\n\n0 !== 1\n",
+    "scope": "Original immutable Git source in Chromium; no RPC/model/new chain execution"
+  },
+  "retained_failures": [
+    {
+      "kind": "First new negative expectation used ASCII hyphen instead of unchanged Unicode minus formatter",
+      "scope": "Three new account groups failed; test-only glyph expectations corrected, production formatter/codec unchanged; original transcript retained privately"
+    },
+    {
+      "kind": "Second run existing keyboard native file chooser timeout5000ms",
+      "scope": "New account groups allpassed; root causeunknown. Complete same-source rerun42/58passed without assertion/time budget changes; original full raw failure retained privately"
+    },
+    {
+      "kind": "Full first current scanner refused stale source-bound review",
+      "scope": "Raw137 findings alreadyretained; refreshed metadata by whole-expression occurrence, 85 exact/52 moved, no new findings/changed rules. Pure gate thenpassed; final full scanner and gate pass at final JS source."
+    }
+  ],
+  "limits": [
+    "No RPC/EVM/model/transaction/user evaluation; views inspect recorded bytes only.",
+    "Synthetic controls are display mutations of after-values, not chain evidence.",
+    "Axe incomplete contrast remains raw; supplemental CSS contrast is separate from manual assistive-tech or fullWCAG certification.",
+    "Numbers retain all decimals and may wrap at narrow widths; no Number conversion or rounding.",
+    "Current protected-main approval/live Pages/formal submission remain pending."
+  ],
+  "visual_review": "Parent inspected1280/320screenshots: stacked320cards are before address/table, whole values retained with wrapping, no page overflow; final unchanged-source screenshots bound below.",
+  "docs": {
+    "files": 15,
+    "links": 84,
+    "unique": 73,
+    "errors": 0,
+    "timeouts": 0,
+    "exclusions": 0,
+    "raw": "docs-links.json"
+  }
+}

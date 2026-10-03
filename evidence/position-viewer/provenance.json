@@ -1,0 +1,160 @@
+{
+  "source_sha256": {
+    ".github/workflows/pages.yml": "d4597cd81cd2366ee52561a7b2660da77967ff36c33f831214a9b1b195c35850",
+    "404.html": "989503fbe34687a3a04be5e0b395c05cecceda59d0ea87bb2f7a6cf7c5d1d958",
+    "AGENTS.md": "d1d8e6c41d67cbcd2ee82f7dcbb50568189acfcf92508b60731eed8de480e303",
+    "CONTRIBUTING.md": "3f4f1bb0b0c9b21635b8ba3cde4a7d34dfaad55e4c2b5ac6cd69ee905cd0e581",
+    "README.md": "12034edfb4cbb2b7f97b4de62ec3e092de8332ea841dfc96377aac7a0ec65d9f",
+    "SECURITY.md": "0f347c7a3925e56ef8d96547b45678281493b8df64ffa2d31c09a61fdbc42dc5",
+    "app.js": "36786b0c3db6a8016101648a5b86ccb3253ac8ce20867cdc01cfe48b88e8325a",
+    "assets/examples/action-comparison.json": "ea92887ff54232e60f0440ea6f290de9cb7cd82ed9ba57d72dcc63ca7f045d67",
+    "comparison.mjs": "e0dac48fe543ce208c21a99f4a029427576e12ad867c4e3c65bdb1d0de7c2fb1",
+    "eslint.config.mjs": "7acf03efd74c5422b646cb4635fd1321222832ad7a92527c77a8f94e8274234a",
+    "eslint.security.config.mjs": "fb2ab88ae816262fd1cef89709826491797957b8ee04835fae10bc6ab83ca7f2",
+    "index.html": "7842ec6f55960466087bf71920c05d35c87eea57a2b165aee228fd6a9a0a45d7",
+    "observed-trace.mjs": "980ff5172f61b82413e9898955f7a60ee23ba10a6374e6b259a91034624fe9ee",
+    "package-lock.json": "199e29dcafd62edef5bef2483a66dbc200601458ac797f6032ecef688a116342",
+    "package.json": "d4ae0a0b1a412c70cf38bace34efd9fd459736f0e8c4d13ded0c53cab43e772d",
+    "position-report.mjs": "38f31262e2248ae6af2d07bf7ee02de3d24316eaaac164e3dc2ae597e00c8f7f",
+    "pyproject.toml": "1fa3f76b9d84bb385aa4a7557416c172a54572c6d380c1ca1d64ddae31457f38",
+    "report-validation.mjs": "23149c73c022279941b291725c39924bbb69a5ab0a201b7cee224dd23a084ad5",
+    "reports/aave-account-impact13.json": "cd96e04c837fa1dcc6b6cf009d58adffe3ffdaebc9fbd5b3b900d71cd2912978",
+    "reports/agent-local-codex.json": "802683e5b42c066a08016c87f51679986715add21f661d7d6c4cc7e563e320e6",
+    "reports/trace-mainnet-prefix-four.json": "1bc41a9375017d601f0a8a027ca59977afedbbb109f5089b5b09eaac3f831db2",
+    "reports/trace-observed-price32.json": "7010848300c353310fb78dab7f377daea4226633e49af3c1a384bcb3a579ba9d",
+    "requirements-quality.in": "eccd79884fb38364cc396e59e22eb5a78f48bbf92e2c0b47825dcff473692185",
+    "requirements-quality.txt": "845de7f7f24826a43ff5e9eebafa79c6b3ef0aa10e46bfc04e39b77f64cea722",
+    "scripts/check_accessibility.mjs": "bb9b6ab452e60c48a296bd1995389279edcfd987a9ed79669d3d2680008aa300",
+    "scripts/check_quality.mjs": "51d72e7ccb7e9716acfc50e39bdf692a2512532e6da91491358da1437f4794d8",
+    "scripts/quality_policy.mjs": "e8064979e1846daf16c6d81b5b25ad0b0601432e3d8b18aecd92065131333d89",
+    "security-reviewed.json": "0e4b99fd01e913039a295c3795a4d498c1f24232a6b94bb3ac2aa991e5185d09",
+    "style.css": "abd759c97109238ac62cf3614dada5fe6c915b049bc74982ccf6ccaf2fff82e3",
+    "tests/comparison.test.mjs": "35a035d9e806548d20224070fa707e8866783c639e860ccc3afece23376b6327",
+    "tests/data/observed-controls.json": "b68865916ac365e2ca1093c16439b4baaa628e14b3b2e209f36596f2c09bba67",
+    "tests/data/position-controls.json": "033383cc85af549cf4f9e1bda7d506e342af2a1f385a6afe88025e9dcd2deb9f",
+    "tests/data/trace-oracle-prefix-32.json": "72b9765731a77c06df1200a2dcf46f74cb7f512758ab35029ae9cef2c6ef2120",
+    "tests/observed.test.mjs": "b0b1391ce47970cdbedd3fbde881b91b5ec76f2d59ba070222edfe975eb7b95b",
+    "tests/position.test.mjs": "9052e49f4b26525acdf3333ee7a0ee4e77e3734a615f29744bbc893936610207",
+    "tests/quality.test.mjs": "71150f603988dcb2429b56de76e3535b0268fbf180b12ecbe998c23c235e52c1",
+    "tests/report.test.mjs": "7669919663e3486783dc39b97d7e5f892b5a4955ef7696d084f244db502ceffd",
+    "tests/test_site.py": "c40f26b927b04eb6ef0a659fa8bbd8dd0b85e7a2491ae53736da3a07257340f3",
+    "tests/trace.test.mjs": "f68f5e426f9cc470728c43ac58a04a49804839a7f5e647ce95ee244d60d62d21",
+    "trace-comparison.mjs": "28df03d42dd2b2c71f38aa1a3d1a1acef388ef8806fa8f6592bc198d74746892",
+    "trace-report.mjs": "f9217b73e0b4e3be9ce8501e980579df7624bfb5016fea21f700553a15d5fcb9",
+    "trace-viewer.mjs": "bffcde1611f85b4edbcd1ed1e937bc42939113362bda803414760518a7140bbd",
+    "tsconfig.json": "b11349591a0d0c9933d0ee3ff60b0b874df53834e8f2e3c6c45b788aa35cb661",
+    "types/browser-tools.d.ts": "0a5352e697b9e2a51651016ac789287acb71d48fdc04027d80a4050b604f579e"
+  },
+  "copies": {
+    "author/node-unit.log": {
+      "source": ".quality/position-unit-release.log",
+      "sha256": "f58f35bb1bd5fb545e438f7ec78a6e4e891dfb7289ad6e59013c4b7a7c4b867d"
+    },
+    "author/python-unit.log": {
+      "source": ".quality/position-python-release.log",
+      "sha256": "36878bced54319163487722445bb8ffc4cf7acfb056c147bda3e06081b31d70d"
+    },
+    "author/format.log": {
+      "source": ".quality/position-format-release.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    "author/types.log": {
+      "source": ".quality/position-types-release.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "author/python-types.log": {
+      "source": ".quality/position-python-types-release.log",
+      "sha256": "5d4b6d285b77932e3d08212c3b4974d0a803f98ec60408ac6ccf6a063fa6c19e"
+    },
+    "author/python-security.json": {
+      "source": ".quality/position-python-security-release.json",
+      "sha256": "12f0cabcc7fb8eaacaf5b02ff40898e6e972055f337eb4eebf3edcd68c671d28"
+    },
+    "author/security-full.json": {
+      "source": ".quality/security.json",
+      "sha256": "7bb5136c7ae264cec8008e01abe90183690d27d587d0b9b5134d929d034f4b06"
+    },
+    "author/source-sha256.json": {
+      "source": ".quality/source-sha256.json",
+      "sha256": "f5356baa1c561422fc3810c62617b7b56471588bb6653cd8ec897e915a03f12e"
+    },
+    "author/security-mapping.json": {
+      "source": ".quality/position-security-mapping.json",
+      "sha256": "1795d4b2fad1b1a62e9591ddaf046741c567b71af44849fc300995ae8b54ec84"
+    },
+    "author/security-policy.log": {
+      "source": ".quality/position-security-corrected-policy.log",
+      "sha256": "9fa6873c97651873f86a07c1405c4ec302600f0f865f5f607e48394d5ab34528"
+    },
+    "author/npm-audit.json": {
+      "source": ".quality/position-npm-audit.json",
+      "sha256": "a1e72e3946382350619bcc55948ae7c50e73cc7f5c165cef8657d739eb397dc3"
+    },
+    "author/python-dependencies.json": {
+      "source": ".quality/position-python-dependencies.json",
+      "sha256": "d38e5abe49c1c04eec653478382ae28562b91c03738bcabdf560e1c7bf09ca39"
+    }
+  },
+  "raw_browser_sha256": "7273a5bc105fadce4057a8a7a4351fe31632cbc2974e03808913c93ffc6378cc",
+  "raw_axe_entries_sha256": {
+    "axe-1280-agent-local-codex.json": "ea1e9e94996cc316f47ff02f24ad181e4abd50bc8b0ca157d0d4455efa40745f",
+    "axe-1280-console.json": "764d649123ceeb41afab54f158aeaf98b5bd155c34527b21e3546031a3c5f607",
+    "axe-1280-depeg-stress.json": "defcf84a3cc83d3379f8b5196444ba74fd7372649ba17e3e3c3c8634d10b8c37",
+    "axe-1280-ethereum-uniswap-slippage.json": "9cdb19aa7f6ba1539abbd69d98adcbc9f69843251b89e03c848f1d911df95ecc",
+    "axe-1280-liquidity-shock.json": "a01dbfc9fe759fe00929f675eaa65c001a43ee2ce3ab5942193957017e3b878c",
+    "axe-1280-recovery-trap.json": "43107053bf02c9aadcbec8572942ddb6f196f28f1f81921e9b3faabc6cbdceaa",
+    "axe-320-agent-local-codex.json": "84bdef1930ebaf5609ac6a99184f030a678f585e1d283259763e11df078533b7",
+    "axe-320-console.json": "769c6d26f7219661f57d972d98cb4df55126469d5a3a8c3916cd319e4d0474f4",
+    "axe-320-depeg-stress.json": "fe64059e36a70945779becd691ff7c244a79abc6f01fe8a8fba9e26f94334631",
+    "axe-320-ethereum-uniswap-slippage.json": "637107d8a312c3b6da30d40b1a3a988c24d017d9b9c761c5fc02764c6e597e5d",
+    "axe-320-liquidity-shock.json": "dafb2d07d01dbb36ea304533c592105af184093bf6cfb52e695ffcd53abca6d5",
+    "axe-320-recovery-trap.json": "d168607507377fcd1071e276038cb61b88e3e076f4daa86e94277897f79398fe",
+    "axe-390-agent-local-codex.json": "73a8cdf81ca50fbb39834d32374b2d47a221c99de8f44218255b41c87e35e2c4",
+    "axe-390-console.json": "9097a49dfca2d4fc6da24db634c94927e31e6a163b8a8d296430dd88b092c417",
+    "axe-390-depeg-stress.json": "12702e48e019fa15652aac72eaf0914939bad66be1431d91ec35f4b93986288e",
+    "axe-390-ethereum-uniswap-slippage.json": "f18aed909876f7141cb443633e877cc21f646f639cf83f7d6c6cc35762341168",
+    "axe-390-liquidity-shock.json": "9a46bb8ff1b4e0e601db9596feb78eaa113ec8dd346d778dfcdeb780f5f7e78d",
+    "axe-390-recovery-trap.json": "f3753bc62dbaf208e05990cf727af2584dc35c6b43c28b51c62b166431139244",
+    "axe-404.json": "aa61d2008e14ec0d0249befa1c0ffafc2a75a1172e51a763c224f9761fb9f379",
+    "axe-account-health_boundary-1280.json": "67d9aa60f5d0bec1ab4c381a7385e685f625b611b83180df9e26c21deeded744",
+    "axe-account-health_boundary-320.json": "cc05b64df036387ff00bd4c85223590916d98d9ebe865efd3917d6375cf5ad7d",
+    "axe-account-health_boundary-390.json": "0840cedd13cdbf39a76ff8e779658fb6fc0893e016d50bdee7606fedb2b4d3b2",
+    "axe-account-impact-1280.json": "d18a4d0efca9ff750e629586b61943aff2ad0a16045a599f0c69dfb235d15068",
+    "axe-account-impact-320.json": "3e3f4560c18ec5b1430217ff283798b8eaa84daefa3b810d1aa132d5c34ece7e",
+    "axe-account-impact-390.json": "63f7f3ff83064c5b0550b3483816f498dd731d232a8a4f70b0a22404db137436",
+    "axe-account-large_integer-1280.json": "f77bfc4bc404017cece691304553b95414cdf76486e46dfb0bd01fc2820de379",
+    "axe-account-large_integer-320.json": "09eac5be4d47130de52d95927fbd266d6557065d43ac4fea7c3b18b1582cc0a0",
+    "axe-account-large_integer-390.json": "6fc9a164cb9d18850ccf6ebaa558d9160db9773a1724de32dd50fb3d5605deb1",
+    "axe-account-missing_account-1280.json": "a6ae68dd96b418926400dc77b0269653b835ec73961590a2b86ca33605779652",
+    "axe-account-missing_account-320.json": "e63f688b4722d0c8276d9aa796555c33e3940f26836a93f75e0c9a59ac108369",
+    "axe-account-missing_account-390.json": "217ead9d10f11d8ead314f26038a51c33fead5b7b6ec29a85f1d9f5f5cc00b35",
+    "axe-account-no_debt-1280.json": "c093f919109b6966180f6f1ced3a918ca905d690b2b89f3c14a71d1dcf67035a",
+    "axe-account-no_debt-320.json": "239264379b68d49aa79c30bc7435cb0c1e5698ea92933a902153ef331481be28",
+    "axe-account-no_debt-390.json": "077f3a413e5c43755c661f777a48f5c81d3d9d5bd285b833f05ff10fd77bc184",
+    "axe-console-import.json": "c4986a77de1bdc469ff76b169b9a474444afbeecab189969243a213fee6f7abc",
+    "axe-error.json": "f6a9ab40d0886c7e581d5c3b627a6cca44ed695a3e7b9186e7fa5aa5bb8ccc0e",
+    "axe-observed-price-1280.json": "3cfab1593f30626d2763427b399c989772e9d01921cd99e6b539384d35192488",
+    "axe-observed-price-320.json": "ab4df3c924d34a27a7d67a1420e8831f55182b06da28dd9448c21aec27e13480",
+    "axe-observed-price-390.json": "76724c84f4ebde5d9a7c6debd97c10c58e15f6bd7e0c1a3ed85bf30224112e61",
+    "axe-observed-unproven-1280.json": "6c7a76e9f9fb53a1fce1f6ae7766f6140b854be5aeace5c2eabdc70b2ffebd26",
+    "axe-observed-unproven-320.json": "43a1bd823a2261f26a5f1ebd48718b0c963f13b6ddd9c552a4ac11446d4a2375",
+    "axe-observed-unproven-390.json": "6f9a5d88ae60d0a5f69c65d5e6df60be8aeea80c6602f96c6cd229aafb80a50a",
+    "axe-original32-1280.json": "d2007dfe60d24db21deefb20556f4a91be3a52503e04015ca899677de82bccca",
+    "axe-original32-320.json": "4011561715264f0602d53d41f083b452ab0e0b1b661e18db15cfc82fc15e766a",
+    "axe-original32-390.json": "902e401b3f811148a12f525ac4adc2dc80eafc06136e4c2575e1c904d794230d",
+    "axe-signed-prefix-1280.json": "556b4d8d9bb6b96c4f7c178db1741a5c989e18f05eec100ed6d685843278ed81",
+    "axe-signed-prefix-320.json": "404e515ee11bfbe94653890de4cf5b62d6ac984db84e47340af2a0fca605257d",
+    "axe-signed-prefix-390.json": "2abd63dc332a9ea7610f8119f66736a2a6901a4e51f5574b82f394ea3bb61eee",
+    "axe-signed-prefix-unverified.json": "994312c89258ecbd8af67dafe0c6b083a5447321e1fc40d38dec2c0b30c1bfba"
+  },
+  "original_account_report_sha256": "cd96e04c837fa1dcc6b6cf009d58adffe3ffdaebc9fbd5b3b900d71cd2912978",
+  "synthetic_control_sha256": "033383cc85af549cf4f9e1bda7d506e342af2a1f385a6afe88025e9dcd2deb9f",
+  "engine": "88c6cd0d00f466ed7e870bd57c118aa50984f8b1",
+  "sdk": "ba4af512784119f23b6dea63fd24c7f5d1fdde44",
+  "normalized_lint": {
+    "source": ".quality/position-lint-release.json",
+    "source_sha256": "2d7ff30f2794be55363f0b42ef230d4b4d4bd36d826b2ce5f95e5c6594195e74",
+    "public_sha256": "3dd2dad92e2dfcb8c405d81342a01c43f46cff0b0399902737f7645ba3245baf",
+    "transformation": "Only filePath values become repository-relative; all original zero diagnostics and numeric scanner fields remain unchanged. Exact private raw lint output retained."
+  }
+}

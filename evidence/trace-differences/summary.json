@@ -1,0 +1,85 @@
+{
+  "status": "independently_reviewed_local_checks_passed_exact_head_CI_and_protected_main_pending",
+  "base": "b7c20ce2c080427fe0742a1afcb5dbc49277de70",
+  "source_sha256": {
+    "tests/data/trace-oracle-prefix-32.json": "72b9765731a77c06df1200a2dcf46f74cb7f512758ab35029ae9cef2c6ef2120",
+    "trace-comparison.mjs": "28df03d42dd2b2c71f38aa1a3d1a1acef388ef8806fa8f6592bc198d74746892",
+    ".github/workflows/pages.yml": "97aae19a1fe77a28151cb1ca22647c41fe8d0c7704bb5e11378057aa570d3169",
+    "README.md": "31e337b5f86a47af035842951f28998c6dcb29f9399710847ea73971ff18bcfb",
+    "SECURITY.md": "06f4d07eae20821a11549334d9f6733aa84ce18847bc8ec59459ac93b2b49514",
+    "STATUS.md": "eeee9e901b13d133e9fb1fec20c64a7830574697dab7c785cfc2b64ee14ea12a",
+    "app.js": "36786b0c3db6a8016101648a5b86ccb3253ac8ce20867cdc01cfe48b88e8325a",
+    "comparison.mjs": "e0dac48fe543ce208c21a99f4a029427576e12ad867c4e3c65bdb1d0de7c2fb1",
+    "eslint.config.mjs": "7acf03efd74c5422b646cb4635fd1321222832ad7a92527c77a8f94e8274234a",
+    "eslint.security.config.mjs": "fb2ab88ae816262fd1cef89709826491797957b8ee04835fae10bc6ab83ca7f2",
+    "index.html": "2ff5a0831db1635cbf2f65fc2c5e7d37c20c708b000cad683be0c24c566ddeb6",
+    "report-validation.mjs": "23149c73c022279941b291725c39924bbb69a5ab0a201b7cee224dd23a084ad5",
+    "scripts/check_accessibility.mjs": "2f2e6f34083dce6dea36b36091e8413f768db10bf15a26fbc7415a0e16019b36",
+    "scripts/check_quality.mjs": "51d72e7ccb7e9716acfc50e39bdf692a2512532e6da91491358da1437f4794d8",
+    "scripts/quality_policy.mjs": "e8064979e1846daf16c6d81b5b25ad0b0601432e3d8b18aecd92065131333d89",
+    "security-reviewed.json": "c6a1ce3b4f1db333003d91f7352c3f733920bfb7417de9247726368c80781151",
+    "tests/comparison.test.mjs": "35a035d9e806548d20224070fa707e8866783c639e860ccc3afece23376b6327",
+    "tests/quality.test.mjs": "71150f603988dcb2429b56de76e3535b0268fbf180b12ecbe998c23c235e52c1",
+    "tests/report.test.mjs": "7669919663e3486783dc39b97d7e5f892b5a4955ef7696d084f244db502ceffd",
+    "tests/test_site.py": "13d347bce0f3d89a00912aafbc2a94b5ea2fa5c7bfb7fe6e109c3acaa0287376",
+    "tests/trace.test.mjs": "f68f5e426f9cc470728c43ac58a04a49804839a7f5e647ce95ee244d60d62d21",
+    "trace-report.mjs": "f9217b73e0b4e3be9ce8501e980579df7624bfb5016fea21f700553a15d5fcb9",
+    "trace-viewer.mjs": "65cde8a8a9ab85e91bc0ebda1160b5a76239a6d8f780881e7252b2995dbd7ed5",
+    "types/browser-tools.d.ts": "0a5352e697b9e2a51651016ac789287acb71d48fdc04027d80a4050b604f579e"
+  },
+  "fixture": {
+    "path": "tests/data/trace-oracle-prefix-32.json",
+    "sha256": "72b9765731a77c06df1200a2dcf46f74cb7f512758ab35029ae9cef2c6ef2120",
+    "source": "engine198139ff0b3bf37781b4232b27d8eeb0a5da5365/evidence/trace-parent-cache/native-005/report.json",
+    "scope": "Existing immutable real32 native technical producer replay; no new chain/model call"
+  },
+  "counts": {
+    "exact_original_receipt_matches": 12,
+    "omitted": 1,
+    "structural_only": 19,
+    "execution_receipt_changes": 0,
+    "unavailable": 0
+  },
+  "tests": {
+    "Node": 66,
+    "Python": 11,
+    "JS_sources": 15,
+    "type_inputs": 16,
+    "full_security_findings": 99,
+    "original_rationales_retained": 97,
+    "new_reviewed_findings": 2,
+    "Python_Bandit_findings": 0,
+    "npm_lock_packages": 109,
+    "Python_lock_packages": 42,
+    "advisories": 0
+  },
+  "browser": {
+    "groups": 36,
+    "raw_axe_scans": 28,
+    "violations": 0,
+    "platform": "darwin",
+    "node": "22.23.1",
+    "Chromium": "153.0.8010.12",
+    "Playwright": "1.63.0",
+    "axe": "4.13.0",
+    "viewports": [
+      1280,
+      390,
+      320
+    ],
+    "imports": "zero requests; same-originGETs only",
+    "ownership": "Original83941 terminal0; fixed harness finally closed owned pages/browser/server; no live author process.",
+    "checked_at": "2026-10-02T11:18:14.153Z"
+  },
+  "before_scope": "Original browser inspection shows absent overview with actual32 import. Missing-helper import regression-before log is a setup gap, not behavioral failure proof; private original retained. Initial14JS helper prototype66 passes are separate from final15JS run. Caption preparation anchor mismatch after firstreview is author setup gap retained privately, not runtimefailure; final checks rerun only after related source correction.",
+  "limits": [
+    "Candidate grouped versus original projected receipt, not baseline; full exact diffs retained",
+    "No receipt equality implies unchanged state/consumer or profit/benefit",
+    "No new chain/model run, broadcast, wire/hash/schema change, deployment or protected merge",
+    "Automated Chromium/keyboard/axe only; incomplete contrast items preserved; not full WCAG/manual assistive technology certification",
+    "Exact-head CI and protected-main human approval remain separate"
+  ],
+  "root_review_followup": "P2 sample/staticfour caption fixed; current loaded32/through31/skip12 versus default4/through3/skip0 and malformed-clear checked at all three viewports. Prior frozen proof and raw package remain retained.",
+  "independent_review_sha256": "1c80b323805bd48c24b82261c0c7eef4f4122ca0dfb12a5dfad00d47de60bb35",
+  "publication_addendum": "One byte-identical root review file plus README/summary references added after the31-file public package review. All27provenance copies, rawZIP contents, runtime/tests/policy/locks unchanged; pre-addendum readiness/rootproof retained."
+}
